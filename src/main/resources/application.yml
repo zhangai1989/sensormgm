@@ -1,0 +1,12 @@
+server:
+  port: 8084
+
+spring:
+    profiles:
+        active: test
+
+## 打印sql
+logging:
+  level:
+    root: DEBUG
+    com.bumt.sensormgm.dao: DEBUG
