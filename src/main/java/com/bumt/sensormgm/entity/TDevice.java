@@ -15,8 +15,16 @@ public class TDevice extends BaseEntity implements Serializable {
 	/**
 	 * 企业ID
 	 */
+
 	@Column(name = "enterprise_id", nullable = false)
 	private Long enterpriseId;
+
+	/**
+	 * 企业名称
+	 */
+	@Transient
+//	@Column(name = "enterprise_name", nullable = false)
+	private String enterpriseName;
 
 	/**
 	 * 设备编码
@@ -137,7 +145,7 @@ public class TDevice extends BaseEntity implements Serializable {
 	 */
 	@Column(name = "offline_time", nullable = true)
 	private java.util.Date offlineTime;
-	
+
 	public Long getEnterpriseId() {
 		return this.enterpriseId;
 	}
@@ -304,5 +312,13 @@ public class TDevice extends BaseEntity implements Serializable {
 	
 	public void setOfflineTime(java.util.Date offlineTime) {
 		this.offlineTime = offlineTime;
+	}
+
+	public String getEnterpriseName() {
+		return enterpriseName;
+	}
+
+	public void setEnterpriseName(String enterpriseName) {
+		this.enterpriseName = enterpriseName;
 	}
 }

@@ -3,6 +3,8 @@ package com.bumt.sensormgm.common.controller;
 
 import com.bumt.sensormgm.common.service.BaseService;
 import com.bumt.sensormgm.util.ResultUtil;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -74,13 +76,9 @@ public abstract class BaseController<T>{
 	}
 
 	public Specification<T> changeConditions(Map<String, Object> entity) {
-		Specification<T> querySpecification = new Specification<T>() {
-			@Override
-			public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				List<Predicate> list = new ArrayList<Predicate>();
-
-				return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
-			}
+		Specification<T> querySpecification = (root, criteriaQuery, criteriaBuilder)-> {
+			List<Predicate> list = new ArrayList<Predicate>();
+			return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
 		};
 		return querySpecification;
 	}

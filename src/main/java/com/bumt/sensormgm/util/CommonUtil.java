@@ -1,5 +1,7 @@
 package com.bumt.sensormgm.util;
 
+import com.alibaba.druid.filter.config.ConfigTools;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,11 +18,106 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author : zhangai
- * @desaciption :
- * @date : Create in 11:34$ 2018/5/4$
+ * @Description:
+ * @Author:     zhangai
+ * @CreateDate: 2019/6/26 11:56
+ * @Version: 1.0
  */
 public class CommonUtil {
+
+
+	private static final String ALGORITHM = "MD5";
+
+	private static final char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+	/**
+	 * encode string
+	 *
+	 * @param algorithm
+	 * @param str
+	 * @return String
+	 */
+	public static String encode(String algorithm, String str) {
+
+		if (str == null) {
+			return null;
+		}
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
+			messageDigest.update(str.getBytes());
+			return getFormattedText(messageDigest.digest());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	/**
+	 * encode By MD5
+	 *
+	 * @param str
+	 * @return String
+	 */
+	public static String encodeByMD5(String str) {
+
+		if (str == null) {
+			return null;
+		}
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance(ALGORITHM);
+			messageDigest.update(str.getBytes());
+			return getFormattedText(messageDigest.digest());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	/**
+	 * Takes the raw bytes from the digest and formats them correct.
+	 *
+	 * @param bytes
+	 *            the raw bytes from the digest.
+	 * @return the formatted bytes.
+	 */
+	private static String getFormattedText(byte[] bytes) {
+
+		int len = bytes.length;
+		StringBuilder buf = new StringBuilder(len * 2);
+		// 把密文转换成十六进制的字符串形式
+		for (int j = 0; j < len; j++) {
+			buf.append(HEX_DIGITS[(bytes[j] << 4) & 0x0f]);
+			buf.append(HEX_DIGITS[bytes[j] & 0x0f]);
+		}
+		return buf.toString();
+	}
+
+
+	
+	
+	/**
+	 * 解密
+	 * @param word
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getDecrypt(String word) throws Exception {
+		//解密
+		String decryptword = ConfigTools.decrypt(word);
+		return decryptword;
+	}
+	/**
+	 *  加密
+	 * @param password
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getEncrypt(String password) throws Exception
+	{
+		//加密
+		String encryptword = ConfigTools.encrypt(password);
+		return encryptword;
+	}
 
 
 	public static String getThisMonth(){
@@ -71,6 +168,17 @@ public class CommonUtil {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return day;
 	}
+
+	public static String getCodeByNowDateTime(){
+		Date day=new Date();
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+		return df.format(day);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getCodeByNowDateTime());
+	}
+
 
 	public static String repHc(String content){
 		return content.replaceAll("\n","<br/>").replaceAll("\r","<br/>");
@@ -141,25 +249,16 @@ public class CommonUtil {
 		return dayAfter;
 	}
 
-	public static void main(String[] args) throws IOException {
 
-		Map<String,Object> entity = new HashMap<>();
-		System.out.println(entity.hashCode());
-
-		entity.put("123","2343");
-		System.out.println(entity.hashCode());
-
-		Map<String,Object> entity2 = new HashMap<>();
-		System.out.println(entity2.hashCode());
-		entity2.put("123","234");
-		System.out.println(entity2.hashCode());
-
-		System.out.println(entity==entity2);
-
-		//BBB0411C4E2D85602E412A082EEA9EF1 BBB0411C4E2D85602E412A082EEA9EF1  A83296E8FC888BC6597F3872C1566D16
-		//BEEBA1BD768E055B0415AE2D943AB1F9
-
-
-		//System.out.println("MD5:"+DigestUtils.md5Hex("WANGQIUYUN"));
+	public static Date getDayByString(String dayStr){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = null; //初始化date
+		try {
+			date = sdf.parse(dayStr); //Mon Jan 14 00:00:00 CST 2013
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
 	}
+
 }

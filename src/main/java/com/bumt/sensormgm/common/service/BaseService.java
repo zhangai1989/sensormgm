@@ -73,4 +73,6 @@ public interface BaseService<T> {
 	 * @return
 	 */
 	Page<T> getPageListByCondition(Specification<T> querySpecification, Pageable pageable);
+
+
 }

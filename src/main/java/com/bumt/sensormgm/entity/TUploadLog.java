@@ -1,6 +1,8 @@
 package com.bumt.sensormgm.entity;
 
 import com.bumt.sensormgm.common.pojo.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 
 import javax.persistence.*;
@@ -63,6 +65,7 @@ public class TUploadLog extends BaseEntity implements Serializable {
 	/**
 	 * 上传时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "upload_time", nullable = true)
 	private java.util.Date uploadTime;
 	

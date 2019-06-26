@@ -16,7 +16,7 @@ public class TUser extends BaseEntity implements Serializable {
 	 * 用户等级 1:超级管理员 2:市级(如信阳市) 3:办事处 4:企业
 	 */
 	@Column(name = "level", nullable = false)
-	private Boolean level;
+	private int level;
 
 	/**
 	 * 登录名
@@ -95,15 +95,15 @@ public class TUser extends BaseEntity implements Serializable {
 	 */
 	@Column(name = "modify_time", nullable = true)
 	private java.util.Date modifyTime;
-	
-	public Boolean getLevel() {
-		return this.level;
+
+	public int getLevel() {
+		return level;
 	}
-	
-	public void setLevel(Boolean level) {
+
+	public void setLevel(int level) {
 		this.level = level;
 	}
-	
+
 	public String getLoginName() {
 		return this.loginName;
 	}

@@ -5,4 +5,5 @@ import com.bumt.sensormgm.entity.TUser;
 
 public interface TUserDao extends BaseJpaDao<TUser> {
 
+    TUser findByLoginNameAndPassword(String loginName, String password);
 }

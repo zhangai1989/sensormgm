@@ -8,5 +8,5 @@ spring:
 ## 打印sql
 logging:
   level:
-    root: INFO
-    com.bumt.sensormgm.dao: DEBUG
+    root: DEBUG
+#    com.bumt.sensormgm.*: DEBUG
