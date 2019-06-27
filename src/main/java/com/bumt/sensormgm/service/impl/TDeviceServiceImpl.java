@@ -58,7 +58,7 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 		PageInfo<TDevice> appsPageInfo = new PageInfo<>(dataList);
 
 		Pageable pageable = PageRequest.of(Integer.parseInt(entity.get("pageNum").toString()), Integer.parseInt(entity.get("pageSize").toString()));
-		Page<Map> page =  dao.getPageListBySqlAndCondition2(enterprise,status,areaId,pageable);
+		Page<TDevice> page =  dao.getPageListBySqlAndCondition2(enterprise,status,areaId,pageable);
 
 
 		return appsPageInfo;

@@ -19,6 +19,6 @@ public interface TDeviceDao extends BaseJpaDao<TDevice> {
 
     TDevice getByEnterpriseId(Long enterpriseId);
 
-    @Query(value = "select t1.*,t2.`name` as enterprise_name  from t_device t1 join t_enterprise t2 on t1.enterprise_id=t2.id where t2.name like CONCAT('%',?1,'%') and t1.`status` like CONCAT('%',?2,'%') AND t2.area_id like CONCAT('%',?3,'%') ",nativeQuery = true)
-    Page<Map> getPageListBySqlAndCondition2(String enterprise, String status, String areaId, Pageable pageable);
+    @Query(value = "select * from (select t1.* from t_device t1 join t_enterprise t2 on t1.enterprise_id=t2.id where t2.name like CONCAT('%',?1,'%') and t1.`status` like CONCAT('%',?2,'%') AND t2.area_id like CONCAT('%',?3,'%')AA )",nativeQuery = true)
+    Page<TDevice> getPageListBySqlAndCondition2(String enterprise, String status, String areaId, Pageable pageable);
 }
