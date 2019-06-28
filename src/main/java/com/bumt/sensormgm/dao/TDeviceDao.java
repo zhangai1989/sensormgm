@@ -12,13 +12,12 @@ import java.util.Map;
 public interface TDeviceDao extends BaseJpaDao<TDevice> {
 
 
-    @Query(value = "select t1.*,t2.`name` as enterprise_name  from t_device t1 join t_enterprise t2 on t1.enterprise_id=t2.id where t2.name like CONCAT('%',?1,'%') and t1.`status` like CONCAT('%',?2,'%') AND t2.area_id like CONCAT('%',?3,'%') ",nativeQuery = true)
-    List<TDevice> getPageListBySqlAndCondition(String enterprise, String status, String areaId);
+    @Query(value = "select t1.* from t_device t1 join t_enterprise t2 on t1.enterprise_id=t2.id where t2.name like CONCAT('%',?1,'%') and t1.`status` like CONCAT('%',?2,'%') AND t2.area_id like CONCAT('%',?3,'%') limit ?4,?5",nativeQuery = true)
+    List<TDevice> getPageListBySqlAndCondition(String enterprise, String status, String areaId,int pageNum,int pageSize);
 
+    @Query(value = "select count(0) from t_device t1 join t_enterprise t2 on t1.enterprise_id=t2.id where t2.name like CONCAT('%',?1,'%') and t1.`status` like CONCAT('%',?2,'%') AND t2.area_id like CONCAT('%',?3,'%') ",nativeQuery = true)
+    int getTotalBySqlAndCondition(String enterprise, String status, String areaId);
 
 
     TDevice getByEnterpriseId(Long enterpriseId);
-
-    @Query(value = "select * from (select t1.* from t_device t1 join t_enterprise t2 on t1.enterprise_id=t2.id where t2.name like CONCAT('%',?1,'%') and t1.`status` like CONCAT('%',?2,'%') AND t2.area_id like CONCAT('%',?3,'%')AA )",nativeQuery = true)
-    Page<TDevice> getPageListBySqlAndCondition2(String enterprise, String status, String areaId, Pageable pageable);
 }

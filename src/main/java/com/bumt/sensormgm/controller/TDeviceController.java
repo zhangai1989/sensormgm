@@ -31,8 +31,8 @@ public class TDeviceController  extends BaseController<TDevice>{
 	 * @Version: 1.0
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getPageListByCondition", produces = {"application/json;charset=UTF-8"},method = RequestMethod.POST)
-	public Object getPageListByCondition(@RequestBody Map<String,Object> entity, HttpSession session){
+	@RequestMapping(value = "/getPageListByCondition2", produces = {"application/json;charset=UTF-8"},method = RequestMethod.POST)
+	public Object getPageListByCondition2(@RequestBody Map<String,Object> entity, HttpSession session){
 		return new ResultUtil<>().setData(service.getPageListBySqlAndCondition(entity,session));
 	}
 }
