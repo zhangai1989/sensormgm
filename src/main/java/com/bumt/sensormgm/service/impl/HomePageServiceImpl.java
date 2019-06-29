@@ -15,7 +15,9 @@ import com.github.pagehelper.util.StringUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,10 +70,39 @@ public class HomePageServiceImpl  implements HomePageService {
             }
         }
 
+        //监测点位统计
+        List<Map> deviceStatisticsList =  tDeviceDao.getDeviceStatisticsByAreaId(areaId);
+        Map deviceStatisticsResultMap = new HashMap();
+
+        deviceStatisticsResultMap.put("allCount",deviceStatisticsList.get(0).get("count"));
+
+        int onlineCount = Integer.parseInt(deviceStatisticsList.get(1).get("count").toString());
+        int earlyWarningCount = Integer.parseInt(deviceStatisticsList.get(2).get("count").toString());
+        int beyondCount = Integer.parseInt(deviceStatisticsList.get(3).get("count").toString());
+
+        deviceStatisticsResultMap.put("onlineCount",onlineCount);
+        int normalCount =onlineCount-earlyWarningCount-beyondCount;
+        deviceStatisticsResultMap.put("normalCount",normalCount);
+        deviceStatisticsResultMap.put("earlyWarningCount",earlyWarningCount);
+        deviceStatisticsResultMap.put("beyondCount",beyondCount);
+
+        //当前设备超标占比
+
+        Map deviceBeyondPerMap = new HashMap();
+        deviceBeyondPerMap.put("normal",normalCount*1.0/onlineCount);
+        deviceBeyondPerMap.put("earlyWarning",earlyWarningCount*1.0/onlineCount);
+        deviceBeyondPerMap.put("beyond",beyondCount*1.0/onlineCount);
+
+        //获取改区域的设备信息
+        List<Map> deviceList = tDeviceDao.getDeviceListByAreaId(areaId);
+
+
         homePageVo.setAreaRank(areaRank);
         homePageVo.setEnterpriseRank(enterpriseRank);
         homePageVo.setEnterpriseBeyond(enterpriseBeyond);
-
+        homePageVo.setDeviceStatistics(deviceStatisticsResultMap);
+        homePageVo.setDeviceBeyondPer(deviceBeyondPerMap);
+        homePageVo.setDeviceList(deviceList);
 		return homePageVo;
 	}
 }

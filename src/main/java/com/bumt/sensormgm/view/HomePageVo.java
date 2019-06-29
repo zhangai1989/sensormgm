@@ -29,6 +29,33 @@ public class HomePageVo {
      */
     private List<String> enterpriseBeyond;
 
+    /**
+     * @Description:监测点位统计
+     * @Author:     zhangai
+     * @CreateDate: 2019/6/29 11:27
+     * @Version: 1.0
+     */
+    private Map deviceStatistics;
+
+
+    /**
+     * @Description:当前设备超标占比
+     * @Author:     zhangai
+     * @CreateDate: 2019/6/29 11:00
+     * @Version: 1.0
+     */
+    private Map deviceBeyondPer;
+
+
+    private List<Map> deviceList;
+
+    public List<Map> getDeviceList() {
+        return deviceList;
+    }
+
+    public void setDeviceList(List<Map> deviceList) {
+        this.deviceList = deviceList;
+    }
 
     public HomePageVo() {
     }
@@ -55,5 +82,22 @@ public class HomePageVo {
 
     public void setEnterpriseBeyond(List<String> enterpriseBeyond) {
         this.enterpriseBeyond = enterpriseBeyond;
+    }
+
+
+    public Map getDeviceStatistics() {
+        return deviceStatistics;
+    }
+
+    public void setDeviceStatistics(Map deviceStatistics) {
+        this.deviceStatistics = deviceStatistics;
+    }
+
+    public Map getDeviceBeyondPer() {
+        return deviceBeyondPer;
+    }
+
+    public void setDeviceBeyondPer(Map deviceBeyondPer) {
+        this.deviceBeyondPer = deviceBeyondPer;
     }
 }

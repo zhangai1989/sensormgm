@@ -60,6 +60,14 @@ public class TAreaController  extends BaseController<TArea>{
 	}
 
 	@ResponseBody
+	@RequestMapping(value = "/getAreaList", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
+	@ApiOperation(value="获取区域下拉框列表", notes="")
+	@ApiImplicitParam(paramType="query", name = "areaId", value = "区域id", required = true, dataType = "String")
+	public Object getAreaList(){
+		return new ResultUtil<>().setData(service.getAreaList());
+	}
+
+	@ResponseBody
 	@RequestMapping(value = "/getAreaListBySession", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
 	@ApiOperation(value="获取区域下拉框列表", notes="")
 	@ApiImplicitParam(paramType="query", name = "areaId", value = "区域id", required = true, dataType = "String")

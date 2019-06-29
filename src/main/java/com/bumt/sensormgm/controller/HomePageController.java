@@ -1,6 +1,7 @@
 package com.bumt.sensormgm.controller;
 
 
+import com.bumt.sensormgm.entity.TArea;
 import com.bumt.sensormgm.service.HomePageService;
 import com.bumt.sensormgm.util.ResultUtil;
 import io.swagger.annotations.ApiImplicitParam;
@@ -20,9 +21,7 @@ public class HomePageController {
     @ResponseBody
     @RequestMapping(value = "/getHomePageDataByAreaId", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
     public Object getHomePageDataByAreaId(@RequestParam("areaId") String areaId){
-        homePageService.getHomePageDataByAreaId(areaId);
-
-        return new ResultUtil<>().setData("");
+        return new ResultUtil<>().setData(homePageService.getHomePageDataByAreaId(areaId));
     }
 
 

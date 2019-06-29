@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public interface BaseService<T> {
 	 * @param t 单条数据信息
 	 * @return int
 	 */
-	Object insert(T t);
+	Object insert(T t,HttpSession session);
 	/**
 	 *获取一页信息
 	 *@author : zhangai
@@ -65,7 +66,7 @@ public interface BaseService<T> {
 	 */
 //	Object updateByPrimaryKeySelective(Map<String,Object> entity);
 
-	Object updateByPrimaryKeySelective(T entity);
+	Object updateByPrimaryKeySelective(T entity,HttpSession session);
 
 	/**
 	 * 根据多个条件查询一页列表

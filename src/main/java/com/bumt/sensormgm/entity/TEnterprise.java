@@ -1,6 +1,8 @@
 package com.bumt.sensormgm.entity;
 
 import com.bumt.sensormgm.common.pojo.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 
 import javax.persistence.*;
@@ -57,8 +59,8 @@ public class TEnterprise extends BaseEntity implements Serializable {
 	/**
 	 * 企业负责人电话
 	 */
-	@Column(name = "contact_name", nullable = false)
-	private String contactName;
+	@Column(name = "contact_mobile", nullable = false)
+	private String contactMobile;
 
 	/**
 	 * 环保负责人
@@ -69,14 +71,14 @@ public class TEnterprise extends BaseEntity implements Serializable {
 	/**
 	 * 环保负责人电话
 	 */
-	@Column(name = "env_contact_name", nullable = false)
-	private String envContactName;
+	@Column(name = "env_contact_mobile", nullable = false)
+	private String envContactMobile;
 
 	/**
 	 * 删除标记 0:未删除 1:已删除
 	 */
 	@Column(name = "delete_flag", nullable = false)
-	private Boolean deleteFlag;
+	private int deleteFlag;
 
 	/**
 	 * 创建人ID
@@ -93,6 +95,7 @@ public class TEnterprise extends BaseEntity implements Serializable {
 	/**
 	 * 创建时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "create_time", nullable = false)
 	private java.util.Date createTime;
 
@@ -111,6 +114,7 @@ public class TEnterprise extends BaseEntity implements Serializable {
 	/**
 	 * 修改时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "modify_time", nullable = true)
 	private java.util.Date modifyTime;
 	
@@ -170,14 +174,7 @@ public class TEnterprise extends BaseEntity implements Serializable {
 		this.contact = contact;
 	}
 	
-	public String getContactName() {
-		return this.contactName;
-	}
-	
-	public void setContactName(String contactName) {
-		this.contactName = contactName;
-	}
-	
+
 	public String getEnvContact() {
 		return this.envContact;
 	}
@@ -185,23 +182,16 @@ public class TEnterprise extends BaseEntity implements Serializable {
 	public void setEnvContact(String envContact) {
 		this.envContact = envContact;
 	}
-	
-	public String getEnvContactName() {
-		return this.envContactName;
+
+
+	public int getDeleteFlag() {
+		return deleteFlag;
 	}
-	
-	public void setEnvContactName(String envContactName) {
-		this.envContactName = envContactName;
-	}
-	
-	public Boolean getDeleteFlag() {
-		return this.deleteFlag;
-	}
-	
-	public void setDeleteFlag(Boolean deleteFlag) {
+
+	public void setDeleteFlag(int deleteFlag) {
 		this.deleteFlag = deleteFlag;
 	}
-	
+
 	public Long getCreatorId() {
 		return this.creatorId;
 	}
@@ -248,5 +238,22 @@ public class TEnterprise extends BaseEntity implements Serializable {
 	
 	public void setModifyTime(java.util.Date modifyTime) {
 		this.modifyTime = modifyTime;
+	}
+
+
+	public String getContactMobile() {
+		return contactMobile;
+	}
+
+	public void setContactMobile(String contactMobile) {
+		this.contactMobile = contactMobile;
+	}
+
+	public String getEnvContactMobile() {
+		return envContactMobile;
+	}
+
+	public void setEnvContactMobile(String envContactMobile) {
+		this.envContactMobile = envContactMobile;
 	}
 }

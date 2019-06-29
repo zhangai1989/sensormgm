@@ -47,6 +47,7 @@ public class TArea extends BaseEntity implements Serializable {
 	/**
 	 * 创建人姓名
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "creator_name", nullable = true)
 	private String creatorName;
 
@@ -74,7 +75,20 @@ public class TArea extends BaseEntity implements Serializable {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "modify_time", nullable = true)
 	private java.util.Date modifyTime;
-	
+
+
+	/**
+	 * 经度
+	 */
+	@Column(name = "longitude", nullable = false)
+	private Double longitude;
+
+	/**
+	 * 纬度
+	 */
+	@Column(name = "latitude", nullable = false)
+	private Double latitude;
+
 	public String getLevel() {
 		return this.level;
 	}
@@ -153,5 +167,21 @@ public class TArea extends BaseEntity implements Serializable {
 	
 	public void setModifyTime(java.util.Date modifyTime) {
 		this.modifyTime = modifyTime;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
 	}
 }

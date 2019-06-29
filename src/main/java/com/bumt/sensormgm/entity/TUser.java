@@ -54,6 +54,13 @@ public class TUser extends BaseEntity implements Serializable {
 	@Column(name = "area_id", nullable = false)
 	private String areaId;
 
+
+	/**
+	 * 企业id
+	 */
+	@Column(name = "enterprise_id", nullable = false)
+	private String enterpriseId;
+
 	/**
 	 * 删除标记 0:未删除 1:已删除
 	 */
@@ -206,5 +213,13 @@ public class TUser extends BaseEntity implements Serializable {
 	
 	public void setModifyTime(java.util.Date modifyTime) {
 		this.modifyTime = modifyTime;
+	}
+
+	public String getEnterpriseId() {
+		return enterpriseId;
+	}
+
+	public void setEnterpriseId(String enterpriseId) {
+		this.enterpriseId = enterpriseId;
 	}
 }

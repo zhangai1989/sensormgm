@@ -3,6 +3,7 @@ package com.bumt.sensormgm.common.service.impl;
 
 import com.bumt.sensormgm.common.dao.BaseJpaDao;
 import com.bumt.sensormgm.common.service.BaseService;
+import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.util.CommonUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -84,15 +86,15 @@ public abstract class BaseServiceImpl<T>  implements BaseService<T> {
 	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Object insert(T t) {
+	public Object insert(T t,HttpSession session) {
 		//添加基础字段，id ,创建时间
-		addBaseMetaInfo(t);
+		addBaseMetaInfo(t,session);
 		return getGenericMapper().save(t);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Object updateByPrimaryKeySelective(T entity) {
+	public Object updateByPrimaryKeySelective(T entity,HttpSession session) {
 
 		try {
 			//实现部分字段更新
@@ -106,7 +108,7 @@ public abstract class BaseServiceImpl<T>  implements BaseService<T> {
                 }
 			}
 			//添加修改时间
-			addUpdateMetaInfo(saveEntity);
+			addUpdateMetaInfo(saveEntity, session);
 			return getGenericMapper().save(saveEntity);
 
 		} catch (IllegalAccessException e) {
@@ -128,7 +130,7 @@ public abstract class BaseServiceImpl<T>  implements BaseService<T> {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public Object deleteById(String id) {
-        getGenericMapper().deleteById(id);
+        getGenericMapper().deleteById(Long.parseLong(id));
 		return 1;
 	}
 
@@ -137,11 +139,16 @@ public abstract class BaseServiceImpl<T>  implements BaseService<T> {
 	 *@Date : 15:00 2018/5/8
 	 *@描述：添加基础字段，id ,创建时间
 	 */
-	public static void addBaseMetaInfo(Object entity)
+	public static void addBaseMetaInfo(Object entity,HttpSession session)
 	{
 		try{
 //			BeanUtils.setProperty(entity, "id", CommonUtil.getUUID());
 			BeanUtils.setProperty(entity, "createTime",CommonUtil.getNowDateTime());
+			TUser tUser = (TUser) session.getAttribute("user");
+			if(tUser!=null){
+				BeanUtils.setProperty(entity, "creatorName",tUser.getCname());
+			}
+
 		} catch(Exception e){
 			e.printStackTrace();
 		};
@@ -152,10 +159,13 @@ public abstract class BaseServiceImpl<T>  implements BaseService<T> {
 	 *@Date : 11:42 2018/5/9
 	 *@描述：
 	 */
-	public static void addUpdateMetaInfo(Object entity)
+	public static void addUpdateMetaInfo(Object entity,HttpSession session)
 	{
 		try{
-
+			TUser tUser = (TUser) session.getAttribute("user");
+			if(tUser!=null){
+				BeanUtils.setProperty(entity, "modifierName",tUser.getCname());
+			}
 			BeanUtils.setProperty(entity, "modifyTime",CommonUtil.getNowDateTime());
 
 		} catch(Exception e){

@@ -29,10 +29,10 @@ public class SessionInterceptor implements HandlerInterceptor {
 		//	设置session失效时间 ：session.setMaxInactiveInterval (30 * 60);
 		if (!(request.getRequestURI().indexOf(Constant.Strings.STATIC_STR)>=0)||request.getRequestURI().indexOf(Constant.Strings.USER_LOGIN_STR)>0||request.getRequestURI().indexOf(Constant.Strings.INDEX_HTML_STR)>0) {
 			//判断用户是否存在，不存在就跳转到登录界面
-//			if(session.getAttribute(Constant.Strings.USER_STR) == null){
-//				request.getRequestDispatcher("/api/index/noTokenLoginOut").forward(request, response);
-//				return false;
-//			}
+			if(session.getAttribute(Constant.Strings.USER_STR) == null){
+				request.getRequestDispatcher("/api/index/noTokenLoginOut").forward(request, response);
+				return false;
+			}
 		}
 		return true;
 	}

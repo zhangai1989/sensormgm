@@ -11,4 +11,6 @@ public interface TAreaService extends BaseService {
     List<TreeNode> getAreaTreeByAreaId(String areaId);
 
     Object getAreaListBySession(HttpSession session);
+
+    Object getAreaList();
 }

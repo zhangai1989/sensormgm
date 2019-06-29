@@ -16,6 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -105,8 +106,8 @@ public abstract class BaseController<T>{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
-	public Object insert(@RequestBody T entity){
-		return new ResultUtil<>().setData(getService().insert(entity));
+	public Object insert(@RequestBody T entity,HttpSession session){
+		return new ResultUtil<>().setData(getService().insert(entity,session));
 	}
 
 	/**
@@ -116,8 +117,20 @@ public abstract class BaseController<T>{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/update",  method = RequestMethod.POST)
-	public Object update(@RequestBody T entity){
-		return new ResultUtil<>().setData(getService().updateByPrimaryKeySelective(entity));
+	public Object update(@RequestBody T entity,HttpSession session){
+		String errorMsg = checkUpdateStatus(entity);
+		if(!StringUtils.isEmpty(errorMsg)){
+			return new ResultUtil<>().setErrorMsg(errorMsg);
+		}
+		changeUpdateEntity(entity);
+		return new ResultUtil<>().setData(getService().updateByPrimaryKeySelective(entity,session));
+	}
+
+	public void changeUpdateEntity(T entity) {
+	}
+
+	public  String checkUpdateStatus(T entity){
+		return "";
 	}
 
 
