@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 8080
 
 spring:
     profiles:
@@ -9,4 +9,5 @@ spring:
 logging:
   level:
     root: DEBUG
-    com.bumt.sensormgm.dao: DEBUG
+#    com.bumt.sensormgm.*: DEBUG
+

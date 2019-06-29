@@ -24,7 +24,15 @@ public interface Constant {
 		String BANNERTYPE_PARTNER = "7";
 		String BANNERTYPE_RESEARCH = "8";
 	}
-
+	interface Strings{
+		String USER_LOGIN_STR = "/api/index/login";
+		String INDEX_HTML_STR = "/index.html";
+		String USER_STR = "user";
+		String STATIC_STR = "/static";
+		String GOTOLOGIN_STR = "goToLogin";
+		String CONFIG_STR = "config";
+		String SYMBOL_STR = "/";
+	}
 	/**
 	 * @Description: 2000:返回成功   4000:返回失败
 	 * @Author:     zhangai
