@@ -1,7 +1,6 @@
 <template>
     <div>
 
-
         <div class="login-box">
             <div class="title">油烟检测系统</div>
             <div class="login-input-box">
@@ -102,6 +101,8 @@
           .then(res => {
             if (res.code === 2000) {
               localStorage.setItem('username',res.result.loginName)
+              localStorage.setItem('user.areaId',res.result.areaId)
+              localStorage.setItem('user.level',res.result.level)
               that.$message({
                 message: '登录成功！',
                 type: 'success'
