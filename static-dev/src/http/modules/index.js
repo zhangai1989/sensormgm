@@ -8,10 +8,13 @@ import axios from '../http'
 
 // 登录
 export function Login(obj) {
-  return axios.post(API.login, obj)
+  return axios.get(API.login, obj)
 }
 
 
-export function logout(obj) {
-  return axios.post(API.logout, obj)
+
+
+//获取监控列表
+export function monitorList(obj) {
+  return axios.post(API.monitorList, obj)
 }

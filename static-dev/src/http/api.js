@@ -3,6 +3,6 @@ import baseUrl from './config'
 
 
 export default {
-  login: baseUrl + '/login',
-  logout: 'api/logout'
+  login: baseUrl + 'index/login',
+  monitorList: baseUrl + 'TDevice/getPageListByCondition',
 }

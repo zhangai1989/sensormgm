@@ -72,8 +72,6 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 		int total =  dao.getTotalBySqlAndCondition(enterprise,status,areaId);
 		Pageable pageable = PageRequest.of((pageNum-1), pageSize);
 		Page<TDevice> page = new PageImpl(dataList,pageable,total);
-		Page<TDevice> page2 = new PageImpl(dataList);
-
 		return page;
 	}
 
