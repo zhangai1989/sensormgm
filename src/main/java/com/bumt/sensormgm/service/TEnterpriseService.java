@@ -11,4 +11,7 @@ public interface TEnterpriseService extends BaseService {
     List<TEnterprise> getAllListByName(String name);
 
     Object getEnterpriseBySession(HttpSession session);
+
+    void save(TEnterprise enterprise, HttpSession session);
+
 }

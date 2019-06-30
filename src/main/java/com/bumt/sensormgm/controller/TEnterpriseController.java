@@ -2,7 +2,6 @@ package com.bumt.sensormgm.controller;
 
 import com.bumt.sensormgm.common.controller.BaseController;
 import com.bumt.sensormgm.common.service.BaseService;
-import com.bumt.sensormgm.entity.TArea;
 import com.bumt.sensormgm.entity.TEnterprise;
 import com.bumt.sensormgm.service.TEnterpriseService;
 import com.bumt.sensormgm.util.ResultUtil;
@@ -10,14 +9,17 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpSession;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -83,7 +85,7 @@ public class TEnterpriseController  extends BaseController<TEnterprise>{
 	public  String checkUpdateStatus2(TEnterprise entity){
 		String name = entity.getName();
 		List<TEnterprise> tEnterprises =  service.getAllListByName(name);
-		if(tEnterprises!=null||tEnterprises.size()>0){
+		if(!CollectionUtils.isEmpty(tEnterprises)){
 			return "企业名称不能重复！";
 		}
 		return "";
