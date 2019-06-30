@@ -4,7 +4,7 @@
         <!--油烟检测系统-->
         <div class="layout-header">
             <div class="layout-logo">
-                <div style="width: 256px;display: flex;align-items: center;justify-content: center">油烟检测系统</div></div>
+                <div style="width: 256px;display: flex;align-items: center;justify-content: center;color: #fff;">油烟检测系统</div></div>
             <div class="layout-top">
 
                 <el-popover
@@ -12,7 +12,7 @@
                         width="100"
                         trigger="click">
                     <div style="text-align: center">
-                        <el-button type="text">退出登录</el-button>
+                        <el-button type="text" @click="clickLogout">退出登录</el-button>
                     </div>
                     <img class="user-img" slot="reference" src="../assets/img/default_user.jpg"/>
                 </el-popover>
@@ -78,6 +78,9 @@
         width: 100%;
         height: 65px;
         /*border-bottom: 1px solid #e1e1e1;*/
+        background: linear-gradient(to right,#36C2CF,#B8E986);
+
+        /*#439107  #67C23A*/
     }
 
     .layout-logo {
@@ -141,7 +144,7 @@
 </style>
 
 <script>
-
+  import {logout} from '../http/modules/index'
 
   export default {
     data() {
@@ -161,12 +164,17 @@
                 index: '/home',
                 title: '实时监控',
                 show: true,
+              },
+              {
+                index: '/history',
+                title: '历史记录',
+                show: true,
               }
             ]
           },
           {
             icon: 'el-icon-document',
-            index: '/',
+            index: '/companyManage',
             title: '系统管理',
             show: true,
             subMenu: [
@@ -189,8 +197,71 @@
     created() {
       let that = this
       that.username = localStorage.getItem('username')
+      let level = localStorage.getItem('user.level')
+      that.menu = [
+        {
+          icon: 'el-icon-document',
+          index: '/',
+          title: '监控管理',
+          show: true,
+          subMenu: [
+            {
+              index: '/home',
+              title: '实时监控',
+              show: true,
+            },
+            {
+              index: '/history',
+              title: '历史记录',
+              show: true,
+            }
+          ]
+        },
+        {
+          icon: 'el-icon-document',
+          index: '/companyManage',
+          title: '系统管理',
+          show: level < 4,
+          subMenu: [
+            {
+              index: '/companyManage',
+              title: '企业管理',
+              show: level < 4,
+            },
+            {
+              index: '/userManage',
+              title: '用户管理',
+              show: level < 4,
+            }
+          ]
+        }
+      ]
+
+      let full_path = this.$route.fullPath
+      let path_arr = full_path.split('/')
+      let _path = path_arr[path_arr.length - 1]
+      let path = _path.split('?')[0]
+      that.defaultRouter = `/${path}`
     },
-    methods: {}
+
+
+    methods: {
+
+
+      clickLogout() {
+        let that = this
+        logout({})
+          .then(res => {
+            if (res.code === 2000) {
+              that.$message.success('您已退出登录！')
+              that.$router.push({path: '/login'})
+            } else {
+              that.$message.error('退出登录失败！')
+            }
+          })
+      }
+
+    }
   }
 
 </script>

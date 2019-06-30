@@ -22,6 +22,7 @@
 
             <div class="table-box">
                 <el-table
+                        v-loading="loading"
                         :data="list"
                         border
                         size="mini"
@@ -41,12 +42,20 @@
                             label="真实姓名"
                             width="140">
                     </el-table-column>
-
                     <el-table-column
                             show-overflow-tooltip
                             align="center"
-                            prop="area"
+                            prop="areaName"
                             label="所属区域"
+                            min-width="180">
+                    </el-table-column>
+
+                    <el-table-column
+                            v-if="level === 3"
+                            show-overflow-tooltip
+                            align="center"
+                            prop="enterpriseName"
+                            label="所属企业"
                             min-width="180">
                     </el-table-column>
 
@@ -130,7 +139,7 @@
 
                 <el-form :inline="true" :model="form" ref="editForm" :rules="rules" label-width="120px">
                     <el-form-item label="所属区域" prop="areaId">
-                        <el-select size="small" v-model="form.areaId" placeholder="请选择" style="width: 200px" :disabled="form.id">
+                        <el-select size="small" v-model="form.areaId" placeholder="请选择" style="width: 200px" :disabled="level > 2">
                             <el-option
                                     v-for="item in areas"
                                     :key="item.id"
@@ -139,11 +148,20 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="企业" prop="enterpriseId">
-                        <el-input size="small" v-model.trim="form.enterpriseId"/>
+
+                    <el-form-item v-show="level === 3" label="所属企业" prop="enterpriseId">
+                        <el-select size="small" v-model="form.enterpriseId" placeholder="请选择" style="width: 200px">
+                            <el-option
+                                    v-for="item in enterprise_list"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
+
                     <el-form-item label="登录名" prop="loginName">
-                        <el-input size="small" v-model.trim="form.loginName" :disabled="form.id"/>
+                        <el-input size="small" v-model.trim="form.loginName" :disabled="form.id !== ''"/>
                     </el-form-item>
                     <el-form-item label="真实姓名" prop="cname" >
                         <el-input size="small" v-model.trim="form.cname"/>
@@ -205,251 +223,280 @@
 
 <script>
 
-    import {areaList, addUser, updateUser, deleteUser, userList} from '../http/modules/index'
-    import ElForm from "../../node_modules/element-ui/packages/form/src/form";
-    import ElFormItem from "../../node_modules/element-ui/packages/form/src/form-item";
-    import ElInput from "../../node_modules/element-ui/packages/input/src/input";
+  import {areaList, addUser, updateUser, deleteUser, userList,EnterpriseAll} from '../http/modules/index'
+  import ElForm from "../../node_modules/element-ui/packages/form/src/form";
+  import ElFormItem from "../../node_modules/element-ui/packages/form/src/form-item";
+  import ElInput from "../../node_modules/element-ui/packages/input/src/input";
 
-    export default {
-        components: {
-            ElInput,
-            ElFormItem,
-            ElForm},
-        data() {
-            return {
-                search: '',
-                list: [],
-                totalNum: 0,
-                pageSize: 10,
-                currentPage: 1,
+  export default {
+    components: {
+      ElInput,
+      ElFormItem,
+      ElForm},
+    data() {
+      return {
+        loading: false,
+        level: 1,
+        search: '',
+        list: [],
+        totalNum: 0,
+        pageSize: 10,
+        currentPage: 1,
 
-                areas: [],
+        areas: [],
+        enterprise_list: [],
 
-                form: {
-                    id: '',
-                    areaId: '',
-                    level: '',
-                    loginName: '',
-                    cname: '',
-                    mobile: '',
-                    email: '',
-                    password: '123456',
-                    deleteFlag: 0
-                },
+        form: {
+          id: '',
+          areaId: '',
+          level: '',
+          loginName: '',
+          cname: '',
+          mobile: '',
+          email: '',
+          password: '123456',
+          deleteFlag: 0
+        },
 
-                title: '新增用户',
-                editFlag: false,
-                allowEdit: false,
+        title: '新增用户',
+        editFlag: false,
+        allowEdit: false,
 
-                rules: {
-                    areaId: [
-                        { required: true, message: '所属区域不能为空', trigger: 'blur' }
-                    ],
-                    loginName: [
-                        { required: true, message: '登录名不能为空', trigger: 'blur' }
-                    ],
-                    cname: [
-                        { required: true, message: '真实姓名不能为空', trigger: 'blur' }
-                    ],
-                    mobile: [
-                        { required: true, message: '手机号不能为空', trigger: 'blur' },
-                        { validator: this.mobileCheck, trigger: 'blur' }
-                    ],
-                    email: [
-                        { required: true, message: '邮箱不能为空', trigger: 'blur' },
-                        { validator: this.emailCheck, trigger: 'blur' }
-                    ]
-                },
-                saveAble: true
+        rules: {
+          areaId: [
+            { required: true, message: '所属区域不能为空', trigger: 'blur' }
+          ],
+          loginName: [
+            { required: true, message: '登录名不能为空', trigger: 'blur' }
+          ],
+          cname: [
+            { required: true, message: '真实姓名不能为空', trigger: 'blur' }
+          ],
+          mobile: [
+            { required: true, message: '手机号不能为空', trigger: 'blur' },
+            { validator: this.mobileCheck, trigger: 'blur' }
+          ],
+          email: [
+            { required: true, message: '邮箱不能为空', trigger: 'blur' },
+            { validator: this.emailCheck, trigger: 'blur' }
+          ]
+        },
+        saveAble: true
+      }
+    },
+    created() {
+
+    },
+
+    mounted() {
+      this.initData()
+    },
+    methods: {
+      //初始化
+      initData() {
+
+        let that = this
+        areaList()
+          .then(res => {
+            if (res.code === 2000) {
+              this.areas = res.result
             }
-        },
-        created() {
+          })
 
-        },
+        EnterpriseAll({})
+          .then(res => {
+            if(res.code === 2000){
+              that.enterprise_list = res.result
+            }
+          })
 
-        mounted() {
-            this.initData()
-        },
-        methods: {
-            //初始化
-            initData() {
-                areaList()
-                    .then(res => {
-                        if (res.code === 2000) {
-                            this.areas = res.result
-                        }
-                    })
-                let level = localStorage.getItem('user.level')
-                this.allowEdit = level < 4
-            },
 
-            // 重置表单
-            resetForm() {
-                this.form.id = ''
-                this.form.areaId = this.areas[0].id
-                this.form.level = parseInt(localStorage.getItem('user.level')) + 1
-                this.form.loginName = ''
-                this.form.cname = ''
-                this.form.mobile = ''
-                this.form.email = ''
-                this.form.password = '123456'
-            },
+        let level = parseInt(localStorage.getItem('user.level'))
+        this.level = level
+        this.allowEdit = level < 4
 
-            openDialog(row) {
-                this.resetForm()
-                if(this.$refs['editForm']) {
-                    this.$refs['editForm'].resetFields()
-                }
-                if(row) {
-                    this.title = '修改用户信息'
-                    this.form.id = row.id
-                    this.form.areaId = parseInt(row.areaId)
-                    this.form.level = row.level
-                    this.form.loginName = row.loginName
-                    this.form.cname = row.cname
-                    this.form.mobile = row.mobile
-                    this.form.email = row.email
-                    this.form.password = row.password
-                }
-                this.editFlag = true
-            },
-
-            //获取一页列表数据
-            getList(argc) {
-                let that = this
-                argc.pageSize = that.pageSize
-                userList(argc)
-                    .then(res => {
-                        if (res.code === 2000) {
-                            that.currentPage = argc.pageNum
-                            that.totalNum = res.result.totalElements
-                            res.result.content.forEach(function (item, index, array) {
-                                that.areas.forEach(function (it, idx, arr) {
-                                    if(it.id === parseInt(item.areaId)) {
-                                        item.area = it.name
-                                    }
-                                })
-                            })
-                            that.list = res.result.content
-                        }
-                    })
-            },
-
-            //分页事件
-            changePage(page) {
-
-                let that = this
-                let argc = {
-                    pageNum:page
-                }
-                if (that.search !== '') {
-                    argc.enterprise = that.enterprise
-                }
-
-                if(that.status !== '全部'){
-                    argc.status = that.status
-                }
-
-                that.getList(argc)
-            },
-
-            //搜索
-            searchList() {
-                let that = this
-                if (that.search.length > 10) {
-                    that.$message.warning('搜索内容请勿太长!')
-                    return
-                }
-
-                let argc = {
-                    pageNum: 1,
-                }
-
-                if (that.search !== '') {
-                    argc.name = that.search
-                }
-                that.getList(argc)
-            },
-
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        this.saveAble = false
-                        if(!this.form.id) {
-                            // 新增企业
-                            addUser(this.form)
-                                .then(res => {
-                                    this.saveAble = true
-                                    if (res.code === 2000) {
-                                        this.$message.success('保存成功')
-                                        this.editFlag = false
-                                        this.searchList()
-                                    }else {
-                                        this.$message.error(res.message)
-                                    }
-                                })
-                        }else {
-                            // 修改企业
-                            updateUser(this.form)
-                                .then(res => {
-                                    this.saveAble = true
-                                    if (res.code === 2000) {
-                                        this.$message.success('修改成功')
-                                        this.editFlag = false
-                                        this.searchList()
-                                    }
-                                })
-                        }
-                    } else {
-                        return false
-                    }
-                })
-
-            },
-
-            confirmDelete(id) {
-                this.$confirm('确定要删除？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    customClass: 'border-gray',
-                    type: 'success'
-                }).then(() => {
-                    deleteUser({id: id})
-                        .then(res => {
-                            if (res.code === 2000) {
-                                this.$message.success('删除成功')
-                                this.searchList()
-                            }
-                        })
-                }).catch(() => {
-                    console.log('取消')
-                })
-            },
-
-            mobileCheck (rule, value, callback) {
-                if (!value || value.length === 0) {
-                    callback()
-                } else {
-                    if (value.match(/^1\d{10}$/) === null) {
-                        callback(new Error('手机号不合法'))
-                    } else {
-                        callback()
-                    }
-                }
-            },
-
-            emailCheck (rule, value, callback) {
-                if (!value || value.length === 0) {
-                    callback()
-                } else {
-                    if (value.match(/(^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$)/i) === null) {
-                        callback(new Error('邮箱不合法'))
-                    } else {
-                        callback()
-                    }
-                }
-            },
+        let argc = {
+          pageNum: 1
         }
+
+        this.getList(argc)
+      },
+
+      // 重置表单
+      resetForm() {
+        this.form.id = ''
+        this.form.areaId = this.areas[0].id
+        this.form.level = parseInt(localStorage.getItem('user.level')) + 1
+        this.form.loginName = ''
+        this.form.cname = ''
+        this.form.mobile = ''
+        this.form.email = ''
+        this.form.password = '123456'
+      },
+
+      openDialog(row) {
+        this.resetForm()
+        if(this.$refs['editForm']) {
+          this.$refs['editForm'].resetFields()
+        }
+        if(row) {
+          this.title = '修改用户信息'
+          this.form.id = row.id
+          this.form.areaId = parseInt(row.areaId)
+          this.form.enterpriseId = parseInt(row.enterpriseId)
+          this.form.level = row.level
+          this.form.loginName = row.loginName
+          this.form.cname = row.cname
+          this.form.mobile = row.mobile
+          this.form.email = row.email
+          this.form.password = row.password
+        }
+        this.editFlag = true
+      },
+
+      //获取一页列表数据
+      getList(argc) {
+        let that = this
+        argc.pageSize = that.pageSize
+
+        that.loading = true
+        userList(argc)
+          .then(res => {
+            if (res.code === 2000) {
+              that.currentPage = argc.pageNum
+              that.totalNum = res.result.totalElements
+
+              console.log(that.areas)
+              //
+              // res.result.content.forEach(function (item, index, array) {
+              //   that.areas.forEach(function (it, idx, arr) {
+              //     if(it.id === parseInt(item.areaId)) {
+              //       item.area = it.name
+              //     }
+              //   })
+              // })
+              that.list = res.result
+            }
+
+            that.loading = false
+          })
+      },
+
+      //分页事件
+      changePage(page) {
+
+        let that = this
+        let argc = {
+          pageNum:page
+        }
+        if (that.search !== '') {
+          argc.enterprise = that.enterprise
+        }
+
+        if(that.status !== '全部'){
+          argc.status = that.status
+        }
+
+        that.getList(argc)
+      },
+
+      //搜索
+      searchList() {
+        let that = this
+        if (that.search.length > 10) {
+          that.$message.warning('搜索内容请勿太长!')
+          return
+        }
+
+        let argc = {
+          pageNum: 1,
+        }
+
+        if (that.search !== '') {
+          argc.name = that.search
+        }
+        that.getList(argc)
+      },
+
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.saveAble = false
+            if(!this.form.id) {
+              // 新增企业
+              addUser(this.form)
+                .then(res => {
+                  this.saveAble = true
+                  if (res.code === 2000) {
+                    this.$message.success('保存成功')
+                    this.editFlag = false
+                    this.searchList()
+                  }else {
+                    this.$message.error(res.message)
+                  }
+                })
+            }else {
+              // 修改企业
+              updateUser(this.form)
+                .then(res => {
+                  this.saveAble = true
+                  if (res.code === 2000) {
+                    this.$message.success('修改成功')
+                    this.editFlag = false
+                    this.searchList()
+                  }
+                })
+            }
+          } else {
+            return false
+          }
+        })
+
+      },
+
+      confirmDelete(id) {
+        this.$confirm('确定要删除？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          customClass: 'border-gray',
+          type: 'success'
+        }).then(() => {
+          deleteUser({id: id})
+            .then(res => {
+              if (res.code === 2000) {
+                this.$message.success('删除成功')
+                this.searchList()
+              }
+            })
+        }).catch(() => {
+          console.log('取消')
+        })
+      },
+
+      mobileCheck (rule, value, callback) {
+        if (!value || value.length === 0) {
+          callback()
+        } else {
+          if (value.match(/^1\d{10}$/) === null) {
+            callback(new Error('手机号不合法'))
+          } else {
+            callback()
+          }
+        }
+      },
+
+      emailCheck (rule, value, callback) {
+        if (!value || value.length === 0) {
+          callback()
+        } else {
+          if (value.match(/(^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$)/i) === null) {
+            callback(new Error('邮箱不合法'))
+          } else {
+            callback()
+          }
+        }
+      },
     }
+  }
 
 </script>

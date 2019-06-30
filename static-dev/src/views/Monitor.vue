@@ -27,12 +27,20 @@
                 </div>
 
                 <div>
-                    <el-button type="primary" size="small" @click="reloadList">刷新</el-button>
+                    <span style="font-size: 14px;margin-right: 10px">自动刷新</span>
+                    <el-switch
+                            v-model="autoReload"
+                            @change="changeAutoReload"
+                    >
+                    </el-switch>
+
+                    <!--<el-button type="primary" size="small" @click="reloadList">定时刷新</el-button>-->
                 </div>
             </div>
 
             <div class="table-box">
                 <el-table
+                        v-loading="loading"
                         :data="list"
                         border
                         size="mini"
@@ -41,8 +49,7 @@
                             fixed
                             align="center"
                             prop="enterpriseName"
-                            label="企业名称"
-                            width="120">
+                            label="企业名称">
                     </el-table-column>
 
                     <el-table-column
@@ -185,6 +192,8 @@
   export default {
     data() {
       return {
+        loading: false,
+        autoReload: false,
         search: '',
         status: '全部',
         status_list: [
@@ -201,50 +210,7 @@
             label: 'OFFLINE'
           }
         ],
-        list: [
-          {
-            id: 1,
-            enterpriseId: 1,
-            enterpriseName: '沃尔沃二若',
-            status: 'ONLINE',//ONLINE/OFFLINE,
-            lampblackWarning: 1,
-            lampblack: -10000,
-            temp: -10000,
-            humidity: -10000,
-            fanStatus: false,
-            fanElec: -10000,
-            purifierStatus: false,
-            purifierElec: -10000
-          },
-          {
-            id: 1,
-            enterpriseId: 1,
-            enterpriseName: '沃尔沃二若',
-            status: 'OFFLINE',//ONLINE/OFFLINE,
-            lampblackWarning: 1,
-            lampblack: -10000,
-            temp: -10000,
-            humidity: -10000,
-            fanStatus: true,
-            fanElec: -10000,
-            purifierStatus: false,
-            purifierElec: -10000
-          },
-          {
-            id: 1,
-            enterpriseId: 1,
-            enterpriseName: '沃尔沃二若',
-            status: 'OFFLINE',//ONLINE/OFFLINE,
-            lampblackWarning: 1,
-            lampblack: -10000,
-            temp: -10000,
-            humidity: -10000,
-            fanStatus: false,
-            fanElec: -10000,
-            purifierStatus: false,
-            purifierElec: -10000
-          },
-        ],
+        list: [],
 
         totalNum: 0,
         pageSize: 10,
@@ -257,6 +223,11 @@
     mounted() {
       this.initData()
     },
+
+    beforeDestroy () {
+      clearInterval(this.intervalId)
+    },
+
     methods: {
 
 
@@ -274,7 +245,7 @@
       getList(argc) {
         let that = this
         argc.pageSize = that.pageSize
-
+        that.loading = true
         monitorList(argc)
           .then(res => {
             if (res.code === 2000) {
@@ -282,6 +253,8 @@
               that.totalNum = res.result.totalElements
               that.list = res.result.content
             }
+
+            that.loading = false
           })
       },
 
@@ -291,13 +264,13 @@
 
         let that = this
         let argc = {
-          pageNum:page
+          pageNum: page
         }
         if (that.search !== '') {
-          argc.enterprise = that.enterprise
+          argc.enterprise = that.search
         }
 
-        if(that.status !== '全部'){
+        if (that.status !== '全部') {
           argc.status = that.status
         }
 
@@ -318,10 +291,10 @@
         }
 
         if (that.search !== '') {
-          argc.enterprise = that.enterprise
+          argc.enterprise = that.search
         }
 
-        if(that.status !== '全部'){
+        if (that.status !== '全部') {
           argc.status = that.status
         }
 
@@ -329,35 +302,46 @@
       },
 
       //筛选状态事件
-      changeStatus(label){
+      changeStatus(label) {
         let that = this
         let argc = {
           pageNum: 1,
         }
         if (that.search !== '') {
-          argc.enterprise = that.enterprise
+          argc.enterprise = that.search
         }
 
-        if(label !== '全部'){
+        if (label !== '全部') {
           argc.status = label
         }
         that.getList(argc)
       },
 
       //刷新
-      reloadList(){
+      reloadList() {
         let that = this
         let argc = {
           pageNum: 1,
         }
         if (that.search !== '') {
-          argc.enterprise = that.enterprise
+          argc.enterprise = that.search
         }
 
-        if(that.status !== '全部'){
+        if (that.status !== '全部') {
           argc.status = that.status
         }
         that.getList(argc)
+      },
+
+      changeAutoReload(val) {
+        let that = this
+        if (val) {
+          that.intervalId = setInterval(() => {
+            that.reloadList()
+          }, 5000)
+        } else {
+          clearInterval(that.intervalId)
+        }
       }
     }
   }

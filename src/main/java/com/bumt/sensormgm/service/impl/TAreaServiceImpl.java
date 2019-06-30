@@ -44,6 +44,7 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 			if(!areaId.equals(area.getId().toString())){
 				node.setParentId(area.getParentId().toString());
 			}
+
 			node.setLevelCode(area.getLevel());
 			node.setType(area.getDeleteFlag().toString());
 			nodeList.put(node.getId(), node);
@@ -54,7 +55,7 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 			node.setText(tEnterprise.getName());
 			node.setId(tEnterprise.getCode().toString());
 			node.setParentId(tEnterprise.getAreaId().toString());
-			node.setLevelCode("3");
+			node.setLevelCode("4");
 			node.setType("");
 			nodeList.put(node.getId(), node);
 		}
@@ -66,10 +67,10 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 
 	@Override
 	public Object getAreaListBySession(HttpSession session) {
-		TUser tUser = (TUser) session.getAttribute("user");
-		if(tUser!=null&&tUser.getLevel()==3){
-			return dao.findById(Long.parseLong(tUser.getAreaId()));
-		}
+//		TUser tUser = (TUser) session.getAttribute("user");
+//		if(tUser!=null&&tUser.getLevel()==3){
+//			return dao.findById(Long.parseLong(tUser.getAreaId()));
+//		}
 		return  dao.findByLevel("2");
 	}
 

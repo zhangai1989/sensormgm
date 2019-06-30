@@ -2,6 +2,7 @@ package com.bumt.sensormgm.service.impl;
 
 import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
 import com.bumt.sensormgm.common.dao.BaseJpaDao;
+import com.bumt.sensormgm.entity.TDevice;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TUserService;
 import com.bumt.sensormgm.util.CommonUtil;
@@ -11,6 +12,11 @@ import com.bumt.sensormgm.dao.TUserDao;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
@@ -45,5 +51,53 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 			session.setAttribute("user", user);
 			return new ResultUtil<>().setData(user,"登录成功！");
 		}
+	}
+
+	@Override
+	public Object getPageListByCondition2(Map<String, Object> entity, HttpSession httpSession) {
+		TUser tUser = (TUser) httpSession.getAttribute("user");
+		if(tUser!=null){
+			int level = tUser.getLevel();
+
+			int levelCondition = 2;
+			String areaIdCondition ="";
+			if(level==1||level==2){
+				//查询level==3的所有数据
+				levelCondition =3 ;
+			}else if(level==3){
+
+				//查询level==4的数据 areaId==
+				levelCondition = 4;
+				areaIdCondition=tUser.getAreaId();
+			}
+
+			int pageNum =Integer.parseInt(entity.get("pageNum").toString());
+			int pageSize =Integer.parseInt(entity.get("pageSize").toString());
+			int start = (pageNum-1)*pageSize;
+			List<Map> dataList =  dao.getPageListBySqlAndCondition(levelCondition,areaIdCondition, start,pageSize );
+			List<Map> dataResultList = new ArrayList<>();
+			for(Map map:dataList){
+				Map map2 = new HashMap();
+				map2.putAll(map);
+				if(map.get("modify_time")!=null&&map.get("modify_time").toString().length()>19){
+					map2.put("modifyTime",map.get("modify_time").toString().substring(0,19));
+				}
+				if(map.get("create_time")!=null&&map.get("create_time").toString().length()>19){
+					map2.put("createTime",map.get("create_time").toString().substring(0,19));
+				}
+
+				dataResultList.add(map2);
+			}
+			return new ResultUtil<>().setData(dataResultList);
+		}
+		return new ResultUtil<>().setErrorMsg(4000,"未登录");
+	}
+
+
+	public static void main(String[] args) {
+		String aa = "2019-06-30 13:48:38.0";
+		System.out.println(aa.substring(0,19));
+
+
 	}
 }

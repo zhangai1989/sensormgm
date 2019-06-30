@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -173,6 +174,16 @@ public class CommonUtil {
 		Date day=new Date();
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 		return df.format(day);
+	}
+
+
+	public static String parseDate(String dateStr) throws ParseException {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSSZ");
+		Date result;
+		result = df.parse(dateStr);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		return sdf.format(result);
 	}
 
 	public static void main(String[] args) {

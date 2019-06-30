@@ -1,6 +1,9 @@
 <template>
-    <div>
+    <div class="page">
 
+        <div class="login-bg">
+            <img src="../assets/img/login.png">
+        </div>
         <div class="login-box">
             <div class="title">油烟检测系统</div>
             <div class="login-input-box">
@@ -18,22 +21,41 @@
             </div>
 
             <div class="login-btn">
-                <el-button type="primary" @click="login">登录</el-button>
+                <el-button type="primary" style="width: 300px" @click="login">登录</el-button>
             </div>
         </div>
+
 
     </div>
 </template>
 
 <style scoped>
 
+    .page {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .login-bg {
+        width: 100vh;
+    }
+
+    .login-bg img {
+        width: 100vw;
+        /*min-height: 100vh;*/
+    }
+
     .login-box {
-        margin: 20vh auto;
+        position: absolute;
+        top: 30vh;
+        right: 5vw;
+        width: 500px;
         padding: 30px;
+        background-color: #fff;
         border: 1px solid #DAE3ED;
         box-shadow: 0 7px 27px 0 rgba(133, 169, 231, 0.51);
         border-radius: 10px;
-        width: 600px;
     }
 
     .title {
@@ -97,12 +119,20 @@
           return
         }
 
+        let loadingInstance = that.$loading({
+          lock: true,
+          text: '登录中...',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
+
         Login(argc)
           .then(res => {
+            loadingInstance.close();
             if (res.code === 2000) {
-              localStorage.setItem('username',res.result.loginName)
-              localStorage.setItem('user.areaId',res.result.areaId)
-              localStorage.setItem('user.level',res.result.level)
+              localStorage.setItem('username', res.result.loginName)
+              localStorage.setItem('user.areaId', res.result.areaId)
+              localStorage.setItem('user.level', res.result.level)
               that.$message({
                 message: '登录成功！',
                 type: 'success'

@@ -1,10 +1,10 @@
 import axios from 'axios'
 import {Message, Loading} from 'element-ui'
 
-let requestLoading
+// let requestLoading
 axios.interceptors.request.use(config => {
   // loading
-  requestLoading = Loading.service({text: '加载中...'});
+  // requestLoading = Loading.service({text: '加载中...'});
   // let urls = config.url.split('/')
   // //除登录外请求头添加token参数  getAfterSaleRecordsAndEqByPhone
   // if (urls[urls.length - 1] !== 'login' && urls[urls.length - 1] !== 'registerTmp' && urls[urls.length - 1] !== 'getAfterSaleRecordsAndEqByPhone' && urls[urls.length - 1] !== 'getRegisterVerificationCode') {
@@ -41,9 +41,9 @@ function checkStatus(response) {
 
 function checkCode(res) {
   // 如果code异常(这里已经包括网络错误，服务器错误，后端抛出的错误)，可以弹出一个错误提示，告诉用户
-  if (requestLoading) {
-    requestLoading.close()
-  }
+  // if (requestLoading) {
+  //   requestLoading.close()
+  // }
   if (res.status === -404) {
     Message({
       showClose: true,

@@ -26,6 +26,10 @@ export default new Router({
           component: resolve => require(['./views/Monitor.vue'], resolve)
         },
         {
+          path: '/history',
+          component: resolve => require(['./views/History.vue'], resolve)
+        },
+        {
           path: '/companyManage',
           component: resolve => require(['./views/CompanyManage.vue'], resolve)
         },
