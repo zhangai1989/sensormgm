@@ -5,6 +5,12 @@
       <p slot="title">
         历史记录
       </p>
+      <div slot="btns">
+        <el-button size="small"
+                   @click="exportExcel">
+          <i class="el-icon-document fbold"></i> 导出
+        </el-button>
+      </div>
     </normal-bar>
 
     <div class="main-viewer">
@@ -24,7 +30,7 @@
             value-format="yyyy-MM-dd"
             @change="timeChange"
             :picker-options="pickerOptions"
-            style="margin-left:20px; width: 270px">
+            :style="{marginLeft: areaTreeDeep > 1 ? '20px' : '0', width: '270px'}">
           </el-date-picker>
         </li>
         <el-button type="success"
@@ -221,6 +227,10 @@ export default {
         argc.enterpriseId = that.treeValue[2]
       }
       that.getList(argc)
+    },
+
+    exportExcel () {
+
     }
   }
 }

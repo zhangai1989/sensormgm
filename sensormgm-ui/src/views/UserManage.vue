@@ -26,13 +26,14 @@
         </li>
         <el-button type="success"
                    size="small"
+                   :disabled="!queryAble"
                    @click="searchList">查 询
         </el-button>
       </ul>
 
       <div class="jy-content mt15">
         <el-table
-          v-loading="loading"
+          v-loading="!queryAble"
           :data="list"
           border
           size="mini"
@@ -43,19 +44,19 @@
             align="center"
             prop="loginName"
             label="登录名"
-            min-width="180">
+            min-width="120">
           </el-table-column>
 
           <el-table-column
             align="center"
             prop="cname"
             label="真实姓名"
-            width="140">
+            min-width="120">
           </el-table-column>
           <el-table-column
             show-overflow-tooltip
             align="center"
-            prop="areaName"
+            prop="area"
             label="所属区域"
             min-width="180">
           </el-table-column>
@@ -96,7 +97,7 @@
             align="center"
             label="创建时间"
             prop="createTime"
-            min-width="150">
+            min-width="160">
           </el-table-column>
 
           <el-table-column
@@ -110,7 +111,7 @@
             align="center"
             label="修改时间"
             prop="modifyTime"
-            min-width="150">
+            min-width="160">
           </el-table-column>
 
           <el-table-column
@@ -120,8 +121,8 @@
             align="center"
             min-width="100">
             <template slot-scope="scope">
-              <el-button type="text" @click="openDialog(scope.row)">修改</el-button>
-              <el-button type="text" @click="confirmDelete(scope.row.id)">删除</el-button>
+              <el-button v-if="scope.row.level > level" type="text" @click="openDialog(scope.row)">修改</el-button>
+              <el-button v-if="scope.row.level > level" type="text" @click="confirmDelete(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
 
@@ -161,7 +162,7 @@
           <el-form-item v-show="level === 3" label="所属企业" prop="enterpriseId">
             <el-select size="small" v-model="form.enterpriseId" placeholder="请选择" style="width: 200px">
               <el-option
-                v-for="item in enterprise_list"
+                v-for="item in enterpriseList"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id">
@@ -225,7 +226,6 @@ export default {
   },
   data () {
     return {
-      loading: false,
       level: 1,
       search: '',
       list: [],
@@ -233,7 +233,7 @@ export default {
       pageSize: 10,
       currentPage: 1,
       areas: [],
-      enterprise_list: [],
+      enterpriseList: [],
       form: {
         id: '',
         areaId: '',
@@ -267,6 +267,7 @@ export default {
           { validator: this.emailCheck, trigger: 'blur' }
         ]
       },
+      queryAble: true,
       saveAble: true
     }
   },
@@ -287,18 +288,13 @@ export default {
       allEnterprise({})
         .then(res => {
           if (res.code === 2000) {
-            that.enterprise_list = res.result
+            that.enterpriseList = res.result
           }
         })
 
-      let level = parseInt(localStorage.getItem('user.level'))
-      this.level = level
-      this.allowEdit = level < 4
-      let argc = {
-        pageNum: 1
-      }
-
-      this.getList(argc)
+      let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      this.level = parseInt(userInfo.level)
+      this.allowEdit = this.level < 4
     },
 
     // 重置表单
@@ -337,23 +333,24 @@ export default {
     getList (argc) {
       let that = this
       argc.pageSize = that.pageSize
-      that.loading = true
+      that.queryAble = false
       userList(argc)
         .then(res => {
           if (res.code === 2000) {
             that.currentPage = argc.pageNum
             that.totalNum = res.result.totalElements
-            console.log(that.areas)
-            res.result.content.forEach(function (item, index, array) {
-              that.areas.forEach(function (it, idx, arr) {
-                if (it.id === parseInt(item.areaId)) {
-                  item.area = it.name
-                }
+            if (res.result.content) {
+              res.result.content.forEach(function (item, index, array) {
+                that.areas.forEach(function (it, idx, arr) {
+                  if (it.id === parseInt(item.areaId)) {
+                    item.area = it.name
+                  }
+                })
               })
-            })
-            that.list = res.result
+              that.list = res.result.content
+            }
           }
-          that.loading = false
+          that.queryAble = true
         })
     },
 
