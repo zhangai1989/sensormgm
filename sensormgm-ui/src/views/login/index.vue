@@ -120,11 +120,7 @@ export default {
       loadingInstance.close()
       if (res.code === 2000) {
         localStorage.setItem('userInfo', JSON.stringify(res.result, null, 0))
-        that.$message({
-          message: '登录成功！',
-          type: 'success'
-        })
-        that.$router.push({path: '/dashboard'})
+        that.$router.push({path: '/monitor'})
       } else {
         that.$message({
           message: res.message,

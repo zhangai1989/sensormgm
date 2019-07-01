@@ -5,8 +5,8 @@
       <!--header logo start-->
       <div class="jy-header-logo">
         <i @click.stop="onCollapse" class="expand iconfont icon-shrink"></i>
-        <i class="logo iconfont icon-logo"></i>
-        <span class="name">合作伙伴</span>
+        <!--<i class="logo iconfont icon-logo"></i>-->
+        <span class="name">油烟监控平台</span>
       </div>
       <!--header logo end-->
 
@@ -34,7 +34,8 @@
 <script>
 
 import Cookies from 'js-cookie'
-import { LOGOUT_URL } from '@configs'
+import { LOGIN_URL } from '@configs'
+import { loginOut } from '@api/login'
 
 const UpdatePwd = () => import('@components/common/UpdatePwd')
 export default {
@@ -62,9 +63,12 @@ export default {
     },
     // 退出
     layout () {
-      sessionStorage.removeItem('userInfo')
+      localStorage.removeItem('userInfo')
       Cookies.remove('JSESSIONID') // 去除cookie
-      location.href = LOGOUT_URL + '&t=' + (new Date().getTime()) + '&redirect=' + document.URL
+      loginOut({})
+        .then(res => {
+          location.href = LOGIN_URL
+        })
     }
   }
 }
