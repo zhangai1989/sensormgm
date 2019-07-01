@@ -15,10 +15,14 @@ import Mixin from './mixin.js'
 import axios from 'axios'
 // 配置文件
 import {LOGIN_URL} from '@configs'
+// echarts图表
+import ECharts from 'vue-echarts/components/ECharts'
+import 'echarts/lib/chart/line'
 
 Vue.config.productionTip = false // 设置为 false 以阻止 vue 在启动时生成生产提示。
 
 Vue.use(ElementUI)
+Vue.component('chart', ECharts)
 
 // 引入公共样式
 require('./assets/styles/base.less')

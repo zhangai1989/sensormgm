@@ -7,8 +7,9 @@
       </p>
       <div slot="btns">
         <el-button size="small"
+                   :disabled="!exportAble"
                    @click="exportExcel">
-          <i class="el-icon-document fbold"></i> 导出
+          <i class="el-icon-document fbold"></i> {{ counter > 0 ? '剩余' + counter + 's' : '导出' }}
         </el-button>
       </div>
     </normal-bar>
@@ -49,7 +50,7 @@
           <el-table-column
             align="center"
             prop="uploadTime"
-            label="发布时间">
+            label="上传时间">
           </el-table-column>
 
           <el-table-column
@@ -132,7 +133,10 @@ export default {
       list: [],
       totalNum: 0,
       pageSize: 10,
-      currentPage: 1
+      currentPage: 1,
+
+      exportAble: true,
+      counter: 0
     }
   },
   created () {
@@ -230,7 +234,17 @@ export default {
     },
 
     exportExcel () {
-
+      this.exportAble = false
+      this.counter = 60
+      let that = this
+      let intervalId = setInterval(() => {
+        if (that.counter === 0) {
+          that.exportAble = true
+          clearInterval(intervalId)
+        } else {
+          that.counter--
+        }
+      }, 1000)
     }
   }
 }

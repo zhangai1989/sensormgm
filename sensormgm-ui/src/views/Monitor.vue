@@ -201,7 +201,7 @@ export default {
     }
   },
   created () {
-    this.autoRefresh = 'true' == localStorage.getItem("monitor.autoRefresh") ? true : false
+    this.autoRefresh = 'true' === localStorage.getItem('monitor.autoRefresh') ? true : false
     this.changeAutoRefresh(this.autoRefresh)
   },
 

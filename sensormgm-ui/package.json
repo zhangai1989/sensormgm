@@ -17,13 +17,15 @@
   "dependencies": {
     "axios": "0.18.0",
     "babel-polyfill": "6.26.0",
+    "echarts": "^4.2.1",
     "element-ui": "^2.8.2",
     "js-cookie": "^2.2.0",
     "vue": "2.5.2",
+    "vue-echarts": "^4.0.3",
+    "vue-moment": "2.0.2",
     "vue-router": "3.0.1",
     "vuedraggable": "^2.21.0",
-    "vuex": "3.0.1",
-    "vue-moment": "2.0.2"
+    "vuex": "3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "7.1.2",
