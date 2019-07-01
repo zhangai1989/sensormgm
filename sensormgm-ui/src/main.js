@@ -18,6 +18,9 @@ import {LOGIN_URL} from '@configs'
 // echarts图表
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/line'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/title'
+import 'echarts/lib/component/legend'
 
 Vue.config.productionTip = false // 设置为 false 以阻止 vue 在启动时生成生产提示。
 

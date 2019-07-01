@@ -1,10 +1,10 @@
 <template>
   <div class="layout width100 height100 flex fxcolumn" style="text-align: center">
-    <normal-bar>
-      <p slot="title">
-        数据分析
-      </p>
-    </normal-bar>
+    <!--<normal-bar>-->
+      <!--<p slot="title">-->
+        <!--数据分析-->
+      <!--</p>-->
+    <!--</normal-bar>-->
 
     <chart class="chart" :options="orgOptions" :auto-resize="false"></chart>
     <chart class="chart" :options="orgOptions" :auto-resize="false"></chart>
@@ -25,14 +25,11 @@ export default {
   },
   mounted () {
     this.orgOptions = {
-      title: {
-        text: '折线图堆叠'
-      },
       tooltip: {
         trigger: 'axis'
       },
       legend: {
-        data:['邮件营销','联盟广告']
+        data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
       },
       grid: {
         left: '3%',
@@ -51,7 +48,7 @@ export default {
         data: ['周一','周二','周三','周四','周五','周六','周日']
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
       },
       series: [
         {
@@ -65,6 +62,24 @@ export default {
           type:'line',
           stack: '总量',
           data:[220, 182, 191, 234, 290, 330, 310]
+        },
+        {
+          name:'视频广告',
+          type:'line',
+          stack: '总量',
+          data:[150, 232, 201, 154, 190, 330, 410]
+        },
+        {
+          name:'直接访问',
+          type:'line',
+          stack: '总量',
+          data:[320, 332, 301, 334, 390, 330, 320]
+        },
+        {
+          name:'搜索引擎',
+          type:'line',
+          stack: '总量',
+          data:[820, 932, 901, 934, 1290, 1330, 1320]
         }
       ]
     }
@@ -76,5 +91,6 @@ export default {
   .chart {
     width: calc(100% - 182px);
     height: 46%;
+    margin-top: 20px;
   }
 </style>
