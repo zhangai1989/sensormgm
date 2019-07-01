@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
+/**
+ * @Description:首页相关请求接口
+ * @Author:     zhangai
+ * @CreateDate: 2019/7/1 10:11
+ * @Version: 1.0
+ */
 @RestController
 @RequestMapping("/api/homePage")
 public class HomePageController {

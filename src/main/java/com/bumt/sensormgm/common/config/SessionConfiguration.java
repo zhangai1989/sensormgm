@@ -23,7 +23,9 @@ public class SessionConfiguration implements WebMvcConfigurer  {
 		registry.addInterceptor(new SessionInterceptor()).addPathPatterns("/**").
 				excludePathPatterns(Constant.Strings.INDEX_HTML_STR).
 				excludePathPatterns("/api/index/**").
-				excludePathPatterns("/static/js/**");
+				excludePathPatterns("/fonts/**").
+				excludePathPatterns("/img/**").
+				excludePathPatterns("/js/**");
 
 	}
 
