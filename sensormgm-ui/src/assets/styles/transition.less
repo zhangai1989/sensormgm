@@ -1,0 +1,104 @@
+/*fade-transform*/
+/*fade*/
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.28s;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+
+.left-enter-active,
+.left-leave-active {
+  transition: all 0.5s;
+}
+
+.left-enter,
+.left-leave-active {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+
+/*fade-transform*/
+.fade1-transform-leave-active,
+.fade1-transform-enter-active {
+  transition: all 0.3s;
+}
+.fade1-transform-enter {
+  opacity: 0;
+  transform: translateX(-5px);
+}
+.fade1-transform-leave-to {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+  transition: all 0.3s;
+}
+.fade-transform-enter {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+.fade-part,
+.fade-full {
+  z-index: 100;
+  position: fixed;
+  top: 53px;
+  bottom: 0;
+  right: 0;
+  left: 85px;
+  height: auto !important;
+}
+.fade-part {
+  left: 309px !important;
+}
+.fade-full > .drawer-bg,
+.fade-part > .drawer-bg {
+  left: 0;
+  top: 0;
+  right: 12px;
+  bottom: 0;
+  position: absolute;
+  background: #fff;
+}
+.drawer-right > div,
+.drawer-right > section {
+  flex-grow: 1;
+}
+.drawer-content,
+.drawer-right {
+  overflow-x: hidden;
+  overflow-y: auto !important;
+}
+/* 右侧滑出 */
+.fade-top-enter-active,
+.fade-top-leave-active {
+  transition: transform 0.36s;
+}
+.fade-top-enter,
+.fade-top-leave-to {
+  transform: translate3d(0, 100%, 0);
+}
+.fade-up {
+  transform: translate3d(0, 100px, 0);
+  opacity: 0;
+  animation: bounchb 0.4s forwards;
+}
+@keyframes bounchb {
+  0% {
+    transform: translate3d(0, 100px, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,406 @@
+@import './elementui';
+@import './scrollbar';
+@import './transition';
+@import './flex';
+@import './common';
+
+/* 字体颜色 */
+.c-333 {
+  color: #333;
+}
+
+.c-666 {
+  color: #666;
+}
+
+.c-999 {
+  color: #999;
+}
+
+.c-blue {
+  color: #259af3;
+}
+
+.c-green {
+  color: #5eb94a;
+}
+
+.c-red {
+  color: @red;
+}
+
+.c-fff {
+  color: @white;
+}
+
+.c-text {
+  color: #343A43;
+}
+
+.c-gray {
+  color: #71757B
+}
+
+/* 鼠标hover,focus颜色变化 */
+.set-blue {
+  cursor: pointer;
+
+  &:hover {
+    color: @button-hover;
+  }
+
+  &:active {
+    color: @button-active;
+  }
+}
+
+.set-red {
+  color: #8492a5;
+  cursor: pointer;
+
+  &:hover {
+    color: @red;
+  }
+
+  &:active {
+    color: #e46060;
+  }
+}
+
+.set-green {
+  color: #8492a5;
+  cursor: pointer;
+
+  &:hover {
+    color: #5eb94a;
+  }
+
+  &:active {
+    color: #428a32;
+  }
+}
+
+.bg-red {
+  background: #f36d6f;
+}
+
+
+.cursor {
+  cursor: pointer;
+}
+
+//必填星号
+.star:after {
+  content: '* ';
+  text-align: right;
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  color: @red;
+}
+
+//左右浮动
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+//清除浮动
+.clearfix {
+  zoom: 1;
+}
+
+.clearfix:after {
+  content: '';
+  display: table;
+  clear: both;
+  overflow: hidden;
+}
+
+.clear {
+  clear: both;
+}
+
+//隐藏dom
+.none {
+  display: none;
+}
+
+//背景
+.bgfff {
+  background-color: @white;
+}
+
+//省略文字
+.omit {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+//字体大小
+.f20 {
+  font-size: 20px;
+}
+
+.f16 {
+  font-size: 16px;
+}
+
+.f12 {
+  font-size: 12px;
+}
+
+//特殊字符换行
+.break-off {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.lineh20 {
+  line-height: 2;
+}
+
+.lineh19 {
+  line-height: 1.9;
+}
+
+.lineh18 {
+  line-height: 1.8;
+}
+
+.lineh17 {
+  line-height: 1.7;
+}
+
+.lineh16 {
+  line-height: 1.6;
+}
+
+.lineh15 {
+  line-height: 1.4;
+}
+
+.lineh14 {
+  line-height: 1.5;
+}
+
+.line {
+  width: 100%;
+  height: 1px;
+  background: #dbe2ea;
+}
+
+.main-viewer {
+  padding: 20px 20px 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  .jy-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
+    .jy-table {
+      display: flex;
+      flex-direction: column;
+
+      .el-table__header-wrapper {
+        flex-shrink: 0;
+      }
+
+      .el-table__body-wrapper {
+        overflow: auto;
+      }
+    }
+  }
+}
+
+.bg-f8f {
+  background: #f8f9fb;
+}
+
+//外边框间距
+.mt0 {
+  margin-top: 0 !important;
+}
+
+.mt5 {
+  margin-top: 5px;
+}
+
+.mt10 {
+  margin-top: 10px;
+}
+
+.pad15 {
+  padding: 15px;
+}
+
+.mt15 {
+  margin-top: 15px;
+}
+
+.mt20 {
+  margin-top: 20px;
+}
+
+.mt30 {
+  margin-top: 30px;
+}
+
+.mb5 {
+  margin-bottom: 5px;
+}
+
+.mb10 {
+  margin-bottom: 10px;
+}
+
+.mb15 {
+  margin-bottom: 15px;
+}
+
+.mb20 {
+  margin-bottom: 20px;
+}
+
+.mb30 {
+  margin-bottom: 30px;
+}
+
+.ml5 {
+  margin-left: 5px;
+}
+
+.ml10 {
+  margin-left: 10px;
+}
+
+.ml15 {
+  margin-left: 15px;
+}
+
+.ml20 {
+  margin-left: 20px;
+}
+
+.mr5 {
+  margin-right: 5px;
+}
+
+.mr10 {
+  margin-right: 10px;
+}
+
+.mr15 {
+  margin-right: 15px;
+}
+
+.mr20 {
+  margin-right: 20px;
+}
+
+//内边框间距
+.pad10 {
+  padding: 10px;
+}
+
+.pl5 {
+  padding-left: 5px;
+}
+
+.pl10 {
+  padding-left: 10px;
+}
+
+.pl15 {
+  padding-left: 15px;
+}
+
+.pl20 {
+  padding-left: 20px;
+}
+
+.pr5 {
+  padding-right: 5px;
+}
+
+.pr10 {
+  padding-right: 10px;
+}
+
+.pr15 {
+  padding-right: 15px;
+}
+
+.pr20 {
+  padding-right: 20px;
+}
+
+.pt5 {
+  padding-top: 5px;
+}
+
+.pt10 {
+  padding-top: 10px;
+}
+
+.pt15 {
+  padding-top: 15px;
+}
+
+.pt20 {
+  padding-top: 20px;
+}
+
+.pt30 {
+  padding-top: 30px;
+}
+
+.pb5 {
+  padding-bottom: 5px;
+}
+
+.pb10 {
+  padding-bottom: 10px;
+}
+
+.pb15 {
+  padding-bottom: 15px;
+}
+
+.pb20 {
+  padding-bottom: 20px;
+}
+
+.ptb12 {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+.plr12 {
+  padding-left: 12px;
+}
+
+/* 高，宽 */
+.width100 {
+  width: 100%;
+}
+
+.height100 {
+  height: 100%;
+}
+
+.width55 {
+  width: 55px;
+}
+
+.width365 {
+  width: 365px;
+}

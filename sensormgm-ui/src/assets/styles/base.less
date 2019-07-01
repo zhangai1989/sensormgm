@@ -1,0 +1,403 @@
+@import './variables';
+
+//所有标签样式
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', 'Microsoft Yahei', sans-serif;
+}
+//去除长按a链接弹框
+html,
+body {
+  -webkit-touch-callout: none;
+  font-size: 14px;
+}
+/*去除点击高亮效果以及继承父元素的字体系列样式*/
+a,
+button,
+input,
+img,
+label {
+  -webkit-tap-highlight-color: transparent;
+  outline: medium none;
+  border: none;
+}
+a {
+  text-decoration: none;
+}
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+input::-moz-focus-inner {
+  border: none;
+  padding: 0;
+}
+select,
+input {
+  vertical-align: baseline;
+}
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #ccc;
+}
+input:-moz-placeholder,
+textarea:-moz-placeholder {
+  color: #ccc;
+}
+//html5标签
+header,
+footer,
+section,
+article,
+aside,
+nav,
+figure {
+  display: block;
+}
+//去除默认样式
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong,
+i,
+em,
+address,
+caption,
+cite,
+code,
+dfn,
+th,
+var {
+  font-weight: normal;
+  font-style: normal;
+  margin: 0;
+}
+fieldset,
+img {
+  border: none;
+}
+h1 {
+  font-size: 26px;
+}
+//去除默认样式
+ul,
+ol,
+li {
+  list-style: none;
+}
+
+blockquote {
+  display: block;
+  border-left: 8px solid #d0e5f2;
+  padding: 5px 10px;
+  margin: 10px 0;
+  line-height: 1.4;
+  font-size: 100%;
+  background-color: #f1f1f1;
+}
+//表格边框合并，边框距零
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* 下划线 */
+.bd-bottom {
+  border-bottom: 1px solid #d2d2d2;
+}
+.bd-right {
+  border-right: 1px solid #d2d2d2;
+}
+
+/* 主体内容 顶部 */
+.nav-title {
+  font-size: 15px;
+  min-height: 46px;
+  .el-button--primary {
+    background-color: #fff;
+    border-color: @button;
+    color: @button;
+    &:hover {
+      background-color: @button-hover;
+      border-color: @button-hover;
+      color: #fff;
+    }
+    &:focus {
+      background-color: @button-active;
+      border-color: @button-active;
+      color: #fff;
+    }
+  }
+}
+.fsize16 {
+  font-size: 16px;
+}
+.fsize15 {
+  font-size: 15px;
+}
+.fsize12 {
+  font-size: 12px;
+}
+.fbold {
+  font-weight: bold;
+}
+// 手势
+.pointer {
+  cursor: pointer;
+}
+/* 工单模板-->关联系统 el-form块 */
+.relate-area .el-form-item__label {
+  width: 76px !important;
+  padding-left: 8px;
+}
+.relate-area .el-form-item__content {
+  margin-left: 76px !important;
+}
+.fade-part,
+.fade-full {
+  z-index: 100;
+  position: fixed;
+  top: 53px;
+  bottom: 0;
+  right: 0;
+  left: 85px;
+  height: auto !important;
+}
+.fade-part {
+  left: 309px !important;
+}
+.fade-full > .drawer-bg,
+.fade-part > .drawer-bg {
+  left: 0;
+  top: 0;
+  right: 12px;
+  bottom: 0;
+  position: absolute;
+  background: #fff;
+}
+.drawer-right > div,
+.drawer-right > section {
+  flex-grow: 1;
+}
+.drawer-content,
+.drawer-right {
+  overflow-x: hidden;
+  overflow-y: auto !important;
+}
+/* 右侧滑出 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: transform 0.36s;
+}
+.fade-enter,
+.fade-leave-to {
+  transform: translate3d(100%, 0, 0);
+}
+/* 紧急度 */
+.table-priority {
+  display: flex;
+  align-items: center;
+}
+.table-priority:before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  color: #fff;
+  line-height: 18px;
+  text-align: center;
+  border-radius: 4px;
+  margin-right: 3px;
+}
+.table-priority-NORMAL:before {
+  background: #35d477;
+  content: '3';
+}
+.table-priority-LOWER:before {
+  background: #febf00;
+  content: '4';
+}
+.table-priority-URGENT:before {
+  background: #259af3;
+  content: '2';
+}
+.table-priority-VERY_URGENT:before {
+  background: #ff4b4b;
+  content: '1';
+}
+/* 底部蹦出 */
+.trans-bound {
+  animation: 0.3s trans-bound;
+}
+@keyframes trans-bound {
+  0% {
+    transform: translate(0, 10px);
+  }
+  50% {
+    transform: translate(0, -8px);
+  }
+  100% {
+    transform: translate(0, 0px);
+  }
+}
+.txright {
+  text-align: right;
+}
+/* 二级菜单选中 */
+.second-selected {
+  color: #333 !important;
+  background: #e9f6ff;
+  border-radius: 4px;
+}
+
+//搜索输入框
+.search-input {
+  .el-input__inner {
+    border-right: none;
+    &:focus {
+      border-color: @button;
+    }
+  }
+  .el-input-group__append {
+    border-radius: 0 25px 25px 0;
+    color: #fff;
+  }
+  .el-input-group--append .el-input__inner {
+    border-radius: 25px 0 0 25px;
+  }
+  .el-input-group__append button.el-button {
+    border-radius: 0 25px 25px 0;
+    background-color: @button;
+    padding: 9.5px 20px;
+    &:hover {
+      background-color: @button-hover;
+    }
+    &:active {
+      background-color: @button-active;
+    }
+  }
+}
+.el-input-group > .el-input__inner {
+  border-right: none;
+  &:focus {
+    border-color: @button-active;
+  }
+}
+
+.hideit {
+  overflow: hidden;
+}
+.scroll-y {
+  overflow-y: auto;
+}
+.scroll-x {
+  overflow-x: auto;
+}
+.hideit.visibleit,
+.visibleit {
+  overflow: visible;
+  & > div.fxcolumn {
+    overflow: visible;
+  }
+}
+.pointer {
+  cursor: pointer;
+}
+/* 主题内容main，以及content超出滚动 */
+.main > div,
+.main > section {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  overflow: hidden;
+  .content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+}
+/* 定位 */
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.fixed {
+  position: fixed;
+}
+.fadeIn {
+  -webkit-animation: fadeIn 0.5s ease both;
+  -moz-animation: fadeIn 0.5s ease both;
+  -ms-animation: fadeIn 0.5s ease both;
+  animation: fadeIn 0.5s ease both;
+}
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+//校验-输入框变色
+.is-error {
+  .el-input__inner {
+    border-color: #f56c6c;
+  }
+}
+.is-success {
+  .el-input__inner {
+    border-color: #67c23a;
+  }
+}
+//wangEditor富文本编辑器
+.w-e-toolbar {
+  // background-color: #fff !important;
+  .w-e-menu {
+    padding: 0 10px !important;
+  }
+}
+.w-e-item
+// .notice-wrap,
+ {
+  img {
+    width: 22px;
+    height: 22px;
+  }
+}
+.w-e-text,
+.notice-wrap {
+  ol > li {
+    list-style: decimal;
+  }
+  ul > li {
+    list-style: disc;
+  }
+}
+.notice-wrap {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 10px;
+  }
+  ul,
+  ol {
+    margin-left: 16px !important;
+  }
+  li {
+    line-height: 30px;
+  }
+}

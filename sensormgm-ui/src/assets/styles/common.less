@@ -1,0 +1,205 @@
+// 常规tab
+.normal-tabs {
+  background: #f8f9fb;
+  height: 38px;
+  border-left: 1px solid #e9ebf0;
+  border-right: 1px solid #e9ebf0;
+  border-radius: 0 0 2px 2px;
+
+  div.el-tabs__item {
+    height: 38px;
+    line-height: 38px !important;
+
+    &.is-active {
+      color: #343a43 !important;
+      font-weight: bold;
+    }
+  }
+
+  .el-tabs__active-bar {
+    background: #29b87a;
+    height: 4px !important;
+  }
+
+  .el-tabs__nav {
+    margin-left: 20px;
+  }
+}
+
+// 覆盖样式
+.normal-set {
+  li {
+    padding-right: 30px;
+  }
+
+  li>label {
+    padding-right: 10px;
+  }
+
+  .el-input,
+  .el-select,
+  .el-date-editor {
+    height: 34px !important;
+    font-size: 14px !important;
+    line-height: 34px !important;
+  }
+
+  .el-input {
+    input {
+      font-size: 14px !important;
+      height: 34px !important;
+      padding-left: 10px !important;
+    }
+  }
+
+  .el-textarea {
+    textarea {
+      font-size: 14px !important;
+      padding-left: 10px !important;
+    }
+  }
+
+  .el-upload--picture-card {
+    width: 80px;
+    height: 80px;
+    line-height: 14px;
+  }
+}
+
+//  详情样式
+.jy-detail {
+  .jy-detail_item {
+    margin-bottom: 12px;
+
+    .el-form-item__label,
+    .jy-detail-label {
+      color: #71757B;
+    }
+
+    .jy-detail_text {
+      color: #484D55;
+    }
+
+    .jy-detail-label__mr {
+      margin-right: 7px;
+    }
+  }
+}
+
+
+
+// 图片上传
+.jy-upload_img {
+  div {
+    position: relative;
+    background: #ffffff;
+
+    i {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      font-size: 20px;
+      transform: translate(-50%, -50%);
+      color: #A3A6AA;
+    }
+
+    span {
+      position: absolute;
+      margin-top: 20px;
+      width: 100%;
+      left: 50%;
+      font-size: 12px;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: #A3A6AA;
+    }
+  }
+
+  .el-upload-list__item {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+// 详情页图片
+.jy-detail_img {
+  li {
+    display: inline-block;
+    padding-right: 15px;
+
+    img {
+      height: 80px;
+      width: 80px;
+    }
+  }
+}
+
+// 链接
+.jy-link {
+  color: #2c5cc5;
+  cursor: pointer;
+}
+
+.f8f-set {
+  min-height: 66px;
+  border: 1px solid #e9ebf0;
+  border-radius: 2px;
+  padding: 0 20px;
+}
+
+
+.el-range-separator {
+  line-height: 40px !important;
+}
+
+
+// 列表状态
+.jy-state {
+  display: inline-block;
+  width: 56px;
+  height: 22px;
+  line-height: 22px;
+  text-align: center;
+  border: 1px solid #c6c6c6;
+  border-radius: 4px;
+  color: #565656;
+  background: #f2f2f2;
+  font-size: 12px;
+}
+
+.jy-state_default__text {
+  color: #565656;
+}
+
+.jy-state_success {
+  color: #2C5CC5;
+  background: #E5F2FD;
+  border-color: #BBDBFF;
+}
+
+.jy-state_success__text {
+  color: #2C5CC5;
+}
+
+.jy-state_progress {
+  color: #DD9104;
+  background: #FFF4C9;
+  border-color: #FFF4C9;
+}
+
+.jy-state_progress__text {
+  color: #DD9104;
+}
+
+// 按钮
+.jy-default_button {
+  height: 34px;
+  background: #29B87A;
+  color: #ffffff;
+  padding: 9px 18px;
+}
+
+// 横线
+.jy-hr {
+  border-bottom: 1px solid #DBE2EA;
+}

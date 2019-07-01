@@ -1,0 +1,71 @@
+/* 通用flex, fxcenter,fxmiddle,dcenter 在没有设定宽度时候不会占用全部宽度，若需要，可以配合classs flex*/
+.fxcenter {
+  display: inline-flex;
+  justify-content: center;
+}
+
+
+.fxmiddle {
+  display: inline-flex;
+  align-items: center;
+}
+
+.wrapit {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.breakall {
+  word-break: break-all;
+}
+
+/* 加了个d，区别与上面center */
+.center {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fx-baseline {
+  align-items: baseline;
+}
+
+.middle {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.fxnowrap {
+  flex-wrap: nowrap;
+}
+
+.fxwrap {
+  flex-wrap: wrap;
+}
+
+.fxcolumn {
+  flex-direction: column;
+}
+
+.fxrow {
+  flex-direction: row !important;
+}
+
+.flex1 {
+  flex-grow: 1;
+}
+
+.flex {
+  display: flex;
+}
+
+.between {
+  justify-content: space-between;
+}
+
+.shrink0 {
+  flex-shrink: 0;
+}

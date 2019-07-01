@@ -1,0 +1,21 @@
+{
+  "code": "",
+  "message": "成功",
+  "items": {
+    "total": 2,
+    "list": [
+      {
+       "name": "成都测试1",
+        "code": "G10001",
+        "address": "四川省成都市天府五街",
+        "status": "ONLINE"
+      },
+      {
+        "name": "成都测试2",
+        "code": "G10002",
+        "address": "四川省成都市环球中心",
+        "status": "OFFLINE"
+      }
+    ]
+  }
+}
