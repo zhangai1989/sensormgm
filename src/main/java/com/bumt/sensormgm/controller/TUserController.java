@@ -39,11 +39,6 @@ public class TUserController  extends BaseController<TUser>{
 	@RequestMapping(value = "/getPageListByCondition2", produces = {"application/json;charset=UTF-8"})
 	public Object getPageListByCondition2(@RequestBody Map<String,Object> entity,HttpSession httpSession){
 
-//		int pageNum = Integer.parseInt(entity.get("pageNum").toString());
-//		int pageSize = Integer.parseInt(entity.get("pageSize").toString());
-//		Pageable pageable= PageRequest.of((pageNum-1),pageSize,changeSort());
-//		Specification<TUser> querySpecification = changeConditions(entity);
-//		service.getPageListByCondition(querySpecification,pageable);
 		return service.getPageListByCondition2(entity,httpSession);
 	}
 

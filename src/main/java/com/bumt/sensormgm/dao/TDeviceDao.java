@@ -27,7 +27,7 @@ public interface TDeviceDao extends BaseJpaDao<TDevice> {
     List<Map> getAreaRank();
 
 
-    @Query(value = "select t2.`name`,sum(lampblack)/count(lampblack) from t_device t1 LEFT JOIN t_enterprise t2 on t1.enterprise_id =t2.id  where t2.area_id = ?1 GROUP BY t1.enterprise_id  limit 10",nativeQuery = true)
+    @Query(value = "select t2.`name`,sum(lampblack)/count(lampblack) per from t_device t1 LEFT JOIN t_enterprise t2 on t1.enterprise_id =t2.id  where t2.area_id = ?1 GROUP BY t1.enterprise_id  limit 10",nativeQuery = true)
     List<Map> getDeviceDataByAreaId(String areaId);
 
 
