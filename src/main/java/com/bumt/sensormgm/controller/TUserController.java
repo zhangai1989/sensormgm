@@ -46,6 +46,7 @@ public class TUserController  extends BaseController<TUser>{
 	@RequestMapping(value = "/alertPwd", method = RequestMethod.POST)
 	public Object alertPwd(@RequestBody TUser entity, HttpSession session){
 		entity.setPassword("010a0c09090a090b0e060007020f080e");
+
 		return new ResultUtil<>().setData(getService().updateByPrimaryKeySelective(entity,session));
 	}
 
