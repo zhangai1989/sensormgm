@@ -22,16 +22,21 @@ export default new Router({
       meta: {
         title: '实时监控'
       }
-    },
-    {
+    }, {
       path: '/monitor/history',
       name: 'history',
       component: () => import('@views/History'),
       meta: {
         title: '历史记录'
       }
-    }
-    ]
+    }, {
+      path: '/monitor/analysis',
+      name: 'analysis',
+      component: () => import('@views/Analysis'),
+      meta: {
+        title: '数据分析'
+      }
+    }]
   },
   {
     path: '/system',

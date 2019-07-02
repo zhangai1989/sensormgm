@@ -27,6 +27,15 @@
         "menuIconClass": "level-menu",
         "order": 1.1,
         "childrens": []
+      }, {
+        "menuId": 10004,
+        "menuName": "数据分析",
+        "menuLevel": 2,
+        "menuParentId": 30081,
+        "menuUrl": "/monitor/analysis",
+        "menuIconClass": "level-menu",
+        "order": 1.1,
+        "childrens": []
       }]
     },
     {

@@ -15,10 +15,17 @@ import Mixin from './mixin.js'
 import axios from 'axios'
 // 配置文件
 import {LOGIN_URL} from '@configs'
+// echarts图表
+import ECharts from 'vue-echarts/components/ECharts'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/title'
+import 'echarts/lib/component/legend'
 
 Vue.config.productionTip = false // 设置为 false 以阻止 vue 在启动时生成生产提示。
 
 Vue.use(ElementUI)
+Vue.component('chart', ECharts)
 
 // 引入公共样式
 require('./assets/styles/base.less')
@@ -40,27 +47,15 @@ function (error) {
 })
 // 返回状态判断
 axios.interceptors.response.use((response) => {
-  return response
+  if (response.data.code === 3000) {
+    window.location.href = LOGIN_URL
+  } else {
+    return response
+  }
 }, (error) => {
   console.log(error)
-  // let loading = ElementUI.Loading.service({});
-  if (error.response.status * 1 === 401) {
-    if (process.env.NODE_ENV === 'local') {
-      window.location.href = '/#/login'
-    } else {
-      window.location.href = LOGIN_URL + '&redirect=' + encodeURIComponent(document.URL)
-    }
-  } else if (error.response.status * 1 === 400) {
-    if (error.response.data.message === 'mobile is exists') {
-      ElementUI.Message.error('手机号已存在')
-    } else if (error.response.data.message === 'email is exists') {
-      ElementUI.Message.error('邮箱已存在')
-    } else {
-      ElementUI.Message.error(error.response.data.message)
-    }
-  } else if (error.response.status * 1 === 403) {
-    ElementUI.Message.error(error.response.data.message)
-    // window.location.href = '/' //跳转到没权限页面
+  if (error.response.code === 3000) {
+    window.location.href = LOGIN_URL
   } else {
     ElementUI.Message.error(error.response.data.message)
   }

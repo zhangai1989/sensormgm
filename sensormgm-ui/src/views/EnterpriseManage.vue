@@ -117,7 +117,7 @@
             align="center"
             label="创建时间"
             prop="createTime"
-            min-width="150">
+            min-width="160">
           </el-table-column>
 
           <el-table-column
@@ -131,7 +131,7 @@
             align="center"
             label="修改时间"
             prop="modifyTime"
-            min-width="150">
+            min-width="160">
           </el-table-column>
 
           <el-table-column
@@ -145,6 +145,7 @@
               <el-button type="text" @click="confirmDelete(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
+
 
         </el-table>
       </div>
@@ -359,7 +360,7 @@ export default {
             that.totalNum = res.result.totalElements
             res.result.content.forEach(function (item, index, array) {
               that.areas.forEach(function (it, idx, arr) {
-                if (it.id === item.areaId) {
+                if(it.id === item.areaId) {
                   item.area = it.name
                 }
               })
