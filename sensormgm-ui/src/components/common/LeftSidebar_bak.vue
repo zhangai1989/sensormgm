@@ -6,16 +6,37 @@
                :collapse="isCollapse"
                unique-opened>
         <template v-for="(menu,i) in menus">
-          <template v-for="(child,k) in menu.childrens">
-            <el-menu-item :key="k"
-                          :index="`${i}${k}`+''"
-                          @click="openTab(child)">
-                  <i class="menu-icon iconfont"
-                     :class="child.menuIconClass"></i>
+          <el-menu-item class="jy-menu-item"
+                        v-if="!menu.childrens || (menu.childrens instanceof Array && menu.childrens.length < 1) "
+                        :key="i"
+                        :index="i+''">
+            <template>
+              <i class="menu-icon iconfont"
+                 :class="menu.menuIconClass"></i>
+              <span>{{menu.menuName}}</span>
+            </template>
+          </el-menu-item>
+
+          <el-submenu v-else
+                      popper-class="jy-left-popper"
+                      :key="i"
+                      :index="i+''">
+            <template>
+              <template slot="title">
+                <i class="menu-icon iconfont"
+                   :class="menu.menuIconClass"></i>
+                <span>{{menu.menuName}}</span>
+              </template>
+              <template v-for="(child,k) in menu.childrens">
+                <el-menu-item :key="k"
+                              :index="`${i}${k}`+''"
+                              @click="openTab(child)">
                   <span class="menu-item-name"
                         slot="title">{{child.menuName}}</span>
-            </el-menu-item>
-          </template>
+                </el-menu-item>
+              </template>
+            </template>
+          </el-submenu>
         </template>
       </el-menu>
     </el-scrollbar>

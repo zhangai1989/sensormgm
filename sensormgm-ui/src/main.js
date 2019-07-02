@@ -21,6 +21,13 @@ import 'echarts/lib/chart/line'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/title'
 import 'echarts/lib/component/legend'
+// 高德地图
+import VueAMap from 'vue-amap'
+Vue.use(VueAMap)
+Vue.config.productionTip = false
+VueAMap.initAMapApiLoader({
+  key: '55d8e1afb1f07c883a13d0b4520911ba'
+})
 
 Vue.config.productionTip = false // 设置为 false 以阻止 vue 在启动时生成生产提示。
 

@@ -36,6 +36,27 @@ export default new Router({
       meta: {
         title: '数据分析'
       }
+    }, {
+      path: '/monitor/warning',
+      name: 'warning',
+      component: () => import('@views/Warning'),
+      meta: {
+        title: '预警查询'
+      }
+    }, {
+      path: '/monitor/outStandard',
+      name: 'outStandard',
+      component: () => import('@views/OutStandard'),
+      meta: {
+        title: '超标查询'
+      }
+    }, {
+      path: '/monitor/realMap',
+      name: 'realMap',
+      component: () => import('@views/RealMap'),
+      meta: {
+        title: '实时地图'
+      }
     }]
   },
   {
@@ -54,6 +75,13 @@ export default new Router({
       component: () => import('@views/UserManage'),
       meta: {
         title: '用户管理'
+      }
+    }, {
+      path: '/system/area',
+      name: 'user',
+      component: () => import('@views/Area'),
+      meta: {
+        title: '区域管理'
       }
     }]
   },
