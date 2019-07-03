@@ -120,7 +120,7 @@ export default {
       loadingInstance.close()
       if (res.code === 2000) {
         localStorage.setItem('userInfo', JSON.stringify(res.result, null, 0))
-        that.$router.push({path: '/monitor'})
+        that.$router.push({path: '/index'})
       } else {
         that.$message({
           message: res.message,

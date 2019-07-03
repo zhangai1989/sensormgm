@@ -5,13 +5,6 @@
       <p slot="title">
         历史记录
       </p>
-      <div slot="btns">
-        <el-button size="small"
-                   :disabled="!exportAble"
-                   @click="exportExcel">
-          <i class="el-icon-document fbold"></i> {{ counter > 0 ? '剩余' + counter + 's' : '导出' }}
-        </el-button>
-      </div>
     </normal-bar>
 
     <div class="main-viewer">
@@ -31,7 +24,7 @@
             value-format="yyyy-MM-dd"
             @change="timeChange"
             :picker-options="pickerOptions"
-            :style="{marginLeft: areaTreeDeep > 1 ? '20px' : '0', width: '270px'}">
+            style="margin-left:20px; width: 270px">
           </el-date-picker>
         </li>
         <el-button type="success"
@@ -50,7 +43,7 @@
           <el-table-column
             align="center"
             prop="uploadTime"
-            label="上传时间">
+            label="发布时间">
           </el-table-column>
 
           <el-table-column
@@ -133,10 +126,7 @@ export default {
       list: [],
       totalNum: 0,
       pageSize: 10,
-      currentPage: 1,
-
-      exportAble: true,
-      counter: 0
+      currentPage: 1
     }
   },
   created () {
@@ -231,20 +221,6 @@ export default {
         argc.enterpriseId = that.treeValue[2]
       }
       that.getList(argc)
-    },
-
-    exportExcel () {
-      this.exportAble = false
-      this.counter = 60
-      let that = this
-      let intervalId = setInterval(() => {
-        if (that.counter === 0) {
-          that.exportAble = true
-          clearInterval(intervalId)
-        } else {
-          that.counter--
-        }
-      }, 1000)
     }
   }
 }

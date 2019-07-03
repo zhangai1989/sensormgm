@@ -50,12 +50,7 @@ export default {
     }
   },
   created () {
-    let str = localStorage.getItem('userInfo')
-    if (!str) {
-      window.location.href = LOGIN_URL
-    } else {
-      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    }
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
   },
   methods: {
     // 左侧菜单收缩展开处理

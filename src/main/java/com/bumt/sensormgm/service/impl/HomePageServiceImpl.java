@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -57,7 +54,7 @@ public class HomePageServiceImpl  implements HomePageService {
 
                 String lastUploadTime="";
                 if(enterpriseBeyondMap.get("last_upload_time")!=null){
-                    lastUploadTime = enterpriseBeyondMap.get("last_upload_time").toString();
+                    lastUploadTime = enterpriseBeyondMap.get("last_upload_time").toString().substring(0,19);
                 }
 
                 String lampblack = enterpriseBeyondMap.get("lampblack").toString();
@@ -89,13 +86,26 @@ public class HomePageServiceImpl  implements HomePageService {
         //当前设备超标占比
 
         Map deviceBeyondPerMap = new HashMap();
-        deviceBeyondPerMap.put("normal",normalCount*1.0/onlineCount);
-        deviceBeyondPerMap.put("earlyWarning",earlyWarningCount*1.0/onlineCount);
-        deviceBeyondPerMap.put("beyond",beyondCount*1.0/onlineCount);
+        if(onlineCount==0){
+            deviceBeyondPerMap.put("normal",0);
+            deviceBeyondPerMap.put("earlyWarning",0);
+            deviceBeyondPerMap.put("beyond",0);
+        }else{
+            deviceBeyondPerMap.put("normal",normalCount*1.0/onlineCount);
+            deviceBeyondPerMap.put("earlyWarning",earlyWarningCount*1.0/onlineCount);
+            deviceBeyondPerMap.put("beyond",beyondCount*1.0/onlineCount);
+
+        }
 
         //获取改区域的设备信息
         List<Map> deviceList = tDeviceDao.getDeviceListByAreaId(areaId);
 
+//        for(Map device:deviceList){
+//            if(device.get("lastUploadTime")!=null){
+//                String lastUploadTime = device.get("lastUploadTime").toString().substring(0,19);
+//                device.put("lastUploadTimeStr",lastUploadTime);
+//            }
+//        }
 
         homePageVo.setAreaRank(areaRank);
         homePageVo.setEnterpriseRank(enterpriseRank);
@@ -105,4 +115,5 @@ public class HomePageServiceImpl  implements HomePageService {
         homePageVo.setDeviceList(deviceList);
 		return homePageVo;
 	}
+
 }

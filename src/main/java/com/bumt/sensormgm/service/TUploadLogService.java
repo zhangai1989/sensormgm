@@ -12,4 +12,6 @@ public interface TUploadLogService extends BaseService {
     Object getWarningPageListByCondition(Map<String, Object> entity, HttpSession httpSession);
 
     Object getDataAnalysisByCondition(Map<String, Object> entity);
+
+    Object getRankingByCondition(Map<String, Object> entity,HttpSession session);
 }
