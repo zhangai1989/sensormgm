@@ -19,6 +19,15 @@
         "order": 1.1,
         "childrens": []
       }, {
+        "menuId": 10000,
+        "menuName": "大屏监控",
+        "menuLevel": 2,
+        "menuParentId": 10001,
+        "menuUrl": "/index",
+        "menuIconClass": "level-menu",
+        "order": 1.1,
+        "childrens": []
+      }, {
         "menuId": 10003,
         "menuName": "历史记录",
         "menuLevel": 2,
@@ -60,7 +69,7 @@
         "menuLevel": 2,
         "menuParentId": 10001,
         "menuUrl": "/monitor/realMap",
-        "menuIconClass": "el-icon-map-location",
+        "menuIconClass": "level-menu",
         "order": 1.1,
         "childrens": []
       }, {

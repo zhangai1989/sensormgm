@@ -37,7 +37,7 @@
       </ul>
 
       <div class="jy-content mt15" v-loading="!queryAble">
-        <chart class="chart" v-if="orgOptions.xAxis.data.length > 0" :options="orgOptions" :auto-resize="true"></chart>
+        <ve-line class="chart" v-if="chartData.rows.length > 0" :data="chartData" :chartSettings="chartSettings"></ve-line>
       </div>
     </div>
   </section>
@@ -78,53 +78,14 @@ export default {
           return time.getTime() > Date.now()
         }
       },
-      orgOptions: {
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: ['烟气温度', '烟气湿度', '油烟浓度']
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: []
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            name: '烟气温度',
-            type: 'line',
-            smooth: true,
-            data: []
-          },
-          {
-            name: '烟气湿度',
-            type: 'line',
-            smooth: true,
-            data: []
-          },
-          {
-            name: '油烟浓度',
-            type: 'line',
-            smooth: true,
-            data: []
-          }
-        ]
-      }
+      chartData: {
+        columns: ['日期', '油烟浓度', '温度', '湿度'],
+        rows: []
+      },
+//      chartSettings: {
+//        dimension: ['日期']
+//      }
+      chartSettings: {}
     }
   },
   created () {
@@ -171,19 +132,18 @@ export default {
       argc.pageSize = 1000
       that.queryAble = false
       const res = await analysisList(argc)
-      that.orgOptions.xAxis.data = []
-      that.orgOptions.series[0].data = []
-      that.orgOptions.series[1].data = []
-      that.orgOptions.series[2].data = []
+      that.chartData.rows = []
       that.queryAble = true
       if (res.code === 2000) {
         let list = res.result
         if (list && list.length > 0) {
           list.forEach(function (item, index, array) {
-            that.orgOptions.xAxis.data.push(item.uploadTime)
-            that.orgOptions.series[0].data.push(item.temp)
-            that.orgOptions.series[1].data.push(item.humidity)
-            that.orgOptions.series[2].data.push(item.lampblack)
+            that.chartData.rows.push({
+              '日期': item.uploadTime,
+              '油烟浓度': item.lampblack,
+              '温度': item.temp,
+              '湿度': item.humidity
+            })
           })
         }
       }
