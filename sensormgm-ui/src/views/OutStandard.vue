@@ -3,7 +3,7 @@
 
     <normal-bar>
       <p slot="title">
-        历史记录
+        超标查询
       </p>
       <div slot="btns">
         <el-button size="small"
@@ -17,21 +17,18 @@
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
         <li class="flex fxmiddle">
-          <el-cascader v-if="areaTreeDeep > 1" :options="areaTree" size="small" @change="changeTree"
-                       v-model="treeValue" :props="treeProps" :show-all-levels="false" placeholder="请选择企业"></el-cascader>
-
           <el-date-picker
             v-model="rangeTime"
             size="small"
-            type="datetimerange"
+            type="daterange"
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            format="yyyy-MM-dd HH:mm:ss"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
             @change="timeChange"
             :picker-options="pickerOptions"
-            :style="{marginLeft: areaTreeDeep > 1 ? '20px' : '0', width: '350px'}">
+            style="width: 270px">
           </el-date-picker>
         </li>
         <el-button type="success"
@@ -49,29 +46,23 @@
           size="mini"
           class="jy-table">
           <el-table-column
+            prop="enterpriseName"
+            label="企业名称">
+          </el-table-column>
+          <el-table-column
             align="center"
             prop="uploadTime"
-            label="上传时间">
+            label="记录时间">
           </el-table-column>
-
           <el-table-column
             align="center"
             prop="lampblack"
             label="油烟浓度(mg/m³)">
           </el-table-column>
-
           <el-table-column
-            align="center"
-            prop="temp"
-            label="烟气温度（℃）">
+            prop="multiple"
+            label="超标倍数">
           </el-table-column>
-
-          <el-table-column
-            align="center"
-            prop="humidity"
-            label="烟气湿度（%）">
-          </el-table-column>
-
         </el-table>
       </div>
 
@@ -89,36 +80,33 @@
   </section>
 </template>
 
+<style>
+  .el-table .cell {
+    white-space: nowrap;
+  }
+</style>
+
 <style scoped>
-    .pagination {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 22px;
-        padding-bottom: 20px;
-    }
+  .pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 22px;
+    padding-bottom: 20px;
+  }
 </style>
 
 <script>
-import { historyList } from '@api/uploadLog'
-import { getAreaTree } from '@api/area'
+import { beyondList } from '@api/uploadLog'
 const normalBar = () => import('@components/common/NormalBar')
 
 export default {
-  name: 'history',
+  name: 'outStandard',
   components: {
     normalBar
   },
   data () {
     return {
       queryAble: true,
-      areaTree: [],
-      areaTreeDeep: 3,
-      treeProps: {
-        value: 'id',
-        label: 'text',
-        children: 'nodes'
-      },
-      treeValue: [],
       rangeTime: '',
       pickerOptions: {
         disabledDate (time) {
@@ -144,33 +132,21 @@ export default {
     // 初始化
     initData () {
       let that = this
-      let userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      let level = parseInt(userInfo.level)
-      this.areaTreeDeep = level < 3 ? 3 : level === 3 ? 2 : 1
-
-      let treeProps = {
-        areaId: parseInt(userInfo.areaId)
+      let argc = {
+        pageNum: 1
       }
-      that.getTree(treeProps)
-    },
-
-    async getTree (argc) {
-      let that = this
-      const res = await getAreaTree(argc)
-      if (res.code === 2000) {
-        that.areaTree = res.result
-      }
+      that.getList(argc)
     },
 
     // 获取一页列表数据
     async getList (argc) {
-      let that = this
-      argc.pageSize = that.pageSize
-      if (this.rangeTime.length === 0) {
+      if (this.rangeTime.length == 0) {
         return
       }
+      let that = this
+      argc.pageSize = that.pageSize
       that.queryAble = false
-      const res = await historyList(argc)
+      const res = await beyondList(argc)
       that.queryAble = true
       if (res.code === 2000) {
         that.currentPage = argc.pageNum
@@ -189,25 +165,6 @@ export default {
         argc.startTime = that.rangeTime[0]
         argc.endTime = that.rangeTime[1]
       }
-      if (that.treeValue.length === that.areaTreeDeep) {
-        argc.enterpriseId = that.treeValue[2]
-      }
-      that.getList(argc)
-    },
-    changeTree (obj) {
-      let that = this
-      if (obj.length < that.areaTreeDeep) {
-        that.treeValue = []
-        return
-      }
-      let argc = {
-        pageNum: 1,
-        enterpriseId: obj[2].id
-      }
-      if (that.rangeTime !== '' && that.rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
-      }
       that.getList(argc)
     },
 
@@ -219,9 +176,6 @@ export default {
       if (rangeTime !== '' && rangeTime !== null) {
         argc.startTime = that.rangeTime[0]
         argc.endTime = that.rangeTime[1]
-      }
-      if (that.treeValue.length === that.areaTreeDeep) {
-        argc.enterpriseId = that.treeValue[2]
       }
       that.getList(argc)
     },

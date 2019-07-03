@@ -22,7 +22,7 @@
         "menuId": 10003,
         "menuName": "历史记录",
         "menuLevel": 2,
-        "menuParentId": 30081,
+        "menuParentId": 10001,
         "menuUrl": "/monitor/history",
         "menuIconClass": "level-menu",
         "order": 1.1,
@@ -31,8 +31,35 @@
         "menuId": 10004,
         "menuName": "数据分析",
         "menuLevel": 2,
-        "menuParentId": 30081,
+        "menuParentId": 10001,
         "menuUrl": "/monitor/analysis",
+        "menuIconClass": "level-menu",
+        "order": 1.1,
+        "childrens": []
+      }, {
+        "menuId": 10005,
+        "menuName": "预警查询",
+        "menuLevel": 2,
+        "menuParentId": 10001,
+        "menuUrl": "/monitor/warning",
+        "menuIconClass": "level-menu",
+        "order": 1.1,
+        "childrens": []
+      }, {
+        "menuId": 10006,
+        "menuName": "超标查询",
+        "menuLevel": 2,
+        "menuParentId": 10001,
+        "menuUrl": "/monitor/outStandard",
+        "menuIconClass": "level-menu",
+        "order": 1.1,
+        "childrens": []
+      }, {
+        "menuId": 10007,
+        "menuName": "实时地图",
+        "menuLevel": 2,
+        "menuParentId": 10001,
+        "menuUrl": "/monitor/realMap",
         "menuIconClass": "level-menu",
         "order": 1.1,
         "childrens": []
@@ -61,6 +88,15 @@
         "menuLevel": 2,
         "menuParentId": 20001,
         "menuUrl": "/system/user",
+        "menuIconClass": "el-icon-user-solid",
+        "order": 1.2,
+        "childrens": []
+      }, {
+        "menuId": 20004,
+        "menuName": "区域管理",
+        "menuLevel": 2,
+        "menuParentId": 20001,
+        "menuUrl": "/system/area",
         "menuIconClass": "level-menu",
         "order": 1.2,
         "childrens": []

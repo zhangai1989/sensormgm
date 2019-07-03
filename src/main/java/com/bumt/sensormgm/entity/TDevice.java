@@ -1,6 +1,8 @@
 package com.bumt.sensormgm.entity;
 
 import com.bumt.sensormgm.common.pojo.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 
 import javax.persistence.*;
@@ -113,6 +115,7 @@ public class TDevice extends BaseEntity implements Serializable {
 	/**
 	 * 最后上传时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "last_upload_time", nullable = true)
 	private java.util.Date lastUploadTime;
 

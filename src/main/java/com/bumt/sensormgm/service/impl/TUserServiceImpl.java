@@ -1,18 +1,19 @@
 package com.bumt.sensormgm.service.impl;
 
-import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
 import com.bumt.sensormgm.common.dao.BaseJpaDao;
-import com.bumt.sensormgm.entity.TDevice;
+import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
+import com.bumt.sensormgm.dao.TAreaDao;
+import com.bumt.sensormgm.dao.TUserDao;
+import com.bumt.sensormgm.entity.TArea;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TUserService;
 import com.bumt.sensormgm.util.CommonUtil;
 import com.bumt.sensormgm.util.ResultUtil;
 import org.springframework.stereotype.Service;
-import com.bumt.sensormgm.dao.TUserDao;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,8 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 
 	@Resource
 	private TUserDao dao;
+	@Resource
+	private TAreaDao areaDao;
 
 	@Override
 	public BaseJpaDao getGenericMapper() {return dao; }
@@ -93,7 +96,25 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 		return new ResultUtil<>().setErrorMsg(4000,"未登录");
 	}
 
+	@Override
+	public Object insert(Object o, HttpSession session) {
+		TUser user = (TUser)o;
+		setLevel(user);
+		return super.insert(o, session);
+	}
 
+	/**
+	 * 设置用户等级
+	 * @param user
+	 */
+	private void setLevel(TUser user) {
+		if(!StringUtils.isEmpty(user.getEnterpriseId())) {
+			user.setLevel(4);
+		}else {
+			TArea area = areaDao.findById(Long.valueOf(user.getAreaId())).get();
+			user.setLevel(Integer.valueOf(area.getLevel()) + 1);
+		}
+	}
 	public static void main(String[] args) {
 		String aa = "2019-06-30 13:48:38.0";
 		System.out.println(aa.substring(0,19));
