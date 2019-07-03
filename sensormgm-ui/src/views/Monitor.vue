@@ -9,9 +9,8 @@
         <div>
           <span style="font-size: 14px;margin-right: 10px">自动刷新</span>
           <el-switch
-            v-model="autoRefresh"
-            active-color="#13ce66"
-            @change="changeAutoRefresh">
+            v-model="autoReload"
+            @change="changeAutoReload">
           </el-switch>
         </div>
       </div>
@@ -22,7 +21,7 @@
         <li class="flex fxmiddle">
           <el-select v-model="status" @change="changeStatus" size="small" placeholder="请选择" style="width: 80px">
             <el-option
-              v-for="(item, i) in statusList"
+              v-for="(item, i) in status_list"
               :key="i"
               :label="item.title"
               :value="item.label">
@@ -36,7 +35,7 @@
             v-model.trim="search">
           </el-input>
         </li>
-        <el-button type="success" size="small" @click="searchList">查 询</el-button>
+        <el-button type="success" size="small" @click="searchList">搜索</el-button>
       </ul>
 
       <div class="jy-content mt15">
@@ -61,7 +60,7 @@
             min-width="120">
             <template slot-scope="scope">
               <i class="iconfont icon-wifi"
-                 :style="{color:scope.row.status === 'ONLINE' ? '#67C23A': '#a7a7a7'}"></i>
+                 :style="{color:scope.row.status === 'ONLINE' ? '#67C23A': '#F56C6C'}"></i>
             </template>
           </el-table-column>
 
@@ -180,10 +179,10 @@ export default {
   data () {
     return {
       loading: false,
-      autoRefresh: false,
+      autoReload: false,
       search: '',
       status: '全部',
-      statusList: [{
+      status_list: [{
         title: '全部',
         label: '全部'
       }, {
@@ -200,8 +199,6 @@ export default {
     }
   },
   created () {
-    this.autoRefresh = 'true' === localStorage.getItem('monitor.autoRefresh') ? true : false
-    this.changeAutoRefresh(this.autoRefresh)
   },
 
   mounted () {
@@ -300,8 +297,7 @@ export default {
       }
       that.getList(argc)
     },
-    changeAutoRefresh (val) {
-      localStorage.setItem('monitor.autoRefresh', val)
+    changeAutoReload (val) {
       let that = this
       if (val) {
         that.intervalId = setInterval(() => {

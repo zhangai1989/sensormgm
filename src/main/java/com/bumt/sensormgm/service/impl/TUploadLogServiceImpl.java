@@ -163,4 +163,46 @@ public class TUploadLogServiceImpl extends BaseServiceImpl implements TUploadLog
 //		List<TUploadLog> tUploadLogList = dao.getDataAnalysisByCondition(startTime,endTime, entity.get("enterpriseId").toString());
 		return dao.getDataAnalysisByCondition(startTime,endTime, entity.get("enterpriseId").toString());
 	}
+
+	@Override
+	public Object getRankingByCondition(Map<String, Object> entity,HttpSession session) {
+
+		String startTime="";
+		if(!StringUtils.isEmpty(entity.get("startTime"))){
+			startTime =entity.get("startTime").toString();
+		}
+
+		String endTime="";
+		if(!StringUtils.isEmpty(entity.get("endTime"))){
+			endTime =entity.get("endTime").toString();
+		}
+
+
+		String sql =  "select t1.*,t3.`name` from (select device_code as deviceCode,sum(lampblack)/COUNT(0) as lampblack,SUM(temp)/count(0) as temp,SUM(humidity)/count(0) as humidity from t_upload_log where upload_time >='"+startTime+"' and upload_time <='"+endTime+"'  GROUP BY device_code) t1 JOIN t_device t2 ON t1.deviceCode = t2.device_code LEFT JOIN t_enterprise t3 ON t2.enterprise_id = t3.id " ;
+
+
+		TUser tUser = (TUser) session.getAttribute("user");
+		//level==3的时候查询改区域的数据，level为4的时候查询该企业的数据
+		if(tUser!=null){
+			if(tUser.getLevel()==3){
+				sql = sql + " and t3.area_id = " +tUser.getAreaId();
+			}else if(tUser.getLevel()==4){
+				sql = sql + " and t2.enterprise_id = " +tUser.getEnterpriseId();
+			}
+		}
+
+		sql=sql+" ORDER BY "+entity.get("field").toString()+" "+entity.get("sort").toString();
+
+		System.out.println(sql);
+		Query query = em.createNativeQuery(sql);
+		query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+		List<Map> dataList = query.getResultList();
+
+//		for(Map map:dataList){
+//			if(map.get("upload_time")!=null&&map.get("upload_time").toString().length()>19){
+//				map.put("uploadTime",map.get("upload_time").toString().substring(0,19));
+//			}
+//		}
+		return dataList;
+	}
 }

@@ -87,4 +87,12 @@ public class TUploadLogController  extends BaseController<TUploadLog>{
 		return new ResultUtil<>().setData(service.getDataAnalysisByCondition(entity));
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/getRankingByCondition", produces = {"application/json;charset=UTF-8"})
+	public Object getRankingByCondition(@RequestBody Map<String,Object> entity,HttpSession session){
+		return new ResultUtil<>().setData(service.getRankingByCondition(entity,session));
+	}
+
+
+
 }
