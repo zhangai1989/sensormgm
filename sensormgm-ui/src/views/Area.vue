@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import { getHistoryList } from '@api/monitor'
 import { getAreaTree } from '@api/area'
 const normalBar = () => import('@components/common/NormalBar')
 

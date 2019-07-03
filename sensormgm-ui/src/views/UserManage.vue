@@ -149,7 +149,7 @@
 
         <el-form :inline="true" :model="form" ref="editForm" :rules="rules" label-width="120px">
           <el-form-item label="所属区域" prop="areaId">
-            <el-select size="small" v-model="form.areaId" placeholder="请选择" style="width: 200px" :disabled="level > 2">
+            <el-select size="small" v-model="form.areaId" placeholder="请选择" :disabled="level > 2">
               <el-option
                 v-for="item in areas"
                 :key="item.id"
@@ -210,6 +210,10 @@
         margin-top: 22px;
         padding-bottom: 20px;
     }
+
+  .el-input--small, .el-select--small {
+    width: 189px;
+  }
 
 </style>
 
@@ -393,6 +397,7 @@ export default {
             // 新增用户
             addUser(this.form)
               .then(res => {
+                  debugger
                 this.saveAble = true
                 if (res.code === 2000) {
                   this.$message.success('保存成功')

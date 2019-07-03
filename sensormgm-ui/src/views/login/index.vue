@@ -9,7 +9,7 @@
       <div class="login-input-box">
         <div class="input">
           <!--el-icon-user-solid-->
-          <el-input v-model="userName" prefix-icon="el-icon-user-solid" style="width: 300px"
+          <el-input v-model="userName" prefix-icon="el-icon-user-solid" style="width: 300px; line-height: 30px; height: auto"
                     placeholder="请输入用户名"></el-input>
         </div>
       </div>
@@ -47,7 +47,7 @@
     position: absolute;
     top: 30vh;
     right: 5vw;
-    width: 500px;
+    width: 450px;
     padding: 30px;
     background-color: #fff;
     border: 1px solid #DAE3ED;
@@ -73,6 +73,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .el-input__inner {
+    line-height: 30px;
+    display: inline-block;
   }
 
 </style>
@@ -120,7 +125,7 @@ export default {
       loadingInstance.close()
       if (res.code === 2000) {
         localStorage.setItem('userInfo', JSON.stringify(res.result, null, 0))
-        that.$router.push({path: '/monitor'})
+        that.$router.push({path: '/monitor/real'})
       } else {
         that.$message({
           message: res.message,

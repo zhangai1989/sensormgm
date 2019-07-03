@@ -32,6 +32,8 @@
                    :disabled="!queryAble"
                    @click="timeChange">查 询
         </el-button>
+
+        <!--<el-button size="small" type="text" class="el-icon-download"></el-button>-->
       </ul>
 
       <div class="jy-content mt15" v-loading="!queryAble">
@@ -69,6 +71,7 @@ export default {
         children: 'nodes'
       },
       treeValue: [],
+      enterpriseId: [],
       rangeTime: '',
       pickerOptions: {
         disabledDate (time) {
@@ -155,6 +158,15 @@ export default {
     // 获取一页列表数据
     async getList (argc) {
       let that = this
+      if (!that.enterpriseId) return
+      argc.enterpriseId =  this.enterpriseId
+      if (that.rangeTime && that.rangeTime !== '' && that.rangeTime !== null) {
+        argc.startTime = that.rangeTime[0]
+        argc.endTime = that.rangeTime[1]
+      } else {
+          return
+      }
+
       argc.pageNo = 1
       argc.pageSize = 1000
       that.queryAble = false
@@ -179,17 +191,13 @@ export default {
 
     changeTree (obj) {
       let that = this
+      that.enterpriseId = obj[obj.length - 1]
       if (obj.length < that.areaTreeDeep) {
         that.treeValue = []
         return
       }
       let argc = {
-        pageNum: 1,
-        enterpriseId: obj[2]
-      }
-      if (that.rangeTime !== '' && that.rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
+        pageNo: 1
       }
       that.getList(argc)
     },
@@ -198,13 +206,6 @@ export default {
       let that = this
       let argc = {
         pageNum: 1
-      }
-      if (rangeTime !== '' && rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
-      }
-      if (that.treeValue.length === that.areaTreeDeep) {
-        argc.enterpriseId = that.treeValue[2]
       }
       that.getList(argc)
     }

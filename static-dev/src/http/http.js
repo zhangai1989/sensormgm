@@ -60,6 +60,11 @@ function checkCode(res) {
   //登录过期拦截
   if(res.data.code === 3000){
     window.location.href = "/"
+    return
+  }
+
+  if (res.data.code != 2000) {
+
   }
 
   //下载请求返回完整的 res
