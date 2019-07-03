@@ -27,6 +27,7 @@ public class HomePageController {
     @ResponseBody
     @RequestMapping(value = "/getHomePageDataByAreaId", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
     public Object getHomePageDataByAreaId(@RequestParam("areaId") String areaId){
+
         return new ResultUtil<>().setData(homePageService.getHomePageDataByAreaId(areaId));
     }
 
