@@ -37,18 +37,11 @@
       </ul>
 
       <div class="jy-content mt15" v-loading="!queryAble">
-        <ve-line class="chart" v-if="chartData.rows.length > 0" :data="chartData" :chartSettings="chartSettings"></ve-line>
+        <ve-line height="700px" v-if="chartData.rows.length > 0" :data="chartData" :settings="chartSettings"></ve-line>
       </div>
     </div>
   </section>
 </template>
-
-<style scoped>
-  .chart {
-    width: calc(100%);
-    height: 650px;
-  }
-</style>
 
 <script>
 import { analysisList } from '@api/uploadLog'
@@ -82,10 +75,10 @@ export default {
         columns: ['日期', '油烟浓度', '温度', '湿度'],
         rows: []
       },
-//      chartSettings: {
-//        dimension: ['日期']
-//      }
-      chartSettings: {}
+      chartSettings: {
+        dimension: ['日期'],
+        height: '900px'
+      },
     }
   },
   created () {
