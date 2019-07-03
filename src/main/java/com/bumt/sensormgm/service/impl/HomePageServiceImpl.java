@@ -7,6 +7,7 @@ import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
 import com.bumt.sensormgm.dao.TAreaDao;
 import com.bumt.sensormgm.dao.TDeviceDao;
 import com.bumt.sensormgm.dao.TEnterpriseDao;
+import com.bumt.sensormgm.dao.TUploadLogDao;
 import com.bumt.sensormgm.entity.TDevice;
 import com.bumt.sensormgm.service.HomePageService;
 import com.bumt.sensormgm.view.HomePageVo;
@@ -30,6 +31,11 @@ public class HomePageServiceImpl  implements HomePageService {
 
 	@Resource
 	private TDeviceDao tDeviceDao;
+
+    @Resource
+    private TUploadLogDao tUploadLogDao;
+
+
 	@Override
 	public Object getHomePageDataByAreaId(String areaId) {
 
@@ -71,13 +77,14 @@ public class HomePageServiceImpl  implements HomePageService {
         List<Map> deviceStatisticsList =  tDeviceDao.getDeviceStatisticsByAreaId(areaId);
         Map deviceStatisticsResultMap = new HashMap();
 
-        deviceStatisticsResultMap.put("allCount",deviceStatisticsList.get(0).get("count"));
-
+        int allCount = Integer.parseInt(deviceStatisticsList.get(0).get("count").toString());
         int onlineCount = Integer.parseInt(deviceStatisticsList.get(1).get("count").toString());
         int earlyWarningCount = Integer.parseInt(deviceStatisticsList.get(2).get("count").toString());
         int beyondCount = Integer.parseInt(deviceStatisticsList.get(3).get("count").toString());
 
+        deviceStatisticsResultMap.put("allCount",deviceStatisticsList.get(0).get("count"));
         deviceStatisticsResultMap.put("onlineCount",onlineCount);
+        deviceStatisticsResultMap.put("offlineCount",allCount-onlineCount);
         int normalCount =onlineCount-earlyWarningCount-beyondCount;
         deviceStatisticsResultMap.put("normalCount",normalCount);
         deviceStatisticsResultMap.put("earlyWarningCount",earlyWarningCount);
@@ -97,15 +104,30 @@ public class HomePageServiceImpl  implements HomePageService {
 
         }
 
+        //最近100条数据显示
+
+        List<Map> getLogList =  tUploadLogDao.getLogListByAreaId(areaId);
+
+        List<String> lastLogsData =  new ArrayList<>();
+        if(getLogList!=null&&getLogList.size()>0){
+            for(Map log:getLogList){
+                String name = log.get("name").toString();
+
+                String uploadTime="";
+                if(log.get("upload_time")!=null){
+                    uploadTime = log.get("upload_time").toString().substring(0,19);
+                }
+
+                String lampblack = log.get("lampblack").toString();
+                String logStr = "【"+uploadTime+"】,"+name+
+                        "上传数据,油烟浓度:"+lampblack+"mg/m3.";
+                lastLogsData.add(logStr);
+            }
+        }
+
         //获取改区域的设备信息
         List<Map> deviceList = tDeviceDao.getDeviceListByAreaId(areaId);
 
-//        for(Map device:deviceList){
-//            if(device.get("lastUploadTime")!=null){
-//                String lastUploadTime = device.get("lastUploadTime").toString().substring(0,19);
-//                device.put("lastUploadTimeStr",lastUploadTime);
-//            }
-//        }
 
         homePageVo.setAreaRank(areaRank);
         homePageVo.setEnterpriseRank(enterpriseRank);
@@ -113,6 +135,7 @@ public class HomePageServiceImpl  implements HomePageService {
         homePageVo.setDeviceStatistics(deviceStatisticsResultMap);
         homePageVo.setDeviceBeyondPer(deviceBeyondPerMap);
         homePageVo.setDeviceList(deviceList);
+        homePageVo.setLastLogsData(lastLogsData);
 		return homePageVo;
 	}
 

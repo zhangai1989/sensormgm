@@ -107,8 +107,18 @@ public abstract class BaseController<T>{
 	@ResponseBody
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public Object insert(@RequestBody T entity,HttpSession session){
+
+		String errorMsg = checkInsertStatus(entity);
+		if(!StringUtils.isEmpty(errorMsg)){
+			return new ResultUtil<>().setErrorMsg(errorMsg);
+		}
+
 		return new ResultUtil<>().setData(getService().insert(entity,session));
 	}
+	public  String checkInsertStatus(T entity){
+		return "";
+	}
+
 
 	/**
 	 *@author : zhangai

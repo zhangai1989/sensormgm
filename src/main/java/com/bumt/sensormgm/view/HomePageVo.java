@@ -49,6 +49,22 @@ public class HomePageVo {
 
     private List<Map> deviceList;
 
+    /**
+     * @Description:企业超标
+     * @Author:     zhangai
+     * @CreateDate: 2019/6/29 11:27
+     * @Version: 1.0
+     */
+    private List<String> lastLogsData;
+
+    public List<String> getLastLogsData() {
+        return lastLogsData;
+    }
+
+    public void setLastLogsData(List<String> lastLogsData) {
+        this.lastLogsData = lastLogsData;
+    }
+
     public List<Map> getDeviceList() {
         return deviceList;
     }

@@ -97,6 +97,28 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 	}
 
 	@Override
+	public List<TUser> getByCname(String cname) {
+
+		return dao.findByCname(cname);
+	}
+
+	@Override
+	public List<TUser> getByMobile(String mobile) {
+		return dao.findByMobile(mobile);
+	}
+
+	@Override
+	public List<TUser> getByEmail(String email) {
+		return dao.findByEmail(email);
+	}
+
+	@Override
+	public List<TUser> checkUpdateStatus(String cname, String mobile, String email, long id) {
+
+		return dao.findByEmailOrCnameOrMobileAndIdNot(email,cname,mobile,id);
+	}
+
+	@Override
 	public Object insert(Object o, HttpSession session) {
 		TUser user = (TUser)o;
 		setLevel(user);
@@ -115,10 +137,5 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 			user.setLevel(Integer.valueOf(area.getLevel()) + 1);
 		}
 	}
-	public static void main(String[] args) {
-		String aa = "2019-06-30 13:48:38.0";
-		System.out.println(aa.substring(0,19));
 
-
-	}
 }

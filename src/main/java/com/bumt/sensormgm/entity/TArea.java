@@ -47,13 +47,13 @@ public class TArea extends BaseEntity implements Serializable {
 	/**
 	 * 创建人姓名
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "creator_name", nullable = true)
 	private String creatorName;
 
 	/**
 	 * 创建时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "create_time", nullable = false)
 	private java.util.Date createTime;
 

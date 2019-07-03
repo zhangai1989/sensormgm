@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 
 import static com.bumt.sensormgm.util.CommonUtil.getCodeByNowDateTime;
@@ -28,6 +30,45 @@ public class TUserController  extends BaseController<TUser>{
 	@Override
 	public BaseService getService() { return service; }
 
+
+
+	@Override
+	public  String checkInsertStatus(TUser entity){
+
+
+		String cname = entity.getCname();
+		List<TUser> tUser =  service.getByCname(cname);
+		if(!CollectionUtils.isEmpty(tUser)){
+			return "登录名称不能重复！";
+		}
+
+		tUser =  service.getByMobile(entity.getMobile());
+		if(!CollectionUtils.isEmpty(tUser)){
+			return "手机不能重复！";
+		}
+		tUser =  service.getByEmail(entity.getEmail());
+		if(!CollectionUtils.isEmpty(tUser)){
+			return "邮箱不能重复！";
+		}
+
+		//登录名 手机 邮箱
+		return "";
+	}
+
+
+	@Override
+	public  String checkUpdateStatus(TUser entity){
+
+		long id = entity.getId();
+		String cname = entity.getCname();
+		List<TUser> tUser =  service.checkUpdateStatus(cname,entity.getMobile(),entity.getEmail(),id);
+		if(!CollectionUtils.isEmpty(tUser)){
+			return "登录名称不能重复！";
+		}
+
+		//登录名 手机 邮箱
+		return "";
+	}
 
 	/**
 	 *@author : zhangai
