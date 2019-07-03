@@ -1,22 +1,15 @@
 package com.bumt.sensormgm.service.impl;
 
-import com.bumt.sensormgm.common.dao.BaseJpaDao;
-import com.bumt.sensormgm.common.pojo.TreeNode;
-import com.bumt.sensormgm.common.pojo.TreeUtil;
-import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
 import com.bumt.sensormgm.dao.TAreaDao;
 import com.bumt.sensormgm.dao.TDeviceDao;
 import com.bumt.sensormgm.dao.TEnterpriseDao;
 import com.bumt.sensormgm.dao.TUploadLogDao;
-import com.bumt.sensormgm.entity.TDevice;
 import com.bumt.sensormgm.service.HomePageService;
 import com.bumt.sensormgm.view.HomePageVo;
-import com.bumt.sensormgm.view.OnePerNode;
 import com.github.pagehelper.util.StringUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigInteger;
 import java.util.*;
 
 

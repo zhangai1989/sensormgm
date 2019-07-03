@@ -97,9 +97,9 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 	}
 
 	@Override
-	public List<TUser> getByCname(String cname) {
+	public List<TUser> getByLoginName(String cname) {
 
-		return dao.findByCname(cname);
+		return dao.findByLoginName(cname);
 	}
 
 	@Override

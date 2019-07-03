@@ -13,7 +13,7 @@ public interface TUserService extends BaseService {
 
     Object getPageListByCondition2(Map<String, Object> entity, HttpSession httpSession);
 
-    List<TUser> getByCname(String cname);
+    List<TUser> getByLoginName(String cname);
 
     List<TUser> getByMobile(String mobile);
 

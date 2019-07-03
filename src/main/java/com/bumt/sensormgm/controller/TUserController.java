@@ -36,8 +36,8 @@ public class TUserController  extends BaseController<TUser>{
 	public  String checkInsertStatus(TUser entity){
 
 
-		String cname = entity.getCname();
-		List<TUser> tUser =  service.getByCname(cname);
+		String cname = entity.getLoginName();
+		List<TUser> tUser =  service.getByLoginName(cname);
 		if(!CollectionUtils.isEmpty(tUser)){
 			return "登录名称不能重复！";
 		}
@@ -60,7 +60,7 @@ public class TUserController  extends BaseController<TUser>{
 	public  String checkUpdateStatus(TUser entity){
 
 		long id = entity.getId();
-		String cname = entity.getCname();
+		String cname = entity.getLoginName();
 		List<TUser> tUser =  service.checkUpdateStatus(cname,entity.getMobile(),entity.getEmail(),id);
 		if(!CollectionUtils.isEmpty(tUser)){
 			return "登录名称不能重复！";
