@@ -63,7 +63,7 @@ public class TUserController  extends BaseController<TUser>{
 		String cname = entity.getLoginName();
 		List<TUser> tUser =  service.checkUpdateStatus(cname,entity.getMobile(),entity.getEmail(),id);
 		if(!CollectionUtils.isEmpty(tUser)){
-			return "登录名称不能重复！";
+			return "登录名称,手机,邮箱不能重复！";
 		}
 
 		//登录名 手机 邮箱

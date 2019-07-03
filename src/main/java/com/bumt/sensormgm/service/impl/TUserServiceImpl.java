@@ -115,7 +115,7 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 	@Override
 	public List<TUser> checkUpdateStatus(String cname, String mobile, String email, long id) {
 
-		return dao.findByEmailOrCnameOrMobileAndIdNot(email,cname,mobile,id);
+		return dao.findByEmailOrLoginNameOrMobileAndIdNot(email,cname,mobile,id);
 	}
 
 	@Override

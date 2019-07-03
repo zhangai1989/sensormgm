@@ -19,5 +19,5 @@ public interface TUserDao extends BaseJpaDao<TUser> {
 
     List<TUser> findByEmail(String email);
 
-    List<TUser> findByEmailOrCnameOrMobileAndIdNot(String email, String cname, String mobile, long id);
+    List<TUser> findByEmailOrLoginNameOrMobileAndIdNot(String email, String cname, String mobile, long id);
 }
