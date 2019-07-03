@@ -57,7 +57,14 @@ export default new Router({
       meta: {
         title: '实时地图'
       }
-    }]
+    }, {
+    path: '/monitor/ranking',
+      name: 'ranking',
+      component: () => import('@views/ranking'),
+      meta: {
+      title: '污染排名'
+    }
+  }]
   },
   {
     path: '/system',

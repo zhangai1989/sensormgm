@@ -8,3 +8,5 @@ export const warningList = (params) => Http.setPromise(`POST`, `/api/TUploadLog/
 export const beyondList = (params) => Http.setPromise(`POST`, `/api/TUploadLog/getBeyondPageListByCondition`, params)
 // 数据分析查询
 export const analysisList = (params) => Http.setPromise(`POST`, `/api/TUploadLog/getDataAnalysisByCondition`, params)
+// 污染排名
+export const rankingList = (params) => Http.setPromise(`POST`, `/api/TUploadLog/getRankingByCondition`, params)

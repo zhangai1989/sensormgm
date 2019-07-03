@@ -20,8 +20,7 @@
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
         <li class="flex fxmiddle">
-
-          <el-select v-model="status" @change="changeStatus" size="small" placeholder="请选择">
+          <el-select v-model="status" @change="changeStatus" size="small" placeholder="请选择" style="width: 80px">
             <el-option
               v-for="(item, i) in statusList"
               :key="i"
@@ -29,11 +28,11 @@
               :value="item.label">
             </el-option>
           </el-select>
-
+        </li>
+        <li class="flex fxmiddle">
           <el-input
             placeholder="请输入企业名称"
             size="small"
-            style="margin:0 15px"
             v-model.trim="search">
           </el-input>
         </li>
