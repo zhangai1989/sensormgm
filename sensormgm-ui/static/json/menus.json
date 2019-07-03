@@ -60,6 +60,15 @@
         "menuLevel": 2,
         "menuParentId": 10001,
         "menuUrl": "/monitor/realMap",
+        "menuIconClass": "el-icon-map-location",
+        "order": 1.1,
+        "childrens": []
+      }, {
+        "menuId": 10008,
+        "menuName": "污染排名",
+        "menuLevel": 2,
+        "menuParentId": 10001,
+        "menuUrl": "/monitor/ranking",
         "menuIconClass": "level-menu",
         "order": 1.1,
         "childrens": []

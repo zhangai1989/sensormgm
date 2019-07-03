@@ -9,10 +9,11 @@
 
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
-        <li class="flex fxmiddle">
-          <el-cascader v-if="areaTreeDeep > 1" :options="areaTree" size="small" @change="changeTree"
+        <li class="flex fxmiddle" v-if="areaTreeDeep > 1">
+          <el-cascader :options="areaTree" size="small" @change="changeTree"
                        v-model="treeValue" :props="treeProps" :show-all-levels="false" placeholder="请选择企业"></el-cascader>
-
+        </li>
+        <li class="flex fxmiddle">
           <el-date-picker
             v-model="rangeTime"
             size="small"
@@ -23,8 +24,7 @@
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
             @change="timeChange"
-            :picker-options="pickerOptions"
-            :style="{marginLeft: areaTreeDeep > 1 ? '20px' : '0', width: '270px'}">
+            :picker-options="pickerOptions">
           </el-date-picker>
         </li>
         <el-button type="success"
