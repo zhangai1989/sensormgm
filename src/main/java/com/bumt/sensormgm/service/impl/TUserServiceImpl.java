@@ -6,9 +6,11 @@ import com.bumt.sensormgm.dao.TAreaDao;
 import com.bumt.sensormgm.dao.TUserDao;
 import com.bumt.sensormgm.entity.TArea;
 import com.bumt.sensormgm.entity.TUser;
+import com.bumt.sensormgm.service.TAreaService;
 import com.bumt.sensormgm.service.TUserService;
 import com.bumt.sensormgm.util.CommonUtil;
 import com.bumt.sensormgm.util.ResultUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -60,10 +62,15 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 		}
 	}
 
+	@Autowired
+	private TAreaService tAreaService;
+
 	@Override
 	public Object getPageListByCondition2(Map<String, Object> entity, HttpSession httpSession) {
 		TUser tUser = (TUser) httpSession.getAttribute("user");
 		if(tUser!=null){
+
+			List<TArea> listArea =  tAreaService.getUserAreas(Long.parseLong(tUser.getAreaId()));
 			int level = tUser.getLevel();
 
 			int levelCondition = 2;

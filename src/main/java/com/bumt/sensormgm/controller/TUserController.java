@@ -5,6 +5,7 @@ import com.bumt.sensormgm.common.service.BaseService;
 import com.bumt.sensormgm.entity.TEnterprise;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TUserService;
+import com.bumt.sensormgm.util.CommonUtil;
 import com.bumt.sensormgm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -32,10 +33,17 @@ public class TUserController  extends BaseController<TUser>{
 
 
 
+
+
+	@Override
+	public  void changeInsertEntity(TUser entity){
+		String password = entity.getPassword();
+		entity.setPassword(CommonUtil.encodeByMD5(password));
+	}
+
+
 	@Override
 	public  String checkInsertStatus(TUser entity){
-
-
 		String cname = entity.getLoginName();
 		List<TUser> tUser =  service.getByLoginName(cname);
 		if(!CollectionUtils.isEmpty(tUser)){
