@@ -12,6 +12,7 @@ export default {
 
 <style lang="less">
 #app{
+  @import "assets/styles/iconfont.css";
   width: 100%;
   height: 100%;
 }

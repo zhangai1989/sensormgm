@@ -35,7 +35,7 @@
             v-model.trim="search">
           </el-input>
         </li>
-        <el-button type="success" size="small" @click="searchList">搜索</el-button>
+        <el-button type="success" size="small" @click="searchList">查 询</el-button>
       </ul>
 
       <div class="jy-content mt15">
@@ -60,7 +60,7 @@
             min-width="120">
             <template slot-scope="scope">
               <i class="iconfont icon-wifi"
-                 :style="{color:scope.row.status === 'ONLINE' ? '#67C23A': '#F56C6C'}"></i>
+                 :style="{color:scope.row.status === 'ONLINE' ? '#53ee33': '#d1d1d1'}"></i>
             </template>
           </el-table-column>
 
@@ -251,7 +251,7 @@ export default {
     // 搜索
     searchList () {
       let that = this
-      if (that.search.length > 10) {
+      if (that.search.length > 30) {
         that.$message.warning('搜索内容请勿太长!')
         return
       }

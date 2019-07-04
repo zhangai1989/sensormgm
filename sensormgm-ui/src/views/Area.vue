@@ -7,64 +7,86 @@
       </p>
       <div slot="btns">
         <el-button size="small"
-                   @click="openDialog">
+                   @click="dialogVisible = true">
           <i class="el-icon-plus fbold"></i> 新增区域
         </el-button>
       </div>
     </normal-bar>
 
     <div class="main-viewer">
-      <el-row :gutter="20">
-        <el-col :span="4">
+      <el-row>
+        <el-col :span="5">
           <el-tree
             :data="areaTree"
             node-key="id"
             :default-expanded-keys="expandedKeys"
-            :props="defaultProps">
+            :expand-on-click-node="false"
+            :props="defaultProps"
+            @node-click="loadDetail">
           </el-tree>
         </el-col>
-        <el-col :span="20">
-          <div class="jy-content mt15" style="padding: 0px">
-            <el-table
-              v-loading="loading"
-              :data="list"
-              border
-              size="mini"
-              class="jy-table">
-              <el-table-column
-                align="center"
-                prop="uploadTime"
-                label="上传时间">
-              </el-table-column>
+        <el-col :span="19">
+          <div class="detail" v-if="showEdit">
+            <el-form :inline="true" :model="form" ref="editForm" v-loading="!editAble" :rules="rules" label-width="100px">
+              <el-form-item prop="name" label="区域名称">
+                <el-input size="small" v-model.trim="form.name" maxlength="15"/>
+              </el-form-item>
 
-              <el-table-column
-                align="center"
-                prop="lampblack"
-                label="油烟浓度(mg/m³)">
-              </el-table-column>
+              <el-form-item prop="longitude" label="经度">
+                <el-input size="small" v-model.trim="form.longitude"/>
+              </el-form-item>
 
-              <el-table-column
-                align="center"
-                prop="temp"
-                label="烟气温度（℃）">
-              </el-table-column>
-
-              <el-table-column
-                align="center"
-                prop="humidity"
-                label="烟气湿度（%）">
-              </el-table-column>
-
-            </el-table>
+              <el-form-item prop="latitude" label="纬度">
+                <el-input size="small" v-model.trim="form.latitude"/>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" style="margin-top: 10px">
+              <el-button size="small" :disabled="!editAble" @click="deleteConfirm(form.id)">删 除</el-button>
+              <el-button style="margin-left: 35px" size="small" type="primary" @click="updateArea" :disabled="!editAble">修 改</el-button>
+           </span>
           </div>
         </el-col>
       </el-row>
     </div>
+
+    <el-dialog
+      :title="title"
+      :visible.sync="dialogVisible"
+      width="420px">
+      <el-form v-loading="!saveAble" :inline="true" :model="form" ref="addForm" :rules="rules" label-width="100px">
+        <el-form-item prop="parentId" label="父级区域">
+          <el-select size="small" v-model="form.parentId" placeholder="请选择">
+            <el-option
+              v-for="item in areas"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item prop="name" label="区域名称">
+          <el-input size="small" v-model.trim="form.name" maxlength="15"/>
+        </el-form-item>
+
+        <el-form-item prop="longitude" label="经度">
+          <el-input size="small" v-model.trim="form.longitude"/>
+        </el-form-item>
+
+        <el-form-item prop="latitude" label="纬度">
+          <el-input size="small" v-model.trim="form.latitude"/>
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button size="small" @click="dialogVisible = false" :disabled="!saveAble">取 消</el-button>
+        <el-button size="small" type="primary" :disabled="!saveAble" @click="saveArea">保 存</el-button>
+     </span>
+    </el-dialog>
   </section>
 </template>
 
 <script>
-import { getAreaTree } from '@api/area'
+import { addArea, deleteArea, updateArea, getAreaTree, areaDetail } from '@api/area'
 const normalBar = () => import('@components/common/NormalBar')
 
 export default {
@@ -75,148 +97,174 @@ export default {
   data () {
     return {
       loading: false,
-      areaTree: [{
-        id: 1,
-        label: '一级 1',
-        children: [{
-          id: 4,
-          label: '二级 1-1',
-          children: [{
-            id: 9,
-            label: '三级 1-1-1'
-          }, {
-            id: 10,
-            label: '三级 1-1-2'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }],
+      userLevel: 0,
+      areaTree: [],
+      areas: [],
       defaultProps: {
-        children: 'children',
-        label: 'label'
+        children: 'nodes',
+        label: 'text'
       },
-      expandedKeys: [1, 2, 3],
+      expandedKeys: [],
+      list: [],
 
-      list: []
+      form: {
+        level: 0,
+        parentId: '',
+        name: '',
+        longitude: 0,
+        latitude: 0
+      },
+      rules: {
+        parentId: [
+          { required: true, message: '父级区域不能为空', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '区域名称不能为空', trigger: 'blur' }
+        ],
+        longitude: [
+          { required: true, message: '经度不能为空', trigger: 'blur' }
+        ],
+        latitude: [
+          { required: true, message: '纬度不能为空', trigger: 'blur' }
+        ]
+      },
+      title: '新增区域',
+      dialogVisible: false,
+      saveAble: true,
+      editAble: true,
+      showEdit: false
     }
   },
   created () {
-    let level = parseInt(localStorage.getItem('user.level'))
-    this.areaTreeDeep = level < 3 ? 3 : level === 3 ? 2 : 1
   },
 
   mounted () {
-//    this.initData()
+    this.getTree()
   },
   methods: {
-
-    // 初始化
-    initData () {
+    async getTree () {
       let that = this
+      let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      that.userLevel = userInfo.level
       let treeProps = {
-        areaId: parseInt(localStorage.getItem('user.areaId'))
+        areaId: parseInt(userInfo.areaId)
       }
-      that.getTree(treeProps)
-      let argc = {
-        pageNum: 1
+      that.expandedKeys = []
+      that.areas = []
+      if (that.userLevel === 1) {
+        that.areas.push({id: 0, name: '根'})
       }
-      that.getList(argc)
-    },
-
-    async getTree (argc) {
-      let that = this
-      const res = await getAreaTree(argc)
+      const res = await getAreaTree(treeProps)
       if (res.code === 2000) {
         that.areaTree = res.result
+        if (res.result && res.result.length > 0) {
+          res.result.forEach(function (item, index, array) {
+            that.expandedKeys.push(item.id)
+            that.areas.push({
+              id: item.id, name: item.text
+            })
+            if (item.nodes && item.nodes.length > 0) {
+              item.nodes.forEach(function (node, idx, arr) {
+                that.expandedKeys.push(node.id)
+              })
+            }
+          })
+        }
       }
     },
-
-    // 获取一页列表数据
-    async getList (argc) {
-      let that = this
-      argc.pageSize = that.pageSize
-      that.loading = true
-      const res = await getHistoryList(argc)
-      if (res.code === 2000) {
-        that.currentPage = argc.pageNum
-        that.totalNum = res.result.totalElements
-        that.list = res.result.content
-        that.loading = false
-      } else {
-        that.loading = false
+    saveArea () {
+      this.$refs['addForm'].validate((valid) => {
+        if (valid) {
+          this.form.level = (0 == this.form.parentId ? 1 : 2)
+          this.addArea()
+        }
+      })
+    },
+    async addArea () {
+      this.saveAble = false
+      this.form.deleteFlag = 0
+      const res = await addArea(this.form)
+      this.saveAble = true
+      if (res === 2000) {
+        this.$message.success('区域新增成功')
+        this.dialogVisible = false
+        this.getTree()
       }
     },
-
-    // 分页事件
-    changePage (page) {
-      let that = this
-      let argc = {
-        pageNum: page
-      }
-      if (that.rangeTime !== '' && that.rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
-      }
-      if (that.treeValue.length === that.areaTreeDeep) {
-        argc.enterpriseId = that.treeValue[2]
-      }
-      that.getList(argc)
-    },
-    changeTree (obj) {
-      let that = this
-      if (obj.length < that.areaTreeDeep) {
-        that.treeValue = []
+    async loadDetail (node) {
+      this.resetForm()
+      if (node.levelCode * 1 > 2) {
+        this.showEdit = false
         return
       }
-      let argc = {
-        pageNum: 1,
-        enterpriseId: obj[2].id
+      this.showEdit = true
+      this.editAble = false
+      const res = await areaDetail({id: node.id})
+      if (res.code === 2000) {
+        this.editAble = true
+        this.form.id = res.result.id
+        this.form.name = res.result.name
+        this.form.longitude = res.result.longitude
+        this.form.latitude = res.result.latitude
       }
-      if (that.rangeTime !== '' && that.rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
-      }
-      that.getList(argc)
     },
-
-    timeChange (rangeTime) {
+    deleteConfirm (id) {
       let that = this
-      let argc = {
-        pageNum: 1
-      }
-      if (rangeTime !== '' && rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
-      }
-      if (that.treeValue.length === that.areaTreeDeep) {
-        argc.enterpriseId = that.treeValue[2]
-      }
-      that.getList(argc)
+      that.$confirm('确定要删除？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        customClass: 'border-gray',
+        type: 'success'
+      }).then(() => {
+        that.deleteArea(id)
+      }).catch(() => {
+        console.log('取消')
+      })
     },
-
-    openDialog () {
-
+    async deleteArea (id) {
+      let that = this
+      const res = await deleteArea ({id: id})
+      if (res.code === 2000) {
+        that.$message.success('删除成功')
+        that.showEdit = false
+        that.getTree()
+      }
+    },
+    async updateArea () {
+      let that = this
+      const res = await updateArea({
+        id: that.form.id,
+        name: that.form.name,
+        longitude: that.form.longitude,
+        latitude: that.form.latitude
+      })
+      if (res.code === 2000) {
+        that.$message.success('修改成功')
+        that.getTree()
+      }
+    },
+    resetForm () {
+      this.form.level = 0
+      this.form.parentId = ''
+      this.form.name = ''
+      this.form.longitude = ''
+      this.form.latitude = ''
     }
   }
 }
 
 </script>
+
+<style scoped>
+  .el-input--small, .el-select--small {
+    width: 250px;
+  }
+  .detail {
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: #f9f9f9;
+    width: 500px;
+    box-shadow: 10px 10px 5px #888888;
+  }
+</style>
