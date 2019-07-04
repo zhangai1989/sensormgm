@@ -6,12 +6,16 @@ Vue.use(Router)
 
 export default new Router({
   routes: [{
+    path: '/',
+    redirect: '/login'
+  }, {
     path: '/login',
     name: 'login',
-    component: () => import('@views/login'),
-    meta: {
-      title: '登录'
-    }
+    component: () => import('@views/login')
+  }, {
+    path: '/index',
+    name: 'index',
+    component: () => import('@views/index')
   }, {
     path: '/monitor',
     component: Layout,

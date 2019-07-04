@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="box-1-1">
-      <div class="charts-box-wap">
+      <div class="charts-box-wap">o
         <img class="box-border" src="../../assets/img/border.png">
         <div class="charts-box">
           <ve-histogram :data="areaRankData"
@@ -52,9 +52,14 @@
       </div>
     </div>
 
+    <!--时间-->
+    <div class="box-2-2">
+      <div class="time">{{nowTime}}</div>
+    </div>
+
     <!--地图-->
     <div class="box-2-3">
-      <div id="container" style="width:720px; height:499px;">
+      <div id="container" style="width:780px; height:499px;">
         <el-amap vid="amapDemo" :zoom="zoom" :center="center" class="amap-demo">
           <!--market_list-->
           <el-amap-marker v-if="radio1 === '油烟'" v-for="(item, i) in market_list" :key="i" :position="item.position"
@@ -150,6 +155,11 @@
             </div>
 
             <div class="statistics-item">
+              <div class="statistics-item-title" style="background-color: #888">离线</div>
+              <div class="statistics-item-value" style="color: #888;">{{deviceStatistics.offlineCount}}</div>
+            </div>
+
+            <div class="statistics-item">
               <div class="statistics-item-title" style="background-color: #67C23A">正常</div>
               <div class="statistics-item-value" style="color: #67C23A;">{{deviceStatistics.normalCount}}</div>
             </div>
@@ -178,8 +188,21 @@
                   :colors="pieColor"
                   :settings="pieChartSettings"
                   :legend-visible="false"
-                  :title="areaRankTitle" height="236px"></ve-pie>
+                  :title="pieTitle" height="236px"></ve-pie>
 
+        </div>
+      </div>
+    </div>
+
+    <div class="box-3-3">
+      <div class="charts-box-wap">
+        <img class="box-border" src="../../assets/img/border.png">
+        <div class="charts-box">
+          <div class="charts-box-title">最新数据</div>
+
+          <div class="scroll-content">
+            <div v-for="(item,i) in lastLogsData" class="scroll-item" :style="{transform: 'translateY(' + scrollY1 +'px)'}">{{item}}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -257,11 +280,27 @@
     width: 1920px;
   }
 
+  .box-2-2{
+    position: absolute;
+    top: 180px;
+    left: 570px;
+    height: 60px;
+    width: 780px;
+  }
+
+  .time{
+    width: 780px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #37E6EB;
+  }
+
   .box-2-3 {
     position: absolute;
-    left: 596px;
+    left: 569px;
     top: 294px;
-    width: 721px;
+    width: 781px;
     height: 499px;
     border: 3px solid rgb(55, 230, 235);
     border-radius: 6px;
@@ -271,7 +310,7 @@
     position: absolute;
     left: 596px;
     top: 850px;
-    width: 719px;
+    width: 780px;
     height: 120px;
   }
 
@@ -286,6 +325,14 @@
   .box-3-2 {
     position: absolute;
     top: 455px;
+    right: 0;
+    width: 505px;
+    height: 295px;
+  }
+
+  .box-3-3{
+    position: absolute;
+    top: 775px;
     right: 0;
     width: 505px;
     height: 295px;
@@ -490,6 +537,7 @@
     data() {
       return {
         scrollY: 0,
+        scrollY1: 0,
         market_icon_list: [market1,market2,market3,market4],
         radio1: '油烟',
         showMapLabel: true,
@@ -578,12 +626,23 @@
           },
         },
 
+        pieTitle:{
+          text: '当月超标占比',
+          textStyle: {
+            color: '#37E6EB',
+            align: 'center',
+          },
+          left: 175,
+          top: 10
+        },
+
         deviceStatistics: {
           onlineCount: 0,
           earlyWarningCount: 0,
           beyondCount: 0,
           normalCount: 0,
-          allCount: 0
+          allCount: 0,
+          offlineCount: 0
         },
 
 
@@ -597,6 +656,8 @@
           radius: 70
         },
         enterpriseBeyond: [],
+        nowTime: '',
+        lastLogsData: []
       }
     },
     created() {
@@ -604,6 +665,8 @@
 
     beforeDestroy () {
       clearInterval(this.ScrollYSetInterval)
+      clearInterval(this.ScrollYSetInterval1)
+      clearInterval(this.timeInterval)
     },
 
     mounted() {
@@ -613,6 +676,9 @@
       init() {
 
         let that = this
+        that.timeInterval = setInterval(function () {
+          that.getNowTime()
+        },1000)
 
         areaMapList({})
           .then(res => {
@@ -685,11 +751,12 @@
               }
 
               //企业超标预警
-
               that.enterpriseBeyond = res.result.enterpriseBeyond
-
               that.scrollYFunc(res.result.enterpriseBeyond.length)
 
+
+              that.lastLogsData = res.result.lastLogsData
+              that.scrollYFunc1(res.result.lastLogsData.length)
             }
           })
       },
@@ -751,14 +818,34 @@
         if(len === 0){
           return
         }
-         that.ScrollYSetInterval = setInterval(function () {
-           if( that.scrollY > -40 * len){
-             that.scrollY = that.scrollY - 5
-           }else{
-             that.scrollY = 80
-           }
+        that.ScrollYSetInterval = setInterval(function () {
+          if( that.scrollY > -40 * len){
+            that.scrollY = that.scrollY - 5
+          }else{
+            that.scrollY = 80
+          }
         },500)
       },
+
+      scrollYFunc1(len){
+        let that = this
+        that.scrollY1 = 0
+        if(that.ScrollYSetInterval1){
+          clearInterval(that.ScrollYSetInterval1)
+        }
+        if(len === 0){
+          return
+        }
+        that.ScrollYSetInterval1 = setInterval(function () {
+          if( that.scrollY1 > -40 * len){
+            that.scrollY1 = that.scrollY1 - 5
+          }else{
+            that.scrollY1 = 80
+          }
+        },500)
+      },
+
+
 
 
       toogleLabel() {
@@ -769,6 +856,23 @@
       jump(){
         let that = this
         that.$router.push({path: '/monitor'})
+      },
+
+      getNowTime(){
+        let that = this
+        let now = new Date()
+        let year = now.getFullYear()
+        let month = now.getMonth() + 1
+        month = month < 10 ? '0' + month : month
+        let date = now.getDate()
+        date = date < 10 ? '0' + date : date
+        let hours = now.getHours()
+        hours = hours < 10 ? '0' + hours : hours
+        let min = now.getMinutes()
+        min = min < 10 ? '0' + min : min
+        let second = now.getSeconds()
+        second = second < 10 ? '0' + second : second
+        that.nowTime = `${year}-${month}-${date}    ${hours}:${min}:${second}`
       }
     }
   }
