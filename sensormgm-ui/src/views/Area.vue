@@ -7,7 +7,7 @@
       </p>
       <div slot="btns">
         <el-button size="small"
-                   @click="dialogVisible = true">
+                   @click="openDialog">
           <i class="el-icon-plus fbold"></i> 新增区域
         </el-button>
       </div>
@@ -27,7 +27,7 @@
         </el-col>
         <el-col :span="19">
           <div class="detail" v-if="showEdit">
-            <el-form :inline="true" :model="form" ref="editForm" v-loading="!editAble" :rules="rules" label-width="100px">
+            <el-form :inline="true" :model="form" ref="detailForm" v-loading="!editAble" :rules="rules" label-width="100px">
               <el-form-item prop="name" label="区域名称">
                 <el-input size="small" v-model.trim="form.name" maxlength="15"/>
               </el-form-item>
@@ -111,8 +111,8 @@ export default {
         level: 0,
         parentId: '',
         name: '',
-        longitude: 0,
-        latitude: 0
+        longitude: '',
+        latitude: ''
       },
       rules: {
         parentId: [
@@ -172,6 +172,12 @@ export default {
         }
       }
     },
+    openDialog () {
+      this.dialogVisible = true
+      if (this.$refs['addForm']) {
+        this.$refs['addForm'].resetFields()
+      }
+    },
     saveArea () {
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
@@ -192,7 +198,9 @@ export default {
       }
     },
     async loadDetail (node) {
-      this.resetForm()
+      if (this.$refs['detailForm']) {
+        this.$refs['detailForm'].resetFields()
+      }
       if (node.levelCode * 1 > 2) {
         this.showEdit = false
         return
@@ -232,6 +240,12 @@ export default {
     },
     async updateArea () {
       let that = this
+      this.$refs['detailForm'].validate((valid) => {
+        if (valid) {
+          that.updateRequest()
+        }
+      })},
+    async updateRequest () {
       const res = await updateArea({
         id: that.form.id,
         name: that.form.name,
@@ -242,13 +256,6 @@ export default {
         that.$message.success('修改成功')
         that.getTree()
       }
-    },
-    resetForm () {
-      this.form.level = 0
-      this.form.parentId = ''
-      this.form.name = ''
-      this.form.longitude = ''
-      this.form.latitude = ''
     }
   }
 }

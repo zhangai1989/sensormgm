@@ -291,21 +291,7 @@ export default {
       this.level = parseInt(userInfo.level)
       this.allowEdit = this.level < 4
     },
-
-    // 重置表单
-    resetForm () {
-      this.form.id = ''
-      this.form.areaId = ''
-//      this.form.level = parseInt(localStorage.getItem('user.level')) + 1
-      this.form.loginName = ''
-      this.form.cname = ''
-      this.form.mobile = ''
-      this.form.email = ''
-      this.form.password = '123456'
-    },
-
     openDialog (row) {
-      this.resetForm()
       if (this.$refs['editForm']) {
         this.$refs['editForm'].resetFields()
       }

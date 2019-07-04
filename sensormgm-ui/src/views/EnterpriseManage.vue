@@ -325,23 +325,7 @@ export default {
       let userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.level = parseInt(userInfo.level)
     },
-
-    // 重置表单
-    resetForm () {
-      this.form.id = ''
-      this.form.areaId = ''
-      this.form.name = ''
-      this.form.address = ''
-      this.form.longitude = ''
-      this.form.latitude = ''
-      this.form.pos = ''
-      this.form.contact = ''
-      this.form.contactMobile = ''
-      this.form.envContact = ''
-      this.form.envContactMobile = ''
-    },
     openDialog (row) {
-      this.resetForm()
       if (this.$refs['editForm']) {
         this.$refs['editForm'].resetFields()
       }
