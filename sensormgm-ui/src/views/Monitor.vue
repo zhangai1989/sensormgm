@@ -47,7 +47,6 @@
           class="jy-table">
           <el-table-column
             fixed
-            align="center"
             prop="enterpriseName"
             label="企业名称"
             min-width="150">
@@ -228,6 +227,15 @@ export default {
       if (res.code === 2000) {
         that.currentPage = argc.pageNum
         that.totalNum = res.result.totalElements
+        if (res.result.content && res.result.content.length > 0) {
+          res.result.content.forEach(function (item) {
+            if(item.lampblack === -10000) item.lampblack = '--'
+            if(item.temp === -10000) item.temp = '--'
+            if(item.humidity === -10000) item.humidity = '--'
+            if(item.fanElec === -10000) item.fanElec = '--'
+            if(item.purifierElec === -10000) item.purifierElec = '--'
+          })
+        }
         that.list = res.result.content
       }
       that.loading = false
