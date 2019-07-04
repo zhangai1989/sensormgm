@@ -11,11 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpSession;
@@ -60,11 +56,11 @@ public class TEnterpriseController  extends BaseController<TEnterprise>{
 
 
 	@ResponseBody
-	@RequestMapping(value = "/getEnterpriseBySession", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
+	@RequestMapping(value = "/getEnterpriseBySessionOrAreaId", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
 	@ApiOperation(value="获取企业下拉框列表", notes="")
 	@ApiImplicitParam(paramType="query", name = "areaId", value = "区域id", required = true, dataType = "String")
-	public Object getEnterpriseBySession(HttpSession session){
-		return new ResultUtil<>().setData(service.getEnterpriseBySession(session));
+	public Object getEnterpriseBySession(HttpSession session,@RequestParam("areaId") String areaId){
+		return new ResultUtil<>().setData(service.getEnterpriseBySession(session,areaId));
 	}
 
 
