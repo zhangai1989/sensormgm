@@ -33,8 +33,7 @@
       }
     },
     created () {
-      let self = this
-      self.getMenus()
+      this.getMenus()
     },
     methods: {
       // open  menu
@@ -46,7 +45,6 @@
           this.$router.push(menu.menuUrl)
         }
       },
-      // get userInfo
       getMenus () {
         if (sessionStorage.getItem('menus') && sessionStorage.getItem('menus') !== 'undefined') {
           let self = this
@@ -59,8 +57,6 @@
               })
             }
           })
-          debugger
-          console.info(self.menus)
         }
       }
     },
@@ -87,7 +83,6 @@
       height: 50px;
       line-height: 50px;
       font-size: 16px;
-      color: #6e6e6e;
       border-bottom: 1px solid #f9f9f9;
       padding-left: 30px !important;
       .menu-icon {
@@ -95,9 +90,10 @@
       }
       &:hover {
         background-color: #f2fdf9 !important;
-        .menu-item-name {
-          color: #29b87a;
-        }
+        color: #29b87a;
+        /*.menu-item-name {*/
+          /*color: #29b87a;*/
+        /*}*/
       }
     }
   }
@@ -105,16 +101,12 @@
   .menu-selected {
     background-color: #f2fdf9 !important;
     border-left: 5px solid #29b87a;
-    .menu-item-name {
-      color: #29b87a;
-    }
+    color: #29b87a!important;
   }
 
   .menu-not-selected {
     background-color: #e7f2ee !important;
     border-left: 5px solid #e7f2ee;
-    .menu-item-name {
-      color: #29b87a;
-    }
+    color: #5a5a5a!important;
   }
 </style>

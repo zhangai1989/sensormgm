@@ -15,28 +15,24 @@ import Mixin from './mixin.js'
 import axios from 'axios'
 // 配置文件
 import {LOGIN_URL} from '@configs'
-
-//地图插件
-import AMap from 'vue-amap';
-
-//v-charts
+// 地图插件
+import AMap from 'vue-amap'
+// v-charts
 import VCharts from 'v-charts'
 
-Vue.use(AMap);
+Vue.use(AMap)
 
 Vue.config.productionTip = false // 设置为 false 以阻止 vue 在启动时生成生产提示。
 
 Vue.use(ElementUI)
-
 Vue.use(VCharts)
-
 
 AMap.initAMapApiLoader({
   // 高德key
   key: '55d8e1afb1f07c883a13d0b4520911ba',
   // 插件集合 （插件按需引入）
   plugin: ['AMap.Geolocation']
-});
+})
 
 // 引入公共样式
 require('./assets/styles/base.less')

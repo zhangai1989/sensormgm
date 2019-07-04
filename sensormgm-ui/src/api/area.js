@@ -14,4 +14,3 @@ export const addArea = (params) => Http.setPromise(`POST`, `/api/TArea/insert`, 
 export const updateArea = (params) => Http.setPromise(`POST`, `/api/TArea/update`, params)
 // 删除区域
 export const deleteArea = (params) => Http.setPromise(`POST`, `/api/TArea/deleteById`, params)
-

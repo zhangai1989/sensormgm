@@ -175,7 +175,7 @@ export default {
     saveArea () {
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
-          this.form.level = (0 == this.form.parentId ? 1 : 2)
+          this.form.level = (this.form.parentId === 0 ? 1 : 2)
           this.addArea()
         }
       })
@@ -223,7 +223,7 @@ export default {
     },
     async deleteArea (id) {
       let that = this
-      const res = await deleteArea ({id: id})
+      const res = await deleteArea({id: id})
       if (res.code === 2000) {
         that.$message.success('删除成功')
         that.showEdit = false
