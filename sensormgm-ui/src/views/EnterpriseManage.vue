@@ -16,7 +16,7 @@
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
         <li class="flex fxmiddle">
-          <el-select size="small" clearable="true" v-model="condition.areaId" placeholder="请选择区域" style="width: 190px" @change="getList({pageNum: 1})">
+          <el-select size="small" :clearable="true" v-model="condition.areaId" placeholder="请选择区域" style="width: 190px; line-height: 34px; height: 34px" @change="getList({pageNum: 1})">
             <el-option
               v-for="item in areas"
               :key="item.id"
@@ -32,7 +32,7 @@
             :clearable="true"
             maxlength="30"
             v-model.trim="condition.name"
-            style="width: 250px">
+            style="width: 250px; line-height: 34px; height: 34px">
           </el-input>
         </li>
         <el-button type="success"
