@@ -148,8 +148,8 @@
         width="40%">
 
         <el-form :inline="true" :model="form" ref="editForm" :rules="rules" label-width="120px">
-          <el-form-item label="所属区域" prop="areaId">
-            <el-select size="small" v-model="form.areaId" placeholder="请选择" :disabled="level > 2">
+          <el-form-item :disabled="level < 3" label="所属区域" prop="areaId">
+            <el-select size="small" v-model="form.areaId" placeholder="请选择" :disabled="level > 2" @change="changeArea">
               <el-option
                 v-for="item in areas"
                 :key="item.id"
@@ -159,10 +159,10 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item v-show="level === 3" label="所属企业" prop="enterpriseId">
-            <el-select size="small" v-model="form.enterpriseId" placeholder="请选择" style="width: 200px">
+          <el-form-item v-if="form.level === 3" :disabled="level === 3" label="所属企业" prop="enterpriseId">
+            <el-select size="small" v-model="form.enterpriseId" placeholder="请选择">
               <el-option
-                v-for="item in enterpriseList"
+                v-for="item in areaEnterprises"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id">
@@ -212,14 +212,14 @@
     }
 
   .el-input--small, .el-select--small {
-    width: 189px;
+    width: 190px;
   }
 
 </style>
 
 <script>
 import {addUser, updateUser, deleteUser, userList} from '@api/user'
-import {allEnterprise} from '@api/enterprise'
+import {areaEnterprise} from '@api/enterprise'
 import { areaList } from '@api/area'
 const normalBar = () => import('@components/common/NormalBar')
 
@@ -237,7 +237,7 @@ export default {
       pageSize: 10,
       currentPage: 1,
       areas: [],
-      enterpriseList: [],
+      areaEnterprises: [],
       form: {
         id: '',
         areaId: '',
@@ -281,21 +281,12 @@ export default {
   },
   methods: {
     // 初始化
-    initData () {
+    async initData () {
       let that = this
-      areaList()
-        .then(res => {
-          if (res.code === 2000) {
-            this.areas = res.result
-          }
-        })
-      allEnterprise({})
-        .then(res => {
-          if (res.code === 2000) {
-            that.enterpriseList = res.result
-          }
-        })
-
+      const res1 = await areaList()
+      if (res1.code === 2000) {
+        that.areas = res1.result
+      }
       let userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.level = parseInt(userInfo.level)
       this.allowEdit = this.level < 4
@@ -304,8 +295,8 @@ export default {
     // 重置表单
     resetForm () {
       this.form.id = ''
-      this.form.areaId = this.areas[0].id
-      this.form.level = parseInt(localStorage.getItem('user.level')) + 1
+      this.form.areaId = ''
+//      this.form.level = parseInt(localStorage.getItem('user.level')) + 1
       this.form.loginName = ''
       this.form.cname = ''
       this.form.mobile = ''
@@ -376,7 +367,7 @@ export default {
     // 搜索
     searchList () {
       let that = this
-      if (that.search.length > 10) {
+      if (that.search.length > 30) {
         that.$message.warning('搜索内容请勿太长!')
         return
       }
@@ -395,16 +386,21 @@ export default {
           this.saveAble = false
           if (!this.form.id) {
             // 新增用户
+            let arg = this.form
+            // 如果选了企业 level=4
+            if (arg.level === 3 && arg.enterpriseId && arg.enterpriseId.length > 0) {
+              arg.level = 4
+            }
+            if (!arg.enterpriseId || arg.enterpriseId.length) {
+//              arg.enterpriseId = null
+            }
             addUser(this.form)
               .then(res => {
-                  debugger
                 this.saveAble = true
-                if (res.code === 2000) {
+                if (res && res.code === 2000) {
                   this.$message.success('保存成功')
                   this.editFlag = false
                   this.searchList()
-                } else {
-                  this.$message.error(res.message)
                 }
               })
           } else {
@@ -442,6 +438,26 @@ export default {
       }).catch(() => {
         console.log('取消')
       })
+    },
+    changeArea (val) {
+      let that = this
+      // 根据区域级别判断用户级别
+      that.form.enterpriseId = ''
+      that.areas.forEach(function (item, index, array) {
+        if (val === item.id) {
+          that.form.level = parseInt(item.level) + 1
+          // 获取区域企业
+          that.getAreaEnterprise(val)
+        }
+      })
+    },
+    async getAreaEnterprise (areaId) {
+      let that = this
+      that.areaEnterprises = []
+      const res = await areaEnterprise({id, areaId})
+      if (res.code === 2000) {
+        that.areaEnterprises = res.result
+      }
     },
     mobileCheck (rule, value, callback) {
       if (!value || value.length === 0) {

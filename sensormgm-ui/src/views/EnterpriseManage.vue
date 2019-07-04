@@ -16,12 +16,23 @@
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
         <li class="flex fxmiddle">
+          <el-select size="small" v-model="condition.areaId" placeholder="请选择区域" style="width: 190px" @change="getList({pageNum: 1})">
+            <el-option
+              v-for="item in areas"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </li>
+        <li class="flex fxmiddle">
           <el-input
             placeholder="请输入企业名称"
             size="small"
             :clearable="true"
-            style="margin-right: 15px"
-            v-model.trim="search">
+            maxlength="30"
+            v-model.trim="condition.name"
+            style="width: 250px">
           </el-input>
         </li>
         <el-button type="success"
@@ -40,7 +51,6 @@
           <el-table-column
             fixed
             show-overflow-tooltip
-            align="center"
             prop="name"
             label="企业名称"
             min-width="180">
@@ -135,7 +145,6 @@
           </el-table-column>
 
           <el-table-column
-            v-if="allowEdit"
             fixed="right"
             label="操作"
             align="center"
@@ -165,44 +174,44 @@
         :visible.sync="editFlag"
         :show-close="false"
         :close-on-click-modal="false"
-        width="40%">
+        width="740px">
 
         <el-form :inline="true" :model="form" ref="editForm" :rules="rules" label-width="120px">
           <el-form-item label="所属区域" prop="areaId">
-            <el-select size="small" v-model="form.areaId" placeholder="请选择" style="width: 200px" :disabled="!allowEdit">
+            <el-select size="small" v-model="form.areaId" placeholder="请选择" :disabled="form.id != ''">
               <el-option
                 v-for="item in areas"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id">
+                :value="item.id"
+                :disabled="item.disabled">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="企业名称" prop="name">
-            <el-input size="small" v-model.trim="form.name"/>
+            <el-input size="small" v-model.trim="form.name" placeholder="请输入企业名称"/>
           </el-form-item>
           <el-form-item label="企业地址" prop="address">
-            <el-input size="small" v-model.trim="form.address"/>
+            <el-input size="small" v-model.trim="form.address" placeholder="请输入企业地址"/>
           </el-form-item>
-          <el-form-item label="经纬度" prop="pos">
-            <el-input size="small" v-model.trim="form.pos" style="width: 200px">
-              <el-button slot="append" icon="el-icon-location-outline"></el-button>
-            </el-input>
+          <el-form-item label="经/纬度" prop="pos">
+            <el-input size="small" v-model.trim="form.longitude" style="width: 98px" placeholder="经度"/>
+            <el-input size="small" v-model.trim="form.latitude" style="width: 98px" placeholder="纬度"/>
           </el-form-item>
 
           <el-form-item label="企业负责人" prop="contact">
-            <el-input size="small" v-model.trim="form.contact"/>
+            <el-input size="small" v-model.trim="form.contact" placeholder="请输入企业负责人"/>
           </el-form-item>
           <el-form-item label="企业负责人电话" prop="contactMobile">
             <el-input size="small" v-model.trim="form.contactMobile" maxLength="11"
-                      oninput="value=value.replace(/[^\d]/g,'')"/>
+                      oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入企业负责人电话"/>
           </el-form-item>
 
           <el-form-item label="环保负责人" prop="envContact">
-            <el-input size="small" v-model="form.envContact"/>
+            <el-input size="small" v-model="form.envContact" placeholder="请输入企业负责人"/>
           </el-form-item>
           <el-form-item label="环保负责人电话" prop="envContactMobile">
-            <el-input size="small" v-model="form.envContactMobile"/>
+            <el-input size="small" v-model="form.envContactMobile" placeholder="请输入环保负责人电话"/>
           </el-form-item>
         </el-form>
 
@@ -216,18 +225,18 @@
   </section>
 </template>
 
-<style>
-    .el-table .cell {
-        white-space: nowrap;
-    }
-</style>
-
 <style scoped>
+    .el-table .cell {
+      white-space: nowrap;
+    }
     .pagination {
         display: flex;
         justify-content: flex-end;
         margin-top: 22px;
         padding-bottom: 20px;
+    }
+    .el-input--small, .el-select--small {
+      width: 200px;
     }
 
 </style>
@@ -252,24 +261,26 @@ export default {
       currentPage: 1,
 
       areas: [],
-
+      condition: {
+        areaId: '',
+        name: ''
+      },
       form: {
         id: '',
         areaId: '',
         name: '',
         address: '',
-        longitude: 0.0,
-        latitude: 0.0,
-        pos: '',
+        longitude: '',
+        latitude: '',
         contact: '',
         contactMobile: '',
         envContact: '',
-        envContactMobile: ''
+        envContactMobile: '',
+        deleteFlag: 0
       },
 
       title: '新增企业',
       editFlag: false,
-      allowEdit: false,
 
       rules: {
         areaId: [
@@ -300,24 +311,29 @@ export default {
       let that = this
       const res = await areaList()
       if (res.code === 2000) {
-        that.areas = res.result
+        if (res.result) {
+          res.result.forEach(function (item, index, array) {
+            if (item.level === '1') {
+              item.disabled = true
+            } else {
+              item.disabled = false
+            }
+            that.areas.push(item)
+          })
+        }
       }
-      let level = localStorage.getItem('user.level')
-      that.allowEdit = (level === '1' || level === '2')
-      let argc = {
-        pageNum: 1
-      }
-      that.getList(argc)
+      let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      this.level = parseInt(userInfo.level)
     },
 
     // 重置表单
     resetForm () {
       this.form.id = ''
-      this.form.areaId = parseInt(localStorage.getItem('user.areaId'))
+      this.form.areaId = ''
       this.form.name = ''
       this.form.address = ''
-      this.form.longitude = 0.0
-      this.form.latitude = 0.0
+      this.form.longitude = ''
+      this.form.latitude = ''
       this.form.pos = ''
       this.form.contact = ''
       this.form.contactMobile = ''
@@ -350,7 +366,8 @@ export default {
     getList (argc) {
       let that = this
       argc.pageSize = that.pageSize
-      argc.areaId = parseInt(localStorage.getItem('user.areaId'))
+      argc.areaId = that.condition.areaId
+      argc.name = that.condition.name
       that.loading = true
       enterpriseList(argc)
         .then(res => {
@@ -389,15 +406,8 @@ export default {
     // 搜索
     searchList () {
       let that = this
-      if (that.search.length > 10) {
-        that.$message.warning('搜索内容请勿太长!')
-        return
-      }
       let argc = {
         pageNum: 1
-      }
-      if (that.search !== '') {
-        argc.name = that.search
       }
       that.getList(argc)
     },
