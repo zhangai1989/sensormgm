@@ -112,13 +112,14 @@ public abstract class BaseController<T>{
 		if(!StringUtils.isEmpty(errorMsg)){
 			return new ResultUtil<>().setErrorMsg(errorMsg);
 		}
-
+		changeInsertEntity(entity);
 		return new ResultUtil<>().setData(getService().insert(entity,session));
 	}
 	public  String checkInsertStatus(T entity){
 		return "";
 	}
-
+	public void changeInsertEntity(T entity) {
+	}
 
 	/**
 	 *@author : zhangai

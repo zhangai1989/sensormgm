@@ -9,6 +9,7 @@ import com.bumt.sensormgm.service.TDeviceService;
 import com.bumt.sensormgm.service.TEnterpriseService;
 import org.springframework.stereotype.Service;
 import com.bumt.sensormgm.dao.TEnterpriseDao;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -31,9 +32,12 @@ public class TEnterpriseServiceImpl extends BaseServiceImpl implements TEnterpri
 	}
 
 	@Override
-	public Object getEnterpriseBySession(HttpSession session) {
+	public Object getEnterpriseBySession(HttpSession session,String areaId) {
 		TUser tUser = (TUser) session.getAttribute("user");
-		return dao.findByAreaId(Long.parseLong(tUser.getAreaId()));
+		if(StringUtils.isEmpty(areaId)){
+			areaId = tUser.getAreaId();
+		}
+		return dao.findByAreaId(Long.parseLong(areaId));
 	}
 
 	@Override
