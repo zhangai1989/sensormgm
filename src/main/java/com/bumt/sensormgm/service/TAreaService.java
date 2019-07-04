@@ -16,6 +16,8 @@ public interface TAreaService extends BaseService {
 
     Object getAreaList();
 
+    List<TArea> getUserAreas(Long areaId);
+
     List<TArea> findByName(String cname);
 
     List<TUser> findByNameAndIdNot(String name, long id);

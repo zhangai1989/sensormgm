@@ -58,32 +58,17 @@ function (error) {
 })
 // 返回状态判断
 axios.interceptors.response.use((response) => {
+  if (response.data.code === 3000) {
+    window.location.href = LOGIN_URL
+    return
+  }
+  if (response.data.code !== 2000) {
+    ElementUI.Message.error(response.data.message)
+  }
   return response
 }, (error) => {
-  console.log(error)
-  // let loading = ElementUI.Loading.service({});
-  if (error.response.status * 1 === 401) {
-    if (process.env.NODE_ENV === 'local') {
-      window.location.href = '/#/login'
-    } else {
-      window.location.href = LOGIN_URL + '&redirect=' + encodeURIComponent(document.URL)
-    }
-  } else if (error.response.status * 1 === 400) {
-    if (error.response.data.message === 'mobile is exists') {
-      ElementUI.Message.error('手机号已存在')
-    } else if (error.response.data.message === 'email is exists') {
-      ElementUI.Message.error('邮箱已存在')
-    } else {
-      ElementUI.Message.error(error.response.data.message)
-    }
-  } else if (error.response.status * 1 === 403) {
-    ElementUI.Message.error(error.response.data.message)
-    // window.location.href = '/' //跳转到没权限页面
-  } else {
-    ElementUI.Message.error(error.response.data.message)
-  }
-  // loading.close();
-  // return Promise.reject(error);
+  ElementUI.Message.error(error.response.data.message)
+  return {code: 500, message: error.response.data.message}
 })
 
 const render = new Vue({

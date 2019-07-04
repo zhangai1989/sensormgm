@@ -1,5 +1,5 @@
 {
-  "code": "SUCCESS",
+  "code": 2000,
   "message": "成功",
   "items": [{
       "menuId": 10001,

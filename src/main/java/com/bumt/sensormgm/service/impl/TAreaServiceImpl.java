@@ -1,20 +1,21 @@
 package com.bumt.sensormgm.service.impl;
 
+import com.bumt.sensormgm.common.dao.BaseJpaDao;
 import com.bumt.sensormgm.common.pojo.TreeNode;
 import com.bumt.sensormgm.common.pojo.TreeUtil;
 import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
-import com.bumt.sensormgm.common.dao.BaseJpaDao;
+import com.bumt.sensormgm.dao.TAreaDao;
 import com.bumt.sensormgm.dao.TEnterpriseDao;
 import com.bumt.sensormgm.entity.TArea;
 import com.bumt.sensormgm.entity.TEnterprise;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TAreaService;
-import com.github.pagehelper.util.StringUtil;
 import org.springframework.stereotype.Service;
-import com.bumt.sensormgm.dao.TAreaDao;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,11 +68,8 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 
 	@Override
 	public Object getAreaListBySession(HttpSession session) {
-//		TUser tUser = (TUser) session.getAttribute("user");
-//		if(tUser!=null&&tUser.getLevel()==3){
-//			return dao.findById(Long.parseLong(tUser.getAreaId()));
-//		}
-		return  dao.findByLevel("2");
+		TUser tUser = (TUser) session.getAttribute("user");
+		return getUserAreas(Long.valueOf(tUser.getAreaId()));
 	}
 
 	@Override
@@ -87,5 +85,24 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 	@Override
 	public List<TUser> findByNameAndIdNot(String name, long id) {
 		return dao.findByNameAndIdNot(name,id);
+	}
+
+	@Override
+	public List<TArea> getUserAreas(Long areaId) {
+		List<TArea> result = new ArrayList<>();
+		// 查询出所有区域
+		List<TArea> allArea = dao.findAll();
+		if(CollectionUtils.isEmpty(allArea)) return result;
+		buildUserAreas(areaId, result, allArea);
+		return result;
+	}
+
+	private void buildUserAreas(Long parentId, List<TArea> mareas, List<TArea> allArea) {
+		for(TArea area : allArea) {
+			if(!area.getDeleteFlag() && parentId.equals(area.getParentId())) {
+				mareas.add(area);
+				buildUserAreas(area.getId(), mareas, allArea);
+			}
+		}
 	}
 }
