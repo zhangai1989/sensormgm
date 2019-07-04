@@ -3,10 +3,10 @@
     <el-scrollbar class="jy-left-aside">
       <el-menu class="jy-left-menus"
                background-color="#F8F9FB"
-               :collapse="isCollapse"
                unique-opened>
         <template v-for="(menu,i) in menus">
-          <el-menu-item class="jy-menu-item"
+          <!--:class="{'jy-menu-item': true, 'menu-selected': currentRoute === menu.menuUrl, 'menu-not-selected': currentRoute !== menu.menuUrl}"-->
+          <el-menu-item :class="{'jy-menu-item': true, 'menu-selected': $route.path === menu.menuUrl, 'menu-not-selected': $route.path !== menu.menuUrl}"
                         v-if="!menu.childrens || (menu.childrens instanceof Array && menu.childrens.length < 1) "
                         :key="i"
                         @click="openTab(menu)"
@@ -29,15 +29,12 @@
     components: {},
     data () {
       return {
-        isCollapse: false,
-        // defaultActive: '00',
-        setShowCollapse: true,
         menus: []
       }
     },
     created () {
-      this.getMenus()
-      this.collapseMenus()
+      let self = this
+      self.getMenus()
     },
     methods: {
       // open  menu
@@ -48,13 +45,6 @@
           sessionStorage.removeItem('HANDLEordersListParams')
           this.$router.push(menu.menuUrl)
         }
-      },
-      // collapse menus
-      collapseMenus () {
-        this.$root.eventHub.$on('asideIsCollapse', () => {
-          this.isCollapse = !this.isCollapse
-          this.setShowCollapse = !this.setShowCollapse
-        })
       },
       // get userInfo
       getMenus () {
@@ -81,7 +71,7 @@
 <style lang="less" scope>
   .jy-left-aside {
     height: calc(100vh - 50px);
-    background-color: #f8f9fb;
+    background-color: #e7f2ee;
     border-right: 1px solid #e9ebf0;
   }
   .jy-left-menus:not(.el-menu--collapse) {
@@ -98,48 +88,33 @@
       line-height: 50px;
       font-size: 16px;
       color: #6e6e6e;
-      border-left: 5px solid #fff;
-      border-bottom: 1px solid #fff;
+      border-bottom: 1px solid #f9f9f9;
       padding-left: 30px !important;
       .menu-icon {
         margin-right: 3px;
       }
       &:hover {
-        background-color: #e7f2ee !important;
-        .menu-item-name {
-          color: #29b87a;
-        }
-      }
-      &.is-active {
-        background-color: #e7f2ee !important;
-        border-left: 5px solid #29b87a;
+        background-color: #f2fdf9 !important;
         .menu-item-name {
           color: #29b87a;
         }
       }
     }
   }
-  .jy-left-popper {
-    .el-menu {
-      .el-menu-item {
-        height: 36px;
-        line-height: 36px;
-        font-size: 13px;
-        border-left: 3px solid #fff;
-        &:hover {
-          background-color: transparent !important;
-          .menu-item-name {
-            color: #29b87a;
-          }
-        }
-        &.is-active {
-          background-color: #e7f2ee !important;
-          border-left: 3px solid #29b87a;
-          .menu-item-name {
-            color: #29b87a;
-          }
-        }
-      }
+
+  .menu-selected {
+    background-color: #f2fdf9 !important;
+    border-left: 5px solid #29b87a;
+    .menu-item-name {
+      color: #29b87a;
+    }
+  }
+
+  .menu-not-selected {
+    background-color: #e7f2ee !important;
+    border-left: 5px solid #e7f2ee;
+    .menu-item-name {
+      color: #29b87a;
     }
   }
 </style>
