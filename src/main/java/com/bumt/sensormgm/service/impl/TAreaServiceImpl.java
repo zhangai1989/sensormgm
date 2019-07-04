@@ -57,7 +57,7 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 			node.setParentId(tEnterprise.getAreaId().toString());
 			node.setLevelCode("4");
 			node.setType("");
-			nodeList.put(node.getId(), node);
+			nodeList.put(tEnterprise.getCode(), node);
 		}
 			// 构造树形结构
 		List<TreeNode>	tnlist = TreeUtil.getNodeList(nodeList);
