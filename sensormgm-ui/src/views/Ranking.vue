@@ -52,7 +52,7 @@
           size="mini"
           class="jy-table">
           <el-table-column
-            prop="enterpriseName"
+            prop="name"
             label="企业名称">
           </el-table-column>
           <el-table-column
