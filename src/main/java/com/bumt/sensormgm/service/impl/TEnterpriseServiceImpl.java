@@ -1,14 +1,14 @@
 package com.bumt.sensormgm.service.impl;
 
-import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
 import com.bumt.sensormgm.common.dao.BaseJpaDao;
+import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
+import com.bumt.sensormgm.dao.TEnterpriseDao;
 import com.bumt.sensormgm.entity.TDevice;
 import com.bumt.sensormgm.entity.TEnterprise;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TDeviceService;
 import com.bumt.sensormgm.service.TEnterpriseService;
 import org.springframework.stereotype.Service;
-import com.bumt.sensormgm.dao.TEnterpriseDao;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -41,9 +41,9 @@ public class TEnterpriseServiceImpl extends BaseServiceImpl implements TEnterpri
 	}
 
 	@Override
-	public void save(TEnterprise enterprise, HttpSession session) {
+	public Object save(TEnterprise enterprise, HttpSession session) {
 		TEnterprise saveResult = (TEnterprise)insert(enterprise, session);
-		deviceService.insert(buildDevice(saveResult.getId(), saveResult.getCode(), saveResult.getName()), session);
+		return deviceService.insert(buildDevice(saveResult.getId(), saveResult.getCode(), saveResult.getName()), session);
 	}
 
 	private TDevice buildDevice(Long enterpriseId, String deviceCode, String deviceName) {

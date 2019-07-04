@@ -12,6 +12,6 @@ public interface TEnterpriseService extends BaseService {
 
     Object getEnterpriseBySession(HttpSession session,String areaId);
 
-    void save(TEnterprise enterprise, HttpSession session);
+    Object save(TEnterprise enterprise, HttpSession session);
 
 }

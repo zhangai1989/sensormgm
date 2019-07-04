@@ -75,7 +75,7 @@ public class TEnterpriseController  extends BaseController<TEnterprise>{
 		if(!StringUtils.isEmpty(errorMsg)){
 			return new ResultUtil<>().setErrorMsg(errorMsg);
 		}
-		return new ResultUtil<>().setData(getService().insert(entity,session));
+		return new ResultUtil<>().setData(service.save(entity,session));
 	}
 
 	public  String checkUpdateStatus2(TEnterprise entity){
