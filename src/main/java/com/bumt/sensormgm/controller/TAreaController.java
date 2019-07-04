@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,31 @@ public class TAreaController  extends BaseController<TArea>{
 	@Override
 	public BaseService getService() { return service; }
 
+
+
+	@Override
+	public  String checkInsertStatus(TArea entity){
+
+
+		String cname = entity.getName();
+		List<TArea> tArea =  service.findByName(cname);
+		if(!CollectionUtils.isEmpty(tArea)){
+			return "区域名称不能重复！";
+		}
+		return "";
+	}
+
+	@Override
+	public  String checkUpdateStatus(TArea entity){
+
+		long id = entity.getId();
+		String name = entity.getName();
+		List<TUser> tUser =  service.findByNameAndIdNot(name,id);
+		if(!CollectionUtils.isEmpty(tUser)){
+			return "区域名称不能重复！";
+		}
+		return "";
+	}
 	/**
 	 * @Description:条件查询
 	 * @Author:     zhangai

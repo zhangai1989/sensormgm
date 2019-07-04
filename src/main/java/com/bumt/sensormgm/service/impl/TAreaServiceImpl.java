@@ -78,4 +78,14 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 	public Object getAreaList() {
 		return dao.findByLevel("2");
 	}
+
+	@Override
+	public List<TArea> findByName(String cname) {
+		return dao.findByName(cname);
+	}
+
+	@Override
+	public List<TUser> findByNameAndIdNot(String name, long id) {
+		return dao.findByNameAndIdNot(name,id);
+	}
 }

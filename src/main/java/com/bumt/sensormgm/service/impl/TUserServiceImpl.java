@@ -9,6 +9,10 @@ import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TUserService;
 import com.bumt.sensormgm.util.CommonUtil;
 import com.bumt.sensormgm.util.ResultUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -91,7 +95,11 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 
 				dataResultList.add(map2);
 			}
-			return new ResultUtil<>().setData(dataResultList);
+			int total =  dao.getTotalBySqlAndCondition(levelCondition,areaIdCondition);
+
+			Pageable pageable = PageRequest.of((pageNum-1), pageSize);
+			Page<Map> page = new PageImpl(dataResultList,pageable,total);
+			return new ResultUtil<>().setData(page);
 		}
 		return new ResultUtil<>().setErrorMsg(4000,"未登录");
 	}
