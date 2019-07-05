@@ -88,7 +88,7 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 			int pageNum =Integer.parseInt(entity.get("pageNum").toString());
 			int pageSize =Integer.parseInt(entity.get("pageSize").toString());
 			int start = (pageNum-1)*pageSize;
-			List<Map> dataList =  dao.getPageListBySqlAndCondition(levelCondition,areaIdCondition, start,pageSize );
+			List<Map> dataList =  dao.getPageListBySqlAndCondition(areaIdCondition, start,pageSize );
 			List<Map> dataResultList = new ArrayList<>();
 			for(Map map:dataList){
 				Map map2 = new HashMap();
@@ -102,7 +102,7 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 
 				dataResultList.add(map2);
 			}
-			int total =  dao.getTotalBySqlAndCondition(levelCondition,areaIdCondition);
+			int total =  dao.getTotalBySqlAndCondition(areaIdCondition);
 
 			Pageable pageable = PageRequest.of((pageNum-1), pageSize);
 			Page<Map> page = new PageImpl(dataResultList,pageable,total);
