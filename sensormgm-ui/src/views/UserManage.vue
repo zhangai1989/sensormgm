@@ -16,7 +16,14 @@
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
         <li class="flex fxmiddle">
-          <area-selector :needEnterprise="false" @changeArea="changeQueryArea"></area-selector>
+          <el-select size="small" :clearable="true" v-model="condition.areaId" placeholder="请选择" :disabled="level > 2" @change="changeArea">
+            <el-option
+              v-for="item in areas"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </li>
         <li class="flex fxmiddle">
           <el-input
@@ -65,7 +72,6 @@
           </el-table-column>
 
           <el-table-column
-            v-if="level === 3"
             show-overflow-tooltip
             align="center"
             prop="enterpriseName"
@@ -148,11 +154,11 @@
         :visible.sync="editFlag"
         :show-close="false"
         :close-on-click-modal="false"
-        width="40%">
+        width="380px">
 
-        <el-form :inline="true" :model="form" ref="editForm" :rules="rules" label-width="120px">
-          <el-form-item :disabled="level < 3" label="所属区域" prop="areaId">
-            <el-select size="small" v-model="form.areaId" placeholder="请选择" :disabled="level > 2" @change="changeArea">
+        <el-form :inline="true" :model="form" ref="editForm" :rules="rules" label-width="100px">
+          <el-form-item label="所属区域" prop="areaId">
+            <el-select size="small" v-model="form.areaId" placeholder="请选择" :disabled="form.id !== ''" @change="changeArea">
               <el-option
                 v-for="item in areas"
                 :key="item.id"
@@ -162,7 +168,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item v-if="form.level === 3" :disabled="level === 3" label="所属企业" prop="enterpriseId">
+          <el-form-item v-if="form.level === 3 && form.id === ''" :disabled="level === 3 || form.enterpriseId" label="所属企业" prop="enterpriseId">
             <el-select size="small" v-model="form.enterpriseId" placeholder="请选择">
               <el-option
                 v-for="item in areaEnterprises"
@@ -215,7 +221,7 @@
     }
 
   .el-input--small, .el-select--small {
-    width: 190px;
+    width: 200px;
   }
 
 </style>
@@ -254,6 +260,7 @@ export default {
         areaId: '',
         level: '',
         loginName: '',
+        enterpriseId: '',
         cname: '',
         mobile: '',
         email: '',
@@ -335,6 +342,17 @@ export default {
         this.form.mobile = row.mobile
         this.form.email = row.email
         this.form.password = row.password
+      } else {
+        this.title = '新增用户'
+        this.form.id = ''
+        this.form.areaId = ''
+        this.form.enterpriseId = ''
+        this.form.level = ''
+        this.form.loginName = ''
+        this.form.cname = ''
+        this.form.mobile = ''
+        this.form.email = ''
+        this.form.password = '123456'
       }
       this.editFlag = true
     },
@@ -354,7 +372,6 @@ export default {
             that.totalNum = res.result.totalElements
             if (res.result.content) {
               res.result.content.forEach(function (item, index, array) {
-                debugger
                 item.area = that.sysArea.get(item.areaId)
                 item.enterpriseName = that.sysEnterprise.get(item.enterpriseId)
               })
@@ -455,7 +472,6 @@ export default {
       })
     },
     changeQueryArea (areaId, enterpriseId) {
-      debugger
       if (!enterpriseId) {
         this.condition.areaId = areaId
       } else {
@@ -467,7 +483,7 @@ export default {
     async getAreaEnterprise (areaId) {
       let that = this
       that.areaEnterprises = []
-      const res = await areaEnterprise({id, areaId})
+      const res = await areaEnterprise({areaId: areaId})
       if (res.code === 2000) {
         that.areaEnterprises = res.result
       }
