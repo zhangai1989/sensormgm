@@ -1,28 +1,24 @@
 package com.bumt.sensormgm.service.impl;
 
-import com.alibaba.druid.sql.PagerUtils;
-import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
 import com.bumt.sensormgm.common.dao.BaseJpaDao;
+import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
+import com.bumt.sensormgm.dao.TDeviceDao;
 import com.bumt.sensormgm.dao.TEnterpriseDao;
 import com.bumt.sensormgm.entity.TDevice;
 import com.bumt.sensormgm.entity.TEnterprise;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TDeviceService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.bumt.sensormgm.dao.TDeviceDao;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceService  {

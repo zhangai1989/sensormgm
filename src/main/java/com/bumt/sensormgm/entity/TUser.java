@@ -1,9 +1,12 @@
 package com.bumt.sensormgm.entity;
 
 import com.bumt.sensormgm.common.pojo.BaseEntity;
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * 用户表 
@@ -82,6 +85,7 @@ public class TUser extends BaseEntity implements Serializable {
 	/**
 	 * 创建时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "create_time", nullable = false)
 	private java.util.Date createTime;
 
@@ -100,6 +104,7 @@ public class TUser extends BaseEntity implements Serializable {
 	/**
 	 * 修改时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@Column(name = "modify_time", nullable = true)
 	private java.util.Date modifyTime;
 

@@ -5,25 +5,24 @@ import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
 import com.bumt.sensormgm.dao.TAreaDao;
 import com.bumt.sensormgm.dao.TUserDao;
 import com.bumt.sensormgm.entity.TArea;
+import com.bumt.sensormgm.entity.TEnterprise;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TAreaService;
 import com.bumt.sensormgm.service.TUserService;
 import com.bumt.sensormgm.util.CommonUtil;
 import com.bumt.sensormgm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
@@ -68,45 +67,40 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 	@Override
 	public Object getPageListByCondition2(Map<String, Object> entity, HttpSession httpSession) {
 		TUser tUser = (TUser) httpSession.getAttribute("user");
-		if(tUser!=null){
+		if(tUser!=null) {
 
-			List<TArea> listArea =  tAreaService.getUserAreas(Long.parseLong(tUser.getAreaId()));
-			int level = tUser.getLevel();
+			List<TArea> listArea = tAreaService.getUserAreas(Long.parseLong(tUser.getAreaId()));
+			// TODO 区域为空直接返回
 
-			int levelCondition = 2;
-			String areaIdCondition ="";
-			if(level==1||level==2){
-				//查询level==3的所有数据
-				levelCondition =3 ;
-			}else if(level==3){
-
-				//查询level==4的数据 areaId==
-				levelCondition = 4;
-				areaIdCondition=tUser.getAreaId();
-			}
-
-			int pageNum =Integer.parseInt(entity.get("pageNum").toString());
-			int pageSize =Integer.parseInt(entity.get("pageSize").toString());
-			int start = (pageNum-1)*pageSize;
-			List<Map> dataList =  dao.getPageListBySqlAndCondition(areaIdCondition, start,pageSize );
-			List<Map> dataResultList = new ArrayList<>();
-			for(Map map:dataList){
-				Map map2 = new HashMap();
-				map2.putAll(map);
-				if(map.get("modify_time")!=null&&map.get("modify_time").toString().length()>19){
-					map2.put("modifyTime",map.get("modify_time").toString().substring(0,19));
+			Specification<TUser> specification = (root, criteriaQuery, criteriaBuilder) -> {
+				List<Predicate> list = new ArrayList<>();
+				// 企业账号只能看同企业下得用户
+				if (!StringUtils.isEmpty(tUser.getEnterpriseId())) {
+					list.add(criteriaBuilder.equal(root.<String>get("enterpriseId"), entity.get("enterpriseId")));
+				} else {
+					// 前端传了区域ID
+					if (!StringUtils.isEmpty(entity.get("areaId"))) {
+						list.add(criteriaBuilder.equal(root.<String>get("areaId"), entity.get("areaId")));
+					} else {
+						CriteriaBuilder.In<Long> in = criteriaBuilder.in(root.<Long>get("areaId"));
+						for (TArea area : listArea) {
+							in.value(area.getId());
+						}
+						list.add(in);
+					}
 				}
-				if(map.get("create_time")!=null&&map.get("create_time").toString().length()>19){
-					map2.put("createTime",map.get("create_time").toString().substring(0,19));
+				if (!StringUtils.isEmpty(entity.get("name"))) {
+					list.add(criteriaBuilder.like(root.get("cname"), "%" + entity.get("name") + "%"));
 				}
+				list.add(criteriaBuilder.equal(root.<Integer>get("deleteFlag"), 0));
+				return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
+			};
 
-				dataResultList.add(map2);
-			}
-			int total =  dao.getTotalBySqlAndCondition(areaIdCondition);
+			int pageNum = Integer.parseInt(entity.get("pageNum").toString());
+			int pageSize = Integer.parseInt(entity.get("pageSize").toString());
+			Pageable pageable= PageRequest.of((pageNum-1),pageSize, new Sort(Sort.Direction.DESC,"id"));
 
-			Pageable pageable = PageRequest.of((pageNum-1), pageSize);
-			Page<Map> page = new PageImpl(dataResultList,pageable,total);
-			return new ResultUtil<>().setData(page);
+			return new ResultUtil<>().setData(getPageListByCondition(specification, pageable));
 		}
 		return new ResultUtil<>().setErrorMsg(4000,"未登录");
 	}
