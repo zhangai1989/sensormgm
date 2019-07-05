@@ -76,9 +76,13 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 
 			Specification<TUser> specification = (root, criteriaQuery, criteriaBuilder) -> {
 				List<Predicate> list = new ArrayList<>();
+				// 前端传了企业ID
+				if(!StringUtils.isEmpty(entity.get("enterpriseId"))) {
+					list.add(criteriaBuilder.equal(root.<String>get("enterpriseId"), entity.get("enterpriseId")));
+				}
 				// 企业账号只能看同企业下得用户
 				if (!StringUtils.isEmpty(tUser.getEnterpriseId())) {
-					list.add(criteriaBuilder.equal(root.<String>get("enterpriseId"), entity.get("enterpriseId")));
+					list.add(criteriaBuilder.equal(root.<String>get("enterpriseId"), tUser.getEnterpriseId()));
 				} else {
 					// 前端传了区域ID
 					if (!StringUtils.isEmpty(entity.get("areaId"))) {
