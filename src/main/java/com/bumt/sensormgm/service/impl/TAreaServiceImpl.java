@@ -69,7 +69,7 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 	@Override
 	public Object getAreaListBySession(HttpSession session) {
 		TUser tUser = (TUser) session.getAttribute("user");
-		return getUserAreas(Long.valueOf(tUser.getAreaId()));
+		return getUserAreas(Long.valueOf(tUser.getAreaId()), false);
 	}
 
 	@Override
@@ -88,20 +88,23 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 	}
 
 	@Override
-	public List<TArea> getUserAreas(Long areaId) {
+	public List<TArea> getUserAreas(Long areaId, boolean containSelf) {
 		List<TArea> result = new ArrayList<>();
 		// 查询出所有区域
 		List<TArea> allArea = dao.findAll();
 		if(CollectionUtils.isEmpty(allArea)) return result;
-		buildUserAreas(areaId, result, allArea);
+		buildUserAreas(areaId, result, allArea, containSelf);
 		return result;
 	}
 
-	private void buildUserAreas(Long parentId, List<TArea> mareas, List<TArea> allArea) {
+	private void buildUserAreas(Long parentId, List<TArea> mareas, List<TArea> allArea, boolean containSelf) {
 		for(TArea area : allArea) {
+			if(containSelf && parentId.equals(area.getId())) {
+				mareas.add(area);
+			}
 			if(!area.getDeleteFlag() && parentId.equals(area.getParentId())) {
 				mareas.add(area);
-				buildUserAreas(area.getId(), mareas, allArea);
+				buildUserAreas(area.getId(), mareas, allArea, containSelf);
 			}
 		}
 	}

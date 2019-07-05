@@ -5,24 +5,26 @@ import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
 import com.bumt.sensormgm.dao.TAreaDao;
 import com.bumt.sensormgm.dao.TUserDao;
 import com.bumt.sensormgm.entity.TArea;
-import com.bumt.sensormgm.entity.TEnterprise;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TAreaService;
 import com.bumt.sensormgm.service.TUserService;
 import com.bumt.sensormgm.util.CommonUtil;
 import com.bumt.sensormgm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
@@ -69,7 +71,7 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 		TUser tUser = (TUser) httpSession.getAttribute("user");
 		if(tUser!=null) {
 
-			List<TArea> listArea = tAreaService.getUserAreas(Long.parseLong(tUser.getAreaId()));
+			List<TArea> listArea = tAreaService.getUserAreas(Long.parseLong(tUser.getAreaId()), true);
 			// TODO 区域为空直接返回
 
 			Specification<TUser> specification = (root, criteriaQuery, criteriaBuilder) -> {

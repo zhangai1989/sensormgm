@@ -16,7 +16,7 @@ public interface TAreaService extends BaseService {
 
     Object getAreaList();
 
-    List<TArea> getUserAreas(Long areaId);
+    List<TArea> getUserAreas(Long areaId, boolean containSelf);
 
     List<TArea> findByName(String cname);
 
