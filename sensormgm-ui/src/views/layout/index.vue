@@ -17,6 +17,8 @@
 
 <script>
 import { LeftSidebar, MainHeader, MainTabs, MainContent } from '@components/common'
+import { allArea } from '@api/area'
+import { allEnterprise } from '@api/enterprise'
 
 export default {
   name: 'layout',
@@ -31,8 +33,37 @@ export default {
       tabs: []
     }
   },
-  created () { },
-  methods: {},
+  created () {
+    this.getAllArea()
+    this.getAllEnterprise()
+  },
+  methods: {
+    async getAllArea () {
+      const res = await allArea({})
+      if (res.code === 2000 && res.result && res.result.length > 0) {
+        let areas = []
+        res.result.forEach(function (item) {
+          if (!item.deleteFlag) {
+            areas.push({id: item.id + "", name: item.name})
+          }
+        })
+        localStorage.setItem("allArea", JSON.stringify(areas, null, 0))
+      }
+    },
+    async getAllEnterprise () {
+      const res = await allEnterprise({})
+      if (res.code === 2000 && res.result && res.result.length > 0) {
+        let enterprises = []
+        res.result.forEach(function (item) {
+          if (!item.deleteFlag) {
+            enterprises.push({id: item.id + "", name: item.name})
+          }
+        })
+        localStorage.setItem("allEnterprise", JSON.stringify(enterprises, null, 0))
+      }
+    }
+
+  },
   computed: {
     currentTab () {
       return this.$store.getters.currentTab

@@ -16,12 +16,15 @@
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
         <li class="flex fxmiddle">
+          <area-selector :needEnterprise="false" @changeArea="changeQueryArea"></area-selector>
+        </li>
+        <li class="flex fxmiddle">
           <el-input
             placeholder="请输入用户名"
             size="small"
             :clearable="true"
             style="margin-right: 15px"
-            v-model.trim="search">
+            v-model.trim="condition.name">
           </el-input>
         </li>
         <el-button type="success"
@@ -222,22 +225,30 @@ import {addUser, updateUser, deleteUser, userList} from '@api/user'
 import {areaEnterprise} from '@api/enterprise'
 import { areaList } from '@api/area'
 const normalBar = () => import('@components/common/NormalBar')
+const areaSelector = () => import('@components/common/AreaSelector')
 
 export default {
   name: 'user',
   components: {
-    normalBar
+    normalBar,
+    areaSelector
   },
   data () {
     return {
+      sysArea: new Map(),
+      sysEnterprise: new Map(),
       level: 1,
-      search: '',
       list: [],
       totalNum: 0,
       pageSize: 10,
       currentPage: 1,
       areas: [],
       areaEnterprises: [],
+      condition: {
+        areaId: '',
+        enterpriseId: '',
+        name: ''
+      },
       form: {
         id: '',
         areaId: '',
@@ -278,6 +289,8 @@ export default {
   created () {},
   mounted () {
     this.initData()
+    this.initSysArea()
+    this.initSysEnterprise()
   },
   methods: {
     // 初始化
@@ -288,8 +301,24 @@ export default {
         that.areas = res1.result
       }
       let userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      this.level = parseInt(userInfo.level)
-      this.allowEdit = this.level < 4
+      that.level = parseInt(userInfo.level)
+      that.areaId = userInfo.areaId
+
+      that.allowEdit = that.level < 4
+    },
+    initSysArea () {
+      let that = this
+      let allArea = JSON.parse(localStorage.getItem('allArea'))
+      allArea.forEach(function (item) {
+        that.sysArea.set(item.id, item.name)
+      })
+    },
+    initSysEnterprise () {
+      let that = this
+      let allEnterprise = JSON.parse(localStorage.getItem('allEnterprise'))
+      allEnterprise.forEach(function (item) {
+        that.sysEnterprise.set(item.id, item.name)
+      })
     },
     openDialog (row) {
       if (this.$refs['editForm']) {
@@ -315,6 +344,9 @@ export default {
       let that = this
       argc.pageSize = that.pageSize
       that.queryAble = false
+      argc.areaId = that.condition.areaId
+      argc.enterpriseId = that.condition.enterpriseId
+      argc.name = that.condition.name
       userList(argc)
         .then(res => {
           if (res.code === 2000) {
@@ -322,11 +354,9 @@ export default {
             that.totalNum = res.result.totalElements
             if (res.result.content) {
               res.result.content.forEach(function (item, index, array) {
-                that.areas.forEach(function (it, idx, arr) {
-                  if (it.id === parseInt(item.areaId)) {
-                    item.area = it.name
-                  }
-                })
+                debugger
+                item.area = that.sysArea.get(item.areaId)
+                item.enterpriseName = that.sysEnterprise.get(item.enterpriseId)
               })
               that.list = res.result.content
             }
@@ -341,27 +371,14 @@ export default {
       let argc = {
         pageNum: page
       }
-      if (that.search !== '') {
-        argc.enterprise = that.enterprise
-      }
-      if (that.status !== '全部') {
-        argc.status = that.status
-      }
       that.getList(argc)
     },
 
     // 搜索
     searchList () {
       let that = this
-      if (that.search.length > 30) {
-        that.$message.warning('搜索内容请勿太长!')
-        return
-      }
       let argc = {
         pageNum: 1
-      }
-      if (that.search !== '') {
-        argc.name = that.search
       }
       that.getList(argc)
     },
@@ -429,13 +446,23 @@ export default {
       let that = this
       // 根据区域级别判断用户级别
       that.form.enterpriseId = ''
-      that.areas.forEach(function (item, index, array) {
+      that.areas.forEach(function (item) {
         if (val === item.id) {
           that.form.level = parseInt(item.level) + 1
           // 获取区域企业
           that.getAreaEnterprise(val)
         }
       })
+    },
+    changeQueryArea (areaId, enterpriseId) {
+      debugger
+      if (!enterpriseId) {
+        this.condition.areaId = areaId
+      } else {
+        this.condition.areaId = ''
+      }
+      this.condition.enterpriseId = enterpriseId
+      this.getList({pageNum: 1})
     },
     async getAreaEnterprise (areaId) {
       let that = this

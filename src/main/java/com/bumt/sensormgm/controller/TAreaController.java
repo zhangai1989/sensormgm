@@ -121,4 +121,12 @@ public class TAreaController  extends BaseController<TArea>{
 	public Object getAreaTreeByAreaId(@RequestParam("areaId") String areaId){
 		return new ResultUtil<>().setData(service.getAreaTreeByAreaId(areaId));
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getAreaDict", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
+	@ApiOperation(value="获取区域数据字典", notes="")
+	@ApiImplicitParam(paramType="query", name = "areaId", value = "区域id", required = true, dataType = "String")
+	public Object getAreaDict(HttpSession session){
+		return new ResultUtil<>().setData(service.getUserAreas(session));
+	}
 }

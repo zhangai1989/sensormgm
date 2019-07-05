@@ -11,6 +11,7 @@ import com.bumt.sensormgm.service.TUserService;
 import com.bumt.sensormgm.util.CommonUtil;
 import com.bumt.sensormgm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -69,46 +70,49 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 	@Override
 	public Object getPageListByCondition2(Map<String, Object> entity, HttpSession httpSession) {
 		TUser tUser = (TUser) httpSession.getAttribute("user");
-		if(tUser!=null) {
-
-			List<TArea> listArea = tAreaService.getUserAreas(Long.parseLong(tUser.getAreaId()), true);
-			// TODO 区域为空直接返回
-
-			Specification<TUser> specification = (root, criteriaQuery, criteriaBuilder) -> {
-				List<Predicate> list = new ArrayList<>();
-				// 前端传了企业ID
-				if(!StringUtils.isEmpty(entity.get("enterpriseId"))) {
-					list.add(criteriaBuilder.equal(root.<String>get("enterpriseId"), entity.get("enterpriseId")));
-				}
-				// 企业账号只能看同企业下得用户
-				if (!StringUtils.isEmpty(tUser.getEnterpriseId())) {
-					list.add(criteriaBuilder.equal(root.<String>get("enterpriseId"), tUser.getEnterpriseId()));
+		if (StringUtils.isEmpty(tUser)) {
+			return new ResultUtil<>().setErrorMsg(4000,"未登录");
+		}
+		// 企业账号无权限
+		if (4 == tUser.getLevel()) {
+			return new PageImpl(new ArrayList(), null, 0);
+		}
+		Specification<TUser> specification = (root, criteriaQuery, cb) -> {
+			List<Predicate> list = new ArrayList<>();
+			// 前端传了企业ID
+			if (!StringUtils.isEmpty(entity.get("enterpriseId"))) {
+				list.add(cb.equal(root.<String>get("enterpriseId"), entity.get("enterpriseId")));
+			} else {
+				// 前端传了区域ID
+				if (!StringUtils.isEmpty(entity.get("areaId"))) {
+					list.add(cb.equal(root.<String>get("areaId"), entity.get("areaId")));
 				} else {
-					// 前端传了区域ID
-					if (!StringUtils.isEmpty(entity.get("areaId"))) {
-						list.add(criteriaBuilder.equal(root.<String>get("areaId"), entity.get("areaId")));
-					} else {
-						CriteriaBuilder.In<Long> in = criteriaBuilder.in(root.<Long>get("areaId"));
+					if(3 == tUser.getLevel()) {
+						// 办事处级别只能查看同区域下企业用户
+						list.add(cb.equal(root.<String>get("areaId"), tUser.getAreaId()));
+						list.add(cb.isNotNull(root.<String>get("enterpriseId")));
+					}else {
+						CriteriaBuilder.In<Long> in = cb.in(root.<Long>get("areaId"));
+						List<TArea> listArea = tAreaService.getUserAreas(Long.valueOf(tUser.getAreaId()), false);
 						for (TArea area : listArea) {
 							in.value(area.getId());
 						}
 						list.add(in);
 					}
 				}
-				if (!StringUtils.isEmpty(entity.get("name"))) {
-					list.add(criteriaBuilder.like(root.get("cname"), "%" + entity.get("name") + "%"));
-				}
-				list.add(criteriaBuilder.equal(root.<Integer>get("deleteFlag"), 0));
-				return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
-			};
+			}
+			if (!StringUtils.isEmpty(entity.get("name"))) {
+				list.add(cb.like(root.get("cname"), "%" + entity.get("name") + "%"));
+			}
+			list.add(cb.equal(root.<Integer>get("deleteFlag"), 0));
+			return cb.and(list.toArray(new Predicate[list.size()]));
+		};
 
-			int pageNum = Integer.parseInt(entity.get("pageNum").toString());
-			int pageSize = Integer.parseInt(entity.get("pageSize").toString());
-			Pageable pageable= PageRequest.of((pageNum-1),pageSize, new Sort(Sort.Direction.DESC,"id"));
+		int pageNum = Integer.parseInt(entity.get("pageNum").toString());
+		int pageSize = Integer.parseInt(entity.get("pageSize").toString());
+		Pageable pageable = PageRequest.of((pageNum - 1), pageSize, new Sort(Sort.Direction.DESC, "id"));
 
-			return new ResultUtil<>().setData(getPageListByCondition(specification, pageable));
-		}
-		return new ResultUtil<>().setErrorMsg(4000,"未登录");
+		return new ResultUtil<>().setData(getPageListByCondition(specification, pageable));
 	}
 
 	@Override
