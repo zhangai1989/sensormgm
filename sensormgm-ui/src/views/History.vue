@@ -101,6 +101,7 @@
 <script>
 import { historyList } from '@api/uploadLog'
 import { getAreaTree } from '@api/area'
+import { exportHistory } from '@api/export'
 const normalBar = () => import('@components/common/NormalBar')
 
 export default {
@@ -227,17 +228,19 @@ export default {
     },
 
     exportExcel () {
-      this.exportAble = false
-      this.counter = 60
-      let that = this
-      let intervalId = setInterval(() => {
-        if (that.counter === 0) {
-          that.exportAble = true
-          clearInterval(intervalId)
-        } else {
-          that.counter--
-        }
-      }, 1000)
+      window.location.href="/api/export/history"
+//      this.exportAble = false
+//      this.counter = 60
+//      let that = this
+//      const res = exportHistory()
+//      let intervalId = setInterval(() => {
+//        if (that.counter === 0) {
+//          that.exportAble = true
+//          clearInterval(intervalId)
+//        } else {
+//          that.counter--
+//        }
+//      }, 1000)
     }
   }
 }

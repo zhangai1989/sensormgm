@@ -64,7 +64,7 @@ axios.interceptors.response.use((response) => {
   return response
 }, (error) => {
   ElementUI.Message.error(error.response.data.message)
-  return {code: 500, message: error.response.data.message}
+  Promise.reject(error)
 })
 
 const render = new Vue({
