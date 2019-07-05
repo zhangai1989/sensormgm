@@ -8,6 +8,7 @@ import com.bumt.sensormgm.entity.TDevice;
 import com.bumt.sensormgm.entity.TEnterprise;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TAreaService;
+import com.bumt.sensormgm.service.TEnterpriseService;
 import com.bumt.sensormgm.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -41,7 +42,18 @@ public class TAreaController  extends BaseController<TArea>{
 	@Override
 	public BaseService getService() { return service; }
 
+	@Autowired
+	private TEnterpriseService tEnterpriseService;
 
+	@Override
+	public  String checkDeleteStatus(String id){
+
+		List<TEnterprise> tEnterpriseList = tEnterpriseService.findByAreaId(id);
+		if(!CollectionUtils.isEmpty(tEnterpriseList)){
+			return "改区域下有企业，不能被删除！";
+		}
+		return "";
+	}
 
 	@Override
 	public  String checkInsertStatus(TArea entity){

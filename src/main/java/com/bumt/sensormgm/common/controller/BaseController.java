@@ -154,10 +154,16 @@ public abstract class BaseController<T>{
 	@RequestMapping(value = "/deleteById", produces = {"application/json;charset=UTF-8"})
 	public Object deleteById(@RequestBody Map<String,Object> entity){
 		String id = entity.get("id").toString();
+		String errorMsg = checkDeleteStatus(id);
+		if(!StringUtils.isEmpty(errorMsg)){
+			return new ResultUtil<>().setErrorMsg(errorMsg);
+		}
 		return new ResultUtil<>().setData(getService().deleteById(id));
 	}
 
-
+	public  String checkDeleteStatus(String id){
+		return "";
+	}
 
 
 	/**

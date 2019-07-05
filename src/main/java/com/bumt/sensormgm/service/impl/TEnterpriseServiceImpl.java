@@ -46,6 +46,11 @@ public class TEnterpriseServiceImpl extends BaseServiceImpl implements TEnterpri
 		return deviceService.insert(buildDevice(saveResult.getId(), saveResult.getCode(), saveResult.getName()), session);
 	}
 
+	@Override
+	public List<TEnterprise> findByAreaId(String areaId) {
+		return dao.findByAreaId(Long.parseLong(areaId));
+	}
+
 	private TDevice buildDevice(Long enterpriseId, String deviceCode, String deviceName) {
 		TDevice device = new TDevice();
 		device.setEnterpriseId(enterpriseId);
