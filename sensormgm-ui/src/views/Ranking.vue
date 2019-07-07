@@ -26,21 +26,20 @@
           <el-date-picker
             v-model="rangeTime"
             size="small"
-            type="daterange"
+            type="datetimerange"
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
-            @change="timeChange"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :picker-options="pickerOptions"
-            style="width: 270px">
+            style="width: 350px">
           </el-date-picker>
         </li>
         <el-button type="success"
                    size="small"
                    :disabled="!queryAble"
-                   @click="timeChange">查 询
+                   @click="getList">查 询
         </el-button>
       </ul>
 
@@ -115,22 +114,22 @@ export default {
     }
   },
   created () {
+    let date = this.$moment(new Date()).format('YYYY-MM-DD')
+    this.rangeTime.push(date + ' 00:00:00')
+    this.rangeTime.push(date + ' 23:59:59')
   },
 
-  mounted () {
-    this.initData()
-  },
+  mounted () {},
   methods: {
-
-    // 初始化
-    initData () {
-      let that = this
-      that.getList()
-    },
     // 获取一页列表数据
     async getList () {
       let that = this
-      if (that.rangeTime.length == 0) {
+      if (null == that.rangeTime || that.rangeTime.length == 0) {
+        this.$message.warning('请先选择时间')
+        return
+      }
+      if (new Date(this.rangeTime[1]).getTime() - new Date(this.rangeTime[0]).getTime() > 1000 * 60 * 60 * 24 * 31) {
+        this.$message.warning('最多只能查询31天的数据')
         return
       }
       if (that.rangeTime !== '' && that.rangeTime !== null) {
@@ -143,20 +142,6 @@ export default {
       if (res.code === 2000) {
         that.list = res.result
       }
-    },
-
-
-
-    timeChange (rangeTime) {
-      let that = this
-      let argc = {
-        pageNum: 1
-      }
-      if (rangeTime !== '' && rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
-      }
-      that.getList(argc)
     }
   }
 }

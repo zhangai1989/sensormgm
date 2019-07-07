@@ -17,20 +17,20 @@
           <el-date-picker
             v-model="rangeTime"
             size="small"
-            type="daterange"
+            type="datetimerange"
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
-            @change="timeChange"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            style="width: 350px"
             :picker-options="pickerOptions">
           </el-date-picker>
         </li>
         <el-button type="success"
                    size="small"
                    :disabled="!queryAble"
-                   @click="timeChange">查 询
+                   @click="getList">查 询
         </el-button>
 
         <!--<el-button size="small" type="text" class="el-icon-download"></el-button>-->
@@ -65,7 +65,7 @@ export default {
       },
       treeValue: [],
       enterpriseId: [],
-      rangeTime: '',
+      rangeTime: [],
       pickerOptions: {
         disabledDate (time) {
           return time.getTime() > Date.now()
@@ -82,6 +82,9 @@ export default {
     }
   },
   created () {
+    let date = this.$moment(new Date()).format('YYYY-MM-DD')
+    this.rangeTime.push(date + ' 00:00:00')
+    this.rangeTime.push(date + ' 23:59:59')
   },
 
   mounted () {
@@ -110,19 +113,25 @@ export default {
     },
 
     // 获取一页列表数据
-    async getList (argc) {
+    async getList () {
       let that = this
-      if (!that.enterpriseId) return
-      argc.enterpriseId =  this.enterpriseId
-      if (that.rangeTime && that.rangeTime !== '' && that.rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
-      } else {
-          return
+      if (that.rangeTime === null || that.rangeTime.length === 0) {
+        this.$message.warning('请先选择时间')
+        return
       }
-
-      argc.pageNo = 1
-      argc.pageSize = 1000
+      if (new Date(that.rangeTime[1]).getTime() - new Date(that.rangeTime[0]).getTime() > 1000 * 60 * 60 * 24 * 31) {
+        that.$message.warning('最多只能查询31天的数据')
+        return
+      }
+      if (that.enterpriseId === '') {
+        that.$message.warning('请先选择企业')
+        return
+      }
+      let argc = {
+        enterpriseId: that.enterpriseId,
+        startTime: that.rangeTime[0],
+        endTime: that.rangeTime[1]
+      }
       that.queryAble = false
       const res = await analysisList(argc)
       that.chartData.rows = []
@@ -147,20 +156,9 @@ export default {
       that.enterpriseId = obj[obj.length - 1]
       if (obj.length < that.areaTreeDeep) {
         that.treeValue = []
+        this.enterpriseId = ''
         return
       }
-      let argc = {
-        pageNo: 1
-      }
-      that.getList(argc)
-    },
-
-    timeChange (rangeTime) {
-      let that = this
-      let argc = {
-        pageNum: 1
-      }
-      that.getList(argc)
     }
   }
 }

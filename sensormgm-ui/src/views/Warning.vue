@@ -20,14 +20,14 @@
           <el-date-picker
             v-model="rangeTime"
             size="small"
-            type="daterange"
+            type="datetimerange"
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :picker-options="pickerOptions"
-            style="width: 270px">
+            style="width: 350px">
           </el-date-picker>
         </li>
         <el-button type="success"
@@ -106,7 +106,7 @@ export default {
   data () {
     return {
       queryAble: true,
-      rangeTime: '',
+      rangeTime: [],
       pickerOptions: {
         disabledDate (time) {
           return time.getTime() > Date.now()
@@ -122,17 +122,24 @@ export default {
     }
   },
   created () {
+    let date = this.$moment(new Date()).format('YYYY-MM-DD')
+    this.rangeTime.push(date + ' 00:00:00')
+    this.rangeTime.push(date + ' 23:59:59')
   },
 
   mounted () {},
   methods: {
     // 获取一页列表数据
     async getList (argc) {
-      if (this.rangeTime.length == 0) {
-        this.$message.warning('请先选择时间')
+      let that = this
+      if (that.rangeTime === null || that.rangeTime.length == 0) {
+        that.$message.warning('请先选择时间')
         return
       }
-      let that = this
+      if (new Date(that.rangeTime[1]).getTime() - new Date(that.rangeTime[0]).getTime() > 1000 * 60 * 60 * 24 * 31) {
+        that.$message.warning('最多只能查询31天的数据')
+        return
+      }
       argc.startTime = that.rangeTime[0]
       argc.endTime = that.rangeTime[1]
       argc.pageSize = that.pageSize
@@ -161,8 +168,12 @@ export default {
       that.getList(argc)
     },
     exportExcel () {
-      if (this.rangeTime.length === 0) {
+      if (this.rangeTime === null || this.rangeTime.length === 0) {
         this.$message.warning('请先选择时间')
+        return
+      }
+      if(new Date(this.rangeTime[1]).getTime() - new Date(this.rangeTime[0]).getTime() > 1000 * 60 * 60 * 24 * 31) {
+        this.$message.warning('最多只能导出31天的数据')
         return
       }
       window.location.href='/api/export/warning?beginTime=' + this.rangeTime[0] + '&endTime=' + this.rangeTime[1]

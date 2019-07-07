@@ -19,7 +19,8 @@
         <li class="flex fxmiddle">
           <el-cascader v-if="areaTreeDeep > 1" :options="areaTree" size="small" @change="changeTree"
                        v-model="treeValue" :props="treeProps" :show-all-levels="false" placeholder="请选择企业"></el-cascader>
-
+        </li>
+        <li class="flex fxmiddle">
           <el-date-picker
             v-model="rangeTime"
             size="small"
@@ -30,7 +31,7 @@
             format="yyyy-MM-dd HH:mm:ss"
             value-format="yyyy-MM-dd HH:mm:ss"
             :picker-options="pickerOptions"
-            :style="{marginLeft: areaTreeDeep > 1 ? '20px' : '0', width: '350px'}">
+            style="width: 350px">
           </el-date-picker>
         </li>
         <el-button type="success"
@@ -120,7 +121,7 @@ export default {
       },
       treeValue: [],
       enterpriseId: '',
-      rangeTime: '',
+      rangeTime: [],
       pickerOptions: {
         disabledDate (time) {
           return time.getTime() > Date.now()
@@ -136,6 +137,9 @@ export default {
     }
   },
   created () {
+    let date = this.$moment(new Date()).format('YYYY-MM-DD')
+    this.rangeTime.push(date + ' 00:00:00')
+    this.rangeTime.push(date + ' 23:59:59')
   },
 
   mounted () {
@@ -168,11 +172,15 @@ export default {
       let that = this
       argc.pageSize = that.pageSize
       if ('' == that.enterpriseId) {
-        this.$message.warning('请先选择企业')
+        that.$message.warning('请先选择企业')
         return
       }
-      if (this.rangeTime.length === 0) {
-        this.$message.warning('请先选择时间')
+      if (that.rangeTime === null || that.rangeTime.length === 0) {
+        that.$message.warning('请先选择时间')
+        return
+      }
+      if (new Date(that.rangeTime[1]).getTime() - new Date(that.rangeTime[0]).getTime() > 1000 * 60 * 60 * 24 * 31) {
+        this.$message.warning('最多只能查询31天的数据')
         return
       }
       argc.enterpriseId = that.enterpriseId
@@ -219,6 +227,10 @@ export default {
       }
       if (this.rangeTime.length === 0) {
         this.$message.warning('请先选择时间')
+        return
+      }
+      if(new Date(this.rangeTime[1]).getTime() - new Date(this.rangeTime[0]).getTime() > 1000 * 60 * 60 * 24 * 31) {
+        this.$message.warning('最多只能导出31天的数据')
         return
       }
       window.location.href='/api/export/history?enterpriseId=' + this.enterpriseId + '&beginTime=' + this.rangeTime[0] + '&endTime=' + this.rangeTime[1]

@@ -20,6 +20,11 @@ import AMap from 'vue-amap'
 // v-charts
 import VCharts from 'v-charts'
 
+import moment from 'moment'
+Vue.prototype.$moment = moment
+
+
+
 Vue.use(AMap)
 
 Vue.config.productionTip = false // 设置为 false 以阻止 vue 在启动时生成生产提示。
