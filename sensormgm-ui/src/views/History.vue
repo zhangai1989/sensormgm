@@ -29,7 +29,6 @@
             end-placeholder="结束日期"
             format="yyyy-MM-dd HH:mm:ss"
             value-format="yyyy-MM-dd HH:mm:ss"
-            @change="timeChange"
             :picker-options="pickerOptions"
             :style="{marginLeft: areaTreeDeep > 1 ? '20px' : '0', width: '350px'}">
           </el-date-picker>
@@ -37,7 +36,7 @@
         <el-button type="success"
                    size="small"
                    :disabled="!queryAble"
-                   @click="timeChange">查 询
+                   @click="getList({pageNum: 1})">查 询
         </el-button>
       </ul>
 
@@ -120,6 +119,7 @@ export default {
         children: 'nodes'
       },
       treeValue: [],
+      enterpriseId: '',
       rangeTime: '',
       pickerOptions: {
         disabledDate (time) {
@@ -167,9 +167,17 @@ export default {
     async getList (argc) {
       let that = this
       argc.pageSize = that.pageSize
-      if (this.rangeTime.length === 0) {
+      if ('' == that.enterpriseId) {
+        this.$message.warning('请先选择企业')
         return
       }
+      if (this.rangeTime.length === 0) {
+        this.$message.warning('请先选择时间')
+        return
+      }
+      argc.enterpriseId = that.enterpriseId
+      argc.startTime = that.rangeTime[0]
+      argc.endTime = that.rangeTime[1]
       that.queryAble = false
       const res = await historyList(argc)
       that.queryAble = true
@@ -189,9 +197,8 @@ export default {
       if (that.rangeTime !== '' && that.rangeTime !== null) {
         argc.startTime = that.rangeTime[0]
         argc.endTime = that.rangeTime[1]
-      }
-      if (that.treeValue.length === that.areaTreeDeep) {
-        argc.enterpriseId = that.treeValue[2]
+      } else {
+        return
       }
       that.getList(argc)
     },
@@ -199,48 +206,33 @@ export default {
       let that = this
       if (obj.length < that.areaTreeDeep) {
         that.treeValue = []
+        that.enterpriseId = ''
         return
       }
-      let argc = {
-        pageNum: 1,
-        enterpriseId: obj[2].id
-      }
-      if (that.rangeTime !== '' && that.rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
-      }
-      that.getList(argc)
-    },
-
-    timeChange (rangeTime) {
-      let that = this
-      let argc = {
-        pageNum: 1
-      }
-      if (rangeTime !== '' && rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
-      }
-      if (that.treeValue.length === that.areaTreeDeep) {
-        argc.enterpriseId = that.treeValue[2]
-      }
-      that.getList(argc)
+      that.enterpriseId = obj[obj.length - 1]
     },
 
     exportExcel () {
-      window.location.href="/api/export/history"
-//      this.exportAble = false
-//      this.counter = 60
-//      let that = this
-//      const res = exportHistory()
-//      let intervalId = setInterval(() => {
-//        if (that.counter === 0) {
-//          that.exportAble = true
-//          clearInterval(intervalId)
-//        } else {
-//          that.counter--
-//        }
-//      }, 1000)
+      if ('' == this.enterpriseId) {
+        this.$message.warning('请先选择企业')
+        return
+      }
+      if (this.rangeTime.length === 0) {
+        this.$message.warning('请先选择时间')
+        return
+      }
+      window.location.href='/api/export/history?enterpriseId=' + this.enterpriseId + '&beginTime=' + this.rangeTime[0] + '&endTime=' + this.rangeTime[1]
+      this.exportAble = false
+      this.counter = 30
+      let that = this
+      let intervalId = setInterval(() => {
+        if (that.counter === 0) {
+          that.exportAble = true
+          clearInterval(intervalId)
+        } else {
+          that.counter--
+        }
+      }, 1000)
     }
   }
 }

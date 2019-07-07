@@ -26,7 +26,6 @@
             end-placeholder="结束日期"
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
-            @change="timeChange"
             :picker-options="pickerOptions"
             style="width: 270px">
           </el-date-picker>
@@ -34,7 +33,7 @@
         <el-button type="success"
                    size="small"
                    :disabled="!queryAble"
-                   @click="timeChange">查 询
+                   @click="getList({pageNum: 1})">查 询
         </el-button>
       </ul>
 
@@ -125,25 +124,17 @@ export default {
   created () {
   },
 
-  mounted () {
-    this.initData()
-  },
+  mounted () {},
   methods: {
-    // 初始化
-    initData () {
-      let that = this
-      let argc = {
-        pageNum: 1
-      }
-      that.getList(argc)
-    },
-
     // 获取一页列表数据
     async getList (argc) {
       if (this.rangeTime.length == 0) {
+        this.$message.warning('请先选择时间')
         return
       }
       let that = this
+      argc.startTime = that.rangeTime[0]
+      argc.endTime = that.rangeTime[1]
       argc.pageSize = that.pageSize
       that.queryAble = false
       const res = await beyondList(argc)
@@ -164,25 +155,20 @@ export default {
       if (that.rangeTime !== '' && that.rangeTime !== null) {
         argc.startTime = that.rangeTime[0]
         argc.endTime = that.rangeTime[1]
-      }
-      that.getList(argc)
-    },
-
-    timeChange (rangeTime) {
-      let that = this
-      let argc = {
-        pageNum: 1
-      }
-      if (rangeTime !== '' && rangeTime !== null) {
-        argc.startTime = that.rangeTime[0]
-        argc.endTime = that.rangeTime[1]
+      } else {
+        return
       }
       that.getList(argc)
     },
 
     exportExcel () {
+      if (this.rangeTime.length === 0) {
+        this.$message.warning('请先选择时间')
+        return
+      }
+      window.location.href='/api/export/outStandard?beginTime=' + this.rangeTime[0] + '&endTime=' + this.rangeTime[1]
       this.exportAble = false
-      this.counter = 60
+      this.counter = 30
       let that = this
       let intervalId = setInterval(() => {
         if (that.counter === 0) {
