@@ -49,6 +49,7 @@ public class TEnterpriseController  extends BaseController<TEnterprise>{
 			if(!StringUtils.isEmpty(entity.get("name"))){
 				list.add(criteriaBuilder.like(root.get("name").as(String.class), "%" + entity.get("name") + "%"));
 			}
+			list.add(criteriaBuilder.equal(root.get("deleteFlag").as(String.class),1));
 			return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
 		};
 		return querySpecification;
@@ -86,4 +87,15 @@ public class TEnterpriseController  extends BaseController<TEnterprise>{
 		}
 		return "";
 	}
+
+	public  String checkUpdateStatus(TEnterprise entity){
+		String name = entity.getName();
+
+		List<TEnterprise> tEnterprises =  service.findByNameAndIdNot(name,entity.getId());
+		if(!CollectionUtils.isEmpty(tEnterprises)){
+			return "企业名称不能重复！";
+		}
+		return "";
+	}
+
 }

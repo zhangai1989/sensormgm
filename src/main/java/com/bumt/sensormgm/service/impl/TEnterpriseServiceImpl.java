@@ -28,12 +28,12 @@ public class TEnterpriseServiceImpl extends BaseServiceImpl implements TEnterpri
 
 	@Override
 	public List<TEnterprise> getAllListByName(String name) {
-		return dao.findByName(name);
+		return dao.findByNameAndDeleteFlag(name,0);
 	}
 
 	@Override
 	public List<TEnterprise> getAllListByCode(String code) {
-		return dao.findByCode(code);
+		return dao.findByCodeAndDeleteFlag(code,0);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class TEnterpriseServiceImpl extends BaseServiceImpl implements TEnterpri
 		if(StringUtils.isEmpty(areaId)){
 			areaId = tUser.getAreaId();
 		}
-		return dao.findByAreaId(Long.parseLong(areaId));
+		return dao.findByAreaIdAndDeleteFlag(Long.parseLong(areaId),0);
 	}
 
 	@Override
@@ -53,7 +53,13 @@ public class TEnterpriseServiceImpl extends BaseServiceImpl implements TEnterpri
 
 	@Override
 	public List<TEnterprise> findByAreaId(String areaId) {
-		return dao.findByAreaId(Long.parseLong(areaId));
+		return dao.findByAreaIdAndDeleteFlag(Long.parseLong(areaId),0);
+	}
+
+	@Override
+	public List<TEnterprise> findByNameAndIdNot(String name, Long id) {
+
+		return dao.findByNameAndIdNotAndDeleteFlag(name,0,0);
 	}
 
 	private TDevice buildDevice(Long enterpriseId, String deviceCode, String deviceName) {

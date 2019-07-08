@@ -149,6 +149,20 @@ public class TDevice extends BaseEntity implements Serializable {
 	@Column(name = "offline_time", nullable = true)
 	private java.util.Date offlineTime;
 
+	/**
+	 * 删除标记 0:未删除 1:已删除
+	 */
+	@Column(name = "delete_flag", nullable = false)
+	private int deleteFlag;
+
+	public int getDeleteFlag() {
+		return deleteFlag;
+	}
+
+	public void setDeleteFlag(int deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
 	public Long getEnterpriseId() {
 		return this.enterpriseId;
 	}

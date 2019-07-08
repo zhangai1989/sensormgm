@@ -54,7 +54,7 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 			e.printStackTrace();
 			return new ResultUtil<>().setErrorMsg("获取密文出错！");
 		}
-		TUser user = dao.findByLoginNameAndPassword(userName,enpassword);
+		TUser user = dao.findByLoginNameAndPasswordAndDeleteFlagNot(userName,enpassword,0);
 		if(user==null){
 			return new ResultUtil<>().setErrorMsg("用户名或密码不正确！");
 		}else{
@@ -118,23 +118,23 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 	@Override
 	public List<TUser> getByLoginName(String cname) {
 
-		return dao.findByLoginName(cname);
+		return dao.findByLoginNameAndDeleteFlagNot(cname,0);
 	}
 
 	@Override
 	public List<TUser> getByMobile(String mobile) {
-		return dao.findByMobile(mobile);
+		return dao.findByMobileAndDeleteFlagNot(mobile,0);
 	}
 
 	@Override
 	public List<TUser> getByEmail(String email) {
-		return dao.findByEmail(email);
+		return dao.findByEmailAndDeleteFlagNot(email,0);
 	}
 
 	@Override
 	public List<TUser> checkUpdateStatus(String cname, String mobile, String email, long id) {
 
-		return dao.findByEmailOrLoginNameOrMobileAndIdNot(email,cname,mobile,id);
+		return dao.findByEmailOrLoginNameOrMobileAndIdNotAndDeleteFlagNot(email,cname,mobile,id,0);
 	}
 
 	@Override

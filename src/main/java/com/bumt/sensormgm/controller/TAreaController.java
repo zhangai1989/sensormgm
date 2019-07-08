@@ -72,7 +72,7 @@ public class TAreaController  extends BaseController<TArea>{
 
 		long id = entity.getId();
 		String name = entity.getName();
-		List<TUser> tUser =  service.findByNameAndIdNot(name,id);
+		List<TArea> tUser =  service.findByNameAndIdNot(name,id);
 		if(!CollectionUtils.isEmpty(tUser)){
 			return "区域名称不能重复！";
 		}
@@ -91,7 +91,7 @@ public class TAreaController  extends BaseController<TArea>{
 			if(!StringUtils.isEmpty(entity.get("areaId"))){
 				list.add(criteriaBuilder.like(root.get("areaId").as(String.class), "%" + entity.get("areaId") + "%"));
 			}
-
+			list.add(criteriaBuilder.equal(root.get("deleteFlag").as(String.class),1));
 			return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
 		};
 		return querySpecification;

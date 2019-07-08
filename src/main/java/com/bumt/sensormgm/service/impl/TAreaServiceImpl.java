@@ -39,6 +39,9 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 		Map<String, TreeNode> nodeList = new LinkedHashMap<String, TreeNode>();
 		List<TArea> tAreaList = dao.findAll();
 		for (TArea area : tAreaList) {
+			if(area.getDeleteFlag()!=0){
+				continue;
+			}
 			TreeNode node = new TreeNode();
 			node.setText(area.getName());
 			node.setId(area.getId().toString());
@@ -47,7 +50,7 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 			}
 
 			node.setLevelCode(area.getLevel());
-			node.setType(area.getDeleteFlag().toString());
+//			node.setType(area.getDeleteFlag());
 			nodeList.put(node.getId(), node);
 		}
 		List<TEnterprise> tEnterpriseList= tEnterpriseDao.findAll();
@@ -74,17 +77,17 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 
 	@Override
 	public Object getAreaList() {
-		return dao.findByLevel("2");
+		return dao.findByLevelAndDeleteFlag("2",0);
 	}
 
 	@Override
 	public List<TArea> findByName(String cname) {
-		return dao.findByName(cname);
+		return dao.findByNameAndDeleteFlag(cname,0);
 	}
 
 	@Override
-	public List<TUser> findByNameAndIdNot(String name, long id) {
-		return dao.findByNameAndIdNot(name,id);
+	public List<TArea> findByNameAndIdNot(String name, long id) {
+		return dao.findByNameAndIdNotAndDeleteFlag(name,id,0);
 	}
 
 	@Override
@@ -102,7 +105,7 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 			if(containSelf && parentId.equals(area.getId())) {
 				mareas.add(area);
 			}
-			if(!area.getDeleteFlag() && parentId.equals(area.getParentId())) {
+			if(area.getDeleteFlag()==0 && parentId.equals(area.getParentId())) {
 				mareas.add(area);
 				buildUserAreas(area.getId(), mareas, allArea, containSelf);
 			}

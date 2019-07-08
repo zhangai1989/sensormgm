@@ -36,7 +36,7 @@ public class TArea extends BaseEntity implements Serializable {
 	 * 删除标记 0:未删除 1:已删除
 	 */
 	@Column(name = "delete_flag", nullable = false)
-	private Boolean deleteFlag;
+	private int deleteFlag;
 
 	/**
 	 * 创建人ID
@@ -112,15 +112,15 @@ public class TArea extends BaseEntity implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public Boolean getDeleteFlag() {
-		return this.deleteFlag;
-	}
-	
-	public void setDeleteFlag(Boolean deleteFlag) {
+
+	public void setDeleteFlag(int deleteFlag) {
 		this.deleteFlag = deleteFlag;
 	}
-	
+
+	public int getDeleteFlag() {
+		return deleteFlag;
+	}
+
 	public Long getCreatorId() {
 		return this.creatorId;
 	}

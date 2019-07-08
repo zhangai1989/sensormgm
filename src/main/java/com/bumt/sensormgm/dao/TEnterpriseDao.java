@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface TEnterpriseDao extends BaseJpaDao<TEnterprise> {
 
-    List<TEnterprise> findByName(String name);
+    List<TEnterprise> findByNameAndDeleteFlag(String name, int deleteFlag);
 
-    List<TEnterprise> findByCode(String code);
+    List<TEnterprise> findByCodeAndDeleteFlag(String code, int deleteFlag);
 
-    List<TEnterprise> findByAreaId(long areaId);
+    List<TEnterprise> findByAreaIdAndDeleteFlag(long areaId, int deleteFlag);
+
+    List<TEnterprise> findByNameAndIdNotAndDeleteFlag(String name, int i, int i1);
 }

@@ -2,9 +2,11 @@ package com.bumt.sensormgm.common.controller;
 
 
 import com.bumt.sensormgm.common.service.BaseService;
+import com.bumt.sensormgm.entity.TDevice;
 import com.bumt.sensormgm.util.ResultUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,6 +19,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpSession;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +71,6 @@ public abstract class BaseController<T>{
 		int pageSize = Integer.parseInt(entity.get("pageSize").toString());
 		Pageable pageable= PageRequest.of((pageNum-1),pageSize,changeSort());
 		Specification<T> querySpecification = changeConditions(entity);
-
 		return new ResultUtil<>().setData(getService().getPageListByCondition(querySpecification,pageable));
 	}
 
@@ -77,10 +79,16 @@ public abstract class BaseController<T>{
 	}
 
 	public Specification<T> changeConditions(Map<String, Object> entity) {
+
 		Specification<T> querySpecification = (root, criteriaQuery, criteriaBuilder)-> {
 			List<Predicate> list = new ArrayList<Predicate>();
+			//根据企业id找到设备编码
+
+			list.add(criteriaBuilder.equal(root.get("deleteFlag").as(String.class),0));
+
 			return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
 		};
+
 		return querySpecification;
 	}
 
@@ -152,13 +160,23 @@ public abstract class BaseController<T>{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/deleteById", produces = {"application/json;charset=UTF-8"})
-	public Object deleteById(@RequestBody Map<String,Object> entity){
-		String id = entity.get("id").toString();
+	public Object deleteById(@RequestBody T entity,HttpSession session){
+
+		String id = null;
+		try {
+			id = BeanUtils.getProperty(entity,"id");
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
 		String errorMsg = checkDeleteStatus(id);
 		if(!StringUtils.isEmpty(errorMsg)){
 			return new ResultUtil<>().setErrorMsg(errorMsg);
 		}
-		return new ResultUtil<>().setData(getService().deleteById(id));
+		return new ResultUtil<>().setData(getService().deleteByIdChangeStatus(entity,session));
 	}
 
 	public  String checkDeleteStatus(String id){

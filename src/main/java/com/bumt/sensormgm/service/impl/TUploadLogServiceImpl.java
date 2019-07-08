@@ -56,10 +56,10 @@ public class TUploadLogServiceImpl extends BaseServiceImpl implements TUploadLog
 		int start = (pageNum-1)*pageSize;
 
 		String sql =  "select t3.`name` as enterpriseName ,t1.upload_time,t2.lampblack_standard as lampblackStandard ,t1.lampblack,t1.lampblack/t2.lampblack_standard as multiple from t_upload_log t1 JOIN t_device t2 on t1.device_code=t2.device_code LEFT JOIN t_enterprise t3 on t2.enterprise_id = t3.id\n" +
-				"where  upload_time >= '" + startTime +"' and upload_time <= '"+endTime+"' and  t2.lampblack_standard < t1.lampblack and t1.lampblack < t2.lampblack_warning";
+				"where  upload_time >= '" + startTime +"' and upload_time <= '"+endTime+"' and  t2.lampblack_standard < t1.lampblack and t1.lampblack < t2.lampblack_warning and t2.delete_flag=0";
 
 		String countSql =  "select count(0) from t_upload_log t1 JOIN t_device t2 on t1.device_code=t2.device_code LEFT JOIN t_enterprise t3 on t2.enterprise_id = t3.id\n" +
-				"where  upload_time >= '" + startTime +"' and upload_time <= '"+endTime+"' and  t2.lampblack_standard < t1.lampblack and t1.lampblack < t2.lampblack_warning";
+				"where  upload_time >= '" + startTime +"' and upload_time <= '"+endTime+"' and  t2.lampblack_standard < t1.lampblack and t1.lampblack < t2.lampblack_warning and t2.delete_flag=0";
 
 
 		TUser tUser = (TUser) httpSession.getAttribute("user");
@@ -111,10 +111,10 @@ public class TUploadLogServiceImpl extends BaseServiceImpl implements TUploadLog
 		int start = (pageNum-1)*pageSize;
 
 		String sql =  "select t3.`name` as enterpriseName ,t1.upload_time,t2.lampblack_standard as lampblackStandard ,t1.lampblack,t1.lampblack/t2.lampblack_standard as multiple from t_upload_log t1 JOIN t_device t2 on t1.device_code=t2.device_code LEFT JOIN t_enterprise t3 on t2.enterprise_id = t3.id\n" +
-				"where  upload_time >= '" + startTime +"' and upload_time <= '"+endTime+"' and t1.lampblack >= t2.lampblack_warning";
+				"where  upload_time >= '" + startTime +"' and upload_time <= '"+endTime+"' and t1.lampblack >= t2.lampblack_warning and t2.delete_flag=0 and t3.delete_flag=0";
 
 		String countSql =  "select count(0) from t_upload_log t1 JOIN t_device t2 on t1.device_code=t2.device_code LEFT JOIN t_enterprise t3 on t2.enterprise_id = t3.id\n" +
-				"where  upload_time >= '" + startTime +"' and upload_time <= '"+endTime+"' and t1.lampblack >= t2.lampblack_warning";
+				"where  upload_time >= '" + startTime +"' and upload_time <= '"+endTime+"' and t1.lampblack >= t2.lampblack_warning and t2.delete_flag=0 and t3.delete_flag=0";
 
 
 		TUser tUser = (TUser) httpSession.getAttribute("user");
@@ -178,7 +178,7 @@ public class TUploadLogServiceImpl extends BaseServiceImpl implements TUploadLog
 		}
 
 
-		String sql =  "select t1.*,t3.`name` from (select device_code as deviceCode,sum(lampblack)/COUNT(0) as lampblack,SUM(temp)/count(0) as temp,SUM(humidity)/count(0) as humidity from t_upload_log where upload_time >='"+startTime+"' and upload_time <='"+endTime+"'  GROUP BY device_code) t1 JOIN t_device t2 ON t1.deviceCode = t2.device_code LEFT JOIN t_enterprise t3 ON t2.enterprise_id = t3.id " ;
+		String sql =  "select t1.*,t3.`name` from (select device_code as deviceCode,sum(lampblack)/COUNT(0) as lampblack,SUM(temp)/count(0) as temp,SUM(humidity)/count(0) as humidity from t_upload_log where upload_time >='"+startTime+"' and upload_time <='"+endTime+"'  GROUP BY device_code) t1 JOIN t_device t2 ON t1.deviceCode = t2.device_code LEFT JOIN t_enterprise t3 ON t2.enterprise_id = t3.id where t2.delete_flag=0 and t3.delete_flag=0" ;
 
 
 		TUser tUser = (TUser) session.getAttribute("user");

@@ -20,5 +20,5 @@ public interface TAreaService extends BaseService {
 
     List<TArea> findByName(String cname);
 
-    List<TUser> findByNameAndIdNot(String name, long id);
+    List<TArea> findByNameAndIdNot(String name, long id);
 }

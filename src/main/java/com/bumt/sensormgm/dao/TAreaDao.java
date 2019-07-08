@@ -7,9 +7,9 @@ import com.bumt.sensormgm.entity.TUser;
 import java.util.List;
 
 public interface TAreaDao extends BaseJpaDao<TArea> {
-    List<TArea> findByLevel(String level);
+    List<TArea> findByLevelAndDeleteFlag(String level, int deleteFlag);
 
-    List<TArea> findByName(String cname);
+    List<TArea> findByNameAndDeleteFlag(String cname, int deleteFlag);
 
-    List<TUser> findByNameAndIdNot(String name, long id);
+    List<TArea> findByNameAndIdNotAndDeleteFlag(String name, long id, int deleteFlag);
 }

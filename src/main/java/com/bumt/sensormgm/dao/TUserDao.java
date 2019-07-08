@@ -9,14 +9,14 @@ import java.util.Map;
 
 public interface TUserDao extends BaseJpaDao<TUser> {
 
-    TUser findByLoginNameAndPassword(String loginName, String password);
+    TUser findByLoginNameAndPasswordAndDeleteFlagNot(String loginName, String password,int deleteFlag);
 
 
-    List<TUser> findByLoginName(String loginName);
+    List<TUser> findByLoginNameAndDeleteFlagNot(String loginName,int deleteFlag);
 
-    List<TUser> findByMobile(String mobile);
+    List<TUser> findByMobileAndDeleteFlagNot(String mobile,int deleteFlag);
 
-    List<TUser> findByEmail(String email);
+    List<TUser> findByEmailAndDeleteFlagNot(String email,int deleteFlag);
 
-    List<TUser> findByEmailOrLoginNameOrMobileAndIdNot(String email, String cname, String mobile, long id);
+    List<TUser> findByEmailOrLoginNameOrMobileAndIdNotAndDeleteFlagNot(String email, String cname, String mobile, long id,int deleteFlag);
 }

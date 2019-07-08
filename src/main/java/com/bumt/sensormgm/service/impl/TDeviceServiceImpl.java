@@ -57,14 +57,14 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 		int pageSize =Integer.parseInt(entity.get("pageSize").toString());
 		int start = (pageNum-1)*pageSize;
 		List<TDevice> dataList =  dao.getPageListBySqlAndCondition(enterprise,status,areaId, start,pageSize );
-		for(TDevice tDevice:dataList){
-			if(tDevice.getEnterpriseId()!=null){
-				TEnterprise tEnterprise = tEnterpriseDao.findById(tDevice.getEnterpriseId()).get();
-				if(tEnterprise!=null){
-					tDevice.setEnterpriseName(tEnterprise.getName());
-				}
-			}
-		}
+//		for(TDevice tDevice:dataList){
+//			if(tDevice.getEnterpriseId()!=null){
+//				TEnterprise tEnterprise = tEnterpriseDao.findById(tDevice.getEnterpriseId()).get();
+//				if(tEnterprise!=null){
+//					tDevice.setEnterpriseName(tEnterprise.getName());
+//				}
+//			}
+//		}
 		int total =  dao.getTotalBySqlAndCondition(enterprise,status,areaId);
 		Pageable pageable = PageRequest.of((pageNum-1), pageSize);
 		Page<TDevice> page = new PageImpl(dataList,pageable,total);

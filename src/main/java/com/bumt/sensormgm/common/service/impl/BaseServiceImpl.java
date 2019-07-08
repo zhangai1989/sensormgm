@@ -110,7 +110,6 @@ public abstract class BaseServiceImpl<T>  implements BaseService<T> {
 			//添加修改时间
 			addUpdateMetaInfo(saveEntity, session);
 			return getGenericMapper().save(saveEntity);
-
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -120,6 +119,7 @@ public abstract class BaseServiceImpl<T>  implements BaseService<T> {
 		}
 		return "error";
 	}
+
 
 
 	/**
@@ -132,6 +132,21 @@ public abstract class BaseServiceImpl<T>  implements BaseService<T> {
 	public Object deleteById(String id) {
         getGenericMapper().deleteById(Long.parseLong(id));
 		return 1;
+	}
+
+
+	@Override
+	public Object deleteByIdChangeStatus(T entity,HttpSession session) {
+		try {
+			//实现部分字段更新
+			BeanUtils.setProperty(entity, "deleteFlag",1);
+			return updateByPrimaryKeySelective(entity,session);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return "error";
 	}
 
 	/**

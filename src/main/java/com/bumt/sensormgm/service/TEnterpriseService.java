@@ -17,4 +17,6 @@ public interface TEnterpriseService extends BaseService {
     Object save(TEnterprise enterprise, HttpSession session);
 
     List<TEnterprise> findByAreaId(String id);
+
+    List<TEnterprise> findByNameAndIdNot(String name, Long id);
 }

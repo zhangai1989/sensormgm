@@ -76,4 +76,5 @@ public interface BaseService<T> {
 	Page<T> getPageListByCondition(Specification<T> querySpecification, Pageable pageable);
 
 
+    Object deleteByIdChangeStatus(T entity, HttpSession session);
 }
