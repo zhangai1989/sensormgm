@@ -32,6 +32,11 @@ public class TEnterpriseServiceImpl extends BaseServiceImpl implements TEnterpri
 	}
 
 	@Override
+	public List<TEnterprise> getAllListByCode(String code) {
+		return dao.findByCode(code);
+	}
+
+	@Override
 	public Object getEnterpriseBySession(HttpSession session,String areaId) {
 		TUser tUser = (TUser) session.getAttribute("user");
 		if(StringUtils.isEmpty(areaId)){

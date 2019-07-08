@@ -174,7 +174,7 @@
         :visible.sync="editFlag"
         :show-close="false"
         :close-on-click-modal="false"
-        width="740px">
+        width="710px">
 
         <el-form :inline="true" :model="form" ref="editForm" :rules="rules" label-width="120px">
           <el-form-item label="所属区域" prop="areaId">
@@ -190,6 +190,9 @@
           </el-form-item>
           <el-form-item label="企业名称" prop="name">
             <el-input size="small" v-model.trim="form.name" placeholder="请输入企业名称"/>
+          </el-form-item>
+          <el-form-item label="企业编码" prop="code" v-if="'' === form.code">
+            <el-input size="small" v-model.trim="form.code" placeholder="请输入企业编码"/>
           </el-form-item>
           <el-form-item label="企业地址" prop="address">
             <el-input size="small" v-model.trim="form.address" placeholder="请输入企业地址"/>
@@ -269,6 +272,7 @@ export default {
         id: '',
         areaId: '',
         name: '',
+        code: '',
         address: '',
         longitude: '',
         latitude: '',
@@ -288,6 +292,9 @@ export default {
         ],
         name: [
           { required: true, message: '企业名称不能为空', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '企业/设备编码不能为空', trigger: 'blur' }
         ],
         address: [
           { required: true, message: '企业地址不能为空', trigger: 'blur' }
@@ -334,6 +341,7 @@ export default {
         this.form.id = row.id
         this.form.areaId = row.areaId
         this.form.name = row.name
+        this.form.code = row.code
         this.form.address = row.address
         this.form.longitude = row.longitude
         this.form.latitude = row.latitude
@@ -342,6 +350,20 @@ export default {
         this.form.contactMobile = row.contactMobile
         this.form.envContact = row.envContact
         this.form.envContactMobile = row.envContactMobile
+      } else {
+        this.title = '新增企业'
+        this.form.id = ''
+        this.form.areaId = ''
+        this.form.name = ''
+        this.form.code = ''
+        this.form.address = ''
+        this.form.longitude = ''
+        this.form.latitude = ''
+        this.form.pos = ''
+        this.form.contact = ''
+        this.form.contactMobile = ''
+        this.form.envContact = ''
+        this.form.envContactMobile = ''
       }
       this.editFlag = true
     },

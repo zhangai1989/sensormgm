@@ -9,5 +9,7 @@ public interface TEnterpriseDao extends BaseJpaDao<TEnterprise> {
 
     List<TEnterprise> findByName(String name);
 
+    List<TEnterprise> findByCode(String code);
+
     List<TEnterprise> findByAreaId(long areaId);
 }
