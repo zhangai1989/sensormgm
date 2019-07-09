@@ -36,3 +36,84 @@
 .icon-start:before {
     content: '\e6c4'
 }
+
+.icon-enterprise:before {
+  content: url("../../assets/icon/enterprise.png")
+}
+.icon-enterprise-selected:before {
+  content: url("../../assets/icon/enterprise-selected.png")
+}
+
+.icon-user:before {
+  content: url("../../assets/icon/user.png")
+}
+.icon-user-selected:before {
+  content: url("../../assets/icon/user-selected.png")
+}
+
+.icon-area:before {
+  content: url("../../assets/icon/area.png")
+}
+.icon-area-selected:before {
+  content: url("../../assets/icon/area-selected.png")
+}
+
+.icon-ranking:before {
+  content: url("../../assets/icon/ranking.png")
+}
+.icon-ranking-selected:before {
+  content: url("../../assets/icon/ranking-selected.png")
+}
+
+.icon-history:before {
+   content: url("../../assets/icon/history.png")
+ }
+.icon-history-selected:before {
+  content: url("../../assets/icon/history-selected.png")
+}
+
+.icon-warning:before {
+  content: url("../../assets/icon/warning.png")
+}
+.icon-warning-selected:before {
+  content: url("../../assets/icon/warning-selected.png")
+}
+
+.icon-outstandard:before {
+  content: url("../../assets/icon/outstandard.png")
+}
+.icon-outstandard-selected:before {
+  content: url("../../assets/icon/outstandard-selected.png")
+}
+
+.icon-analysis:before {
+  content: url("../../assets/icon/analysis.png")
+}
+.icon-analysis-selected:before {
+  content: url("../../assets/icon/analysis-selected.png")
+}
+
+.icon-realmap:before {
+  content: url("../../assets/icon/realmap.png")
+}
+.icon-realmap-selected:before {
+  content: url("../../assets/icon/realmap-selected.png")
+}
+
+.icon-dp:before {
+  content: url("../../assets/icon/dp.png")
+}
+.icon-dp-selected:before {
+  content: url("../../assets/icon/dp-selected.png")
+}
+
+.icon-monitor:before {
+  content: url("../../assets/icon/monitor.png")
+}
+.icon-monitor-selected:before {
+  content: url("../../assets/icon/monitor-selected.png")
+}
+
+
+
+

@@ -10,6 +10,7 @@
           <span style="font-size: 14px;margin-right: 10px">自动刷新</span>
           <el-switch
             v-model="autoReload"
+            active-color="#13ce66"
             @change="changeAutoReload">
           </el-switch>
         </div>
@@ -80,14 +81,14 @@
           <el-table-column
             align="center"
             prop="temp"
-            label="烟气温度"
+            label="VOC(mg/m³)"
             max-width="120">
           </el-table-column>
 
           <el-table-column
             align="center"
             prop="humidity"
-            label="油烟湿度"
+            label="颗粒物(mg/m³)"
             max-width="120">
           </el-table-column>
 

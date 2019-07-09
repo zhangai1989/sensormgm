@@ -1,0 +1,42 @@
+{
+  "code": 2000,
+  "message": "成功",
+  "items": [{
+      "menuId": 20001,
+      "menuName": "系统管理",
+      "menuLevel": 1,
+      "menuParentId": 0,
+      "menuUrl": "/system",
+      "menuIconClass": "icon-system-assistance",
+      "order": 1.0,
+      "childrens": [{
+      "menuId": 20004,
+      "menuName": "区域管理",
+      "menuLevel": 2,
+      "menuParentId": 20001,
+      "menuUrl": "/system/area",
+      "menuIconClass": "icon-area",
+      "order": 1.2,
+      "childrens": []
+    }, {
+        "menuId": 20002,
+        "menuName": "企业管理",
+        "menuLevel": 2,
+        "menuParentId": 20001,
+        "menuUrl": "/system/enterprise",
+        "menuIconClass": "icon-enterprise",
+        "order": 1.1,
+        "childrens": []
+      },{
+        "menuId": 20003,
+        "menuName": "用户管理",
+        "menuLevel": 2,
+        "menuParentId": 20001,
+        "menuUrl": "/system/user",
+        "menuIconClass": "icon-user",
+        "order": 1.2,
+        "childrens": []
+      }]
+    }
+  ]
+}

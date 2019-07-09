@@ -15,7 +15,7 @@
         "menuLevel": 2,
         "menuParentId": 10001,
         "menuUrl": "/monitor/real",
-        "menuIconClass": "level-menu",
+        "menuIconClass": "icon-monitor",
         "order": 1.1,
         "childrens": []
       }, {
@@ -24,7 +24,7 @@
         "menuLevel": 2,
         "menuParentId": 10001,
         "menuUrl": "/index",
-        "menuIconClass": "level-menu",
+        "menuIconClass": "icon-dp",
         "order": 1.1,
         "childrens": []
       }, {
@@ -33,7 +33,7 @@
         "menuLevel": 2,
         "menuParentId": 10001,
         "menuUrl": "/monitor/realMap",
-        "menuIconClass": "level-menu",
+        "menuIconClass": "icon-realmap",
         "order": 1.1,
         "childrens": []
       }, {
@@ -42,7 +42,7 @@
         "menuLevel": 2,
         "menuParentId": 10001,
         "menuUrl": "/monitor/analysis",
-        "menuIconClass": "level-menu",
+        "menuIconClass": "icon-analysis",
         "order": 1.1,
         "childrens": []
       }, {
@@ -51,7 +51,7 @@
         "menuLevel": 2,
         "menuParentId": 10001,
         "menuUrl": "/monitor/outStandard",
-        "menuIconClass": "level-menu",
+        "menuIconClass": "icon-outstandard",
         "order": 1.1,
         "childrens": []
       }, {
@@ -60,7 +60,7 @@
         "menuLevel": 2,
         "menuParentId": 10001,
         "menuUrl": "/monitor/warning",
-        "menuIconClass": "level-menu",
+        "menuIconClass": "icon-warning",
         "order": 1.1,
         "childrens": []
       }, {
@@ -69,7 +69,7 @@
         "menuLevel": 2,
         "menuParentId": 10001,
         "menuUrl": "/monitor/history",
-        "menuIconClass": "level-menu",
+        "menuIconClass": "icon-history",
         "order": 1.1,
         "childrens": []
       }, {
@@ -78,7 +78,7 @@
         "menuLevel": 2,
         "menuParentId": 10001,
         "menuUrl": "/monitor/ranking",
-        "menuIconClass": "level-menu",
+        "menuIconClass": "icon-ranking",
         "order": 1.1,
         "childrens": []
       }]
@@ -97,7 +97,7 @@
       "menuLevel": 2,
       "menuParentId": 20001,
       "menuUrl": "/system/area",
-      "menuIconClass": "level-menu",
+      "menuIconClass": "icon-area",
       "order": 1.2,
       "childrens": []
     }, {
@@ -106,7 +106,7 @@
         "menuLevel": 2,
         "menuParentId": 20001,
         "menuUrl": "/system/enterprise",
-        "menuIconClass": "level-menu",
+        "menuIconClass": "icon-enterprise",
         "order": 1.1,
         "childrens": []
       },{
@@ -115,7 +115,7 @@
         "menuLevel": 2,
         "menuParentId": 20001,
         "menuUrl": "/system/user",
-        "menuIconClass": "el-icon-user-solid",
+        "menuIconClass": "icon-user",
         "order": 1.2,
         "childrens": []
       }]

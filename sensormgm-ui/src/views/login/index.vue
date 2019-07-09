@@ -79,6 +79,7 @@
 
 <script>
 import { login } from '@api/login'
+import { menus_level1, menus_level23, menus_level4 } from '@api/Base'
 export default {
   data () {
     return {
@@ -119,14 +120,38 @@ export default {
       const res = await login(argc)
       loadingInstance.close()
       if (res.code === 2000) {
+        let level = res.result.level
         localStorage.setItem('userInfo', JSON.stringify(res.result, null, 0))
-        that.$router.push({path: '/index'})
+        // 加载菜单
+        that.loadMenus(level)
       } else {
         that.$message({
           message: res.message,
           type: 'error'
         })
       }
+    },
+    async loadMenus (level) {
+      let res
+      let next
+      if (level === 1) {
+        next = '/system/area'
+        res = await menus_level1()
+      }
+      if (level === 2) {
+        next = '/index'
+        res = await menus_level2()
+      }
+      if (level === 3) {
+        next = '/monitor/real'
+        res = await menus_level3()
+      }
+      if (level === 4) {
+        next = '/monitor/real'
+        res = await menus_level4()
+      }
+      sessionStorage.setItem('menus', JSON.stringify(res.items || []))
+      this.$router.push({path: next})
     }
   }
 }

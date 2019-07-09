@@ -16,9 +16,8 @@
 
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
-        <li class="flex fxmiddle">
-          <el-cascader v-if="areaTreeDeep > 1" :options="areaTree" size="small" @change="changeTree"
-                       v-model="treeValue" :props="treeProps" :show-all-levels="false" placeholder="请选择企业"></el-cascader>
+        <li class="flex fxmiddle" v-if="userLevel !== '4'">
+          <enterprise-selector @changeEnterprise="changeEnterprise"/>
         </li>
         <li class="flex fxmiddle">
           <el-date-picker
@@ -63,13 +62,13 @@
           <el-table-column
             align="center"
             prop="temp"
-            label="烟气温度（℃）">
+            label="VOC(mg/m³)">
           </el-table-column>
 
           <el-table-column
             align="center"
             prop="humidity"
-            label="烟气湿度（%）">
+            label="颗粒物(mg/m³)">
           </el-table-column>
 
         </el-table>
@@ -101,25 +100,20 @@
 <script>
 import { historyList } from '@api/uploadLog'
 import { getAreaTree } from '@api/area'
-import { exportHistory } from '@api/export'
+import UserContext from '@utils/UserContext'
 const normalBar = () => import('@components/common/NormalBar')
+const enterpriseSelector = () => import('@components/common/EnterpriseSelector')
 
 export default {
   name: 'history',
   components: {
-    normalBar
+    normalBar,
+    enterpriseSelector
   },
   data () {
     return {
       queryAble: true,
-      areaTree: [],
-      areaTreeDeep: 3,
-      treeProps: {
-        value: 'id',
-        label: 'text',
-        children: 'nodes'
-      },
-      treeValue: [],
+      userLevel: 0,
       enterpriseId: '',
       rangeTime: [],
       pickerOptions: {
@@ -140,33 +134,15 @@ export default {
     let date = this.$moment(new Date()).format('YYYY-MM-DD')
     this.rangeTime.push(date + ' 00:00:00')
     this.rangeTime.push(date + ' 23:59:59')
+
+    this.userLevel = UserContext.getUserLevel();
+    if (this.userLevel === 4) {
+      this.enterpriseId = UserContext.getUserEnterprise()
+    }
   },
 
-  mounted () {
-    this.initData()
-  },
+  mounted () {},
   methods: {
-    // 初始化
-    initData () {
-      let that = this
-      let userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      let level = parseInt(userInfo.level)
-      this.areaTreeDeep = level < 3 ? 3 : level === 3 ? 2 : 1
-
-      let treeProps = {
-        areaId: parseInt(userInfo.areaId)
-      }
-      that.getTree(treeProps)
-    },
-
-    async getTree (argc) {
-      let that = this
-      const res = await getAreaTree(argc)
-      if (res.code === 2000) {
-        that.areaTree = res.result
-      }
-    },
-
     // 获取一页列表数据
     async getList (argc) {
       let that = this
@@ -193,6 +169,19 @@ export default {
         that.currentPage = argc.pageNum
         that.totalNum = res.result.totalElements
         that.list = res.result.content
+        if (that.list && that.list.length > 0) {
+          that.list.forEach(function (item) {
+            if (item.lampblack === -10000) {
+              item.lampblack = '--'
+            }
+            if (item.temp === -10000) {
+              item.temp = '--'
+            }
+            if (item.humidity === -10000) {
+              item.humidity = '--'
+            }
+          })
+        }
       }
     },
 
@@ -210,16 +199,6 @@ export default {
       }
       that.getList(argc)
     },
-    changeTree (obj) {
-      let that = this
-      if (obj.length < that.areaTreeDeep) {
-        that.treeValue = []
-        that.enterpriseId = ''
-        return
-      }
-      that.enterpriseId = obj[obj.length - 1]
-    },
-
     exportExcel () {
       if ('' == this.enterpriseId) {
         this.$message.warning('请先选择企业')
@@ -245,6 +224,9 @@ export default {
           that.counter--
         }
       }, 1000)
+    },
+    changeEnterprise (id) {
+      this.enterpriseId = id
     }
   }
 }

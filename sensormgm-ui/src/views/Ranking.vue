@@ -10,10 +10,10 @@
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
         <li class="flex fxmiddle">
-          <el-select v-model="form.field" style="width: 80px">
+          <el-select v-model="form.field" style="width: 90px">
             <el-option label="油烟" value="lampblack"/>
-            <el-option label="温度" value="temp"/>
-            <el-option label="湿度" value="humidity"/>
+            <el-option label="VOC" value="temp"/>
+            <el-option label="颗粒物" value="humidity"/>
           </el-select>
         </li>
         <li class="flex fxmiddle">
@@ -62,14 +62,14 @@
           <el-table-column
             align="center"
             prop="temp"
-            label="烟气温度"
+            label="VOC(mg/m³)">
             max-width="120">
           </el-table-column>
 
           <el-table-column
             align="center"
             prop="humidity"
-            label="油烟湿度"
+            label="颗粒物(mg/m³)"
             max-width="120">
           </el-table-column>
         </el-table>

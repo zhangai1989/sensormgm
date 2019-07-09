@@ -16,7 +16,7 @@
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
         <li class="flex fxmiddle">
-          <el-select size="small" :clearable="true" v-model="condition.areaId" placeholder="请选择" :disabled="level > 2" @change="changeArea">
+          <el-select size="small" :clearable="true" v-model="condition.areaId" placeholder="请选择区域" :disabled="level > 2" @change="changeArea">
             <el-option
               v-for="item in areas"
               :key="item.id"
@@ -231,13 +231,10 @@ import {addUser, updateUser, deleteUser, userList} from '@api/user'
 import {areaEnterprise} from '@api/enterprise'
 import { areaList } from '@api/area'
 const normalBar = () => import('@components/common/NormalBar')
-const areaSelector = () => import('@components/common/AreaSelector')
-
 export default {
   name: 'user',
   components: {
-    normalBar,
-    areaSelector
+    normalBar
   },
   data () {
     return {

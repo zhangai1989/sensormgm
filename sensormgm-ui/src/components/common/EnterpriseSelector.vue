@@ -8,8 +8,7 @@ import { getAreaTree } from '@api/area'
 import UserContext from '@utils/UserContext'
 
 export default {
-  name: 'areaSelector',
-  props: ['needEnterprise'],
+  name: 'enterpriseSelector',
   data () {
     return {
       areaTree: [],
@@ -59,19 +58,11 @@ export default {
       let id = arr[arr.length - 1]
       let idx = id.indexOf('-')
       // 必须选企业
-      if (that.innerNeedEnterprise === true) {
-        if (idx === -1) {
-          that.treeValue = []
-          that.$emit('changeArea', null, null)
-        }
+      if (idx != -1) {
+        that.$emit('changeEnterprise', id.substr(idx + 1, id.length))
       } else {
-        if (idx === -1) {
-          // 选择的是区域
-          that.$emit('changeArea', id, null)
-        } else {
-          // 选择的是企业
-          that.$emit('changeArea', id.substr(0, idx), id.substr(idx + 1, id.length))
-        }
+        that.$emit('changeEnterprise', '')
+        that.treeValue = []
       }
     }
   }

@@ -1,0 +1,60 @@
+{
+  "code": 2000,
+  "message": "成功",
+  "items": [{
+      "menuId": 10001,
+      "menuName": "监控管理",
+      "menuLevel": 1,
+      "menuParentId": 0,
+      "menuUrl": "/monitor",
+      "menuIconClass": "icon-system-assistance",
+      "order": 1.0,
+      "childrens": [{
+        "menuId": 10002,
+        "menuName": "实时监控",
+        "menuLevel": 2,
+        "menuParentId": 10001,
+        "menuUrl": "/monitor/real",
+        "menuIconClass": "icon-monitor",
+        "order": 1.1,
+        "childrens": []
+      }, {
+        "menuId": 10004,
+        "menuName": "数据分析",
+        "menuLevel": 2,
+        "menuParentId": 10001,
+        "menuUrl": "/monitor/analysis",
+        "menuIconClass": "icon-analysis",
+        "order": 1.1,
+        "childrens": []
+      }, {
+        "menuId": 10006,
+        "menuName": "超标查询",
+        "menuLevel": 2,
+        "menuParentId": 10001,
+        "menuUrl": "/monitor/outStandard",
+        "menuIconClass": "icon-outstandard",
+        "order": 1.1,
+        "childrens": []
+      }, {
+        "menuId": 10005,
+        "menuName": "预警查询",
+        "menuLevel": 2,
+        "menuParentId": 10001,
+        "menuUrl": "/monitor/warning",
+        "menuIconClass": "icon-warning",
+        "order": 1.1,
+        "childrens": []
+      }, {
+        "menuId": 10003,
+        "menuName": "历史记录",
+        "menuLevel": 2,
+        "menuParentId": 10001,
+        "menuUrl": "/monitor/history",
+        "menuIconClass": "icon-history",
+        "order": 1.1,
+        "childrens": []
+      }]
+    }
+  ]
+}

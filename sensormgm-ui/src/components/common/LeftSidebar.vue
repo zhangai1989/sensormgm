@@ -13,7 +13,7 @@
                         :index="i+''">
             <template>
               <i class="menu-icon iconfont"
-                 :class="menu.menuIconClass"></i>
+                 :class="$route.path === menu.menuUrl ? menu.menuIconClass + '-selected' : menu.menuIconClass"></i>
               <span>{{menu.menuName}}</span>
             </template>
           </el-menu-item>
@@ -72,7 +72,6 @@
   }
   .jy-left-menus:not(.el-menu--collapse) {
     width: 180px;
-    min-height: 400px;
   }
 </style>
 
@@ -91,9 +90,6 @@
       &:hover {
         background-color: #f2fdf9 !important;
         color: #29b87a;
-        /*.menu-item-name {*/
-          /*color: #29b87a;*/
-        /*}*/
       }
     }
   }
