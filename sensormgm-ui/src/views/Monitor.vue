@@ -178,6 +178,7 @@ export default {
   },
   data () {
     return {
+      sysEnterprise: new Map(),
       loading: false,
       autoReload: false,
       search: '',
@@ -203,6 +204,7 @@ export default {
 
   mounted () {
     this.initData()
+    this.initSysEnterprise()
   },
 
   beforeDestroy () {
@@ -217,6 +219,13 @@ export default {
         pageNum: 1
       }
       that.getList(argc)
+    },
+    initSysEnterprise () {
+      let that = this
+      let allEnterprise = JSON.parse(localStorage.getItem('allEnterprise'))
+      allEnterprise.forEach(function (item) {
+        that.sysEnterprise.set(parseInt(item.id), item.name)
+      })
     },
 
     // 获取一页列表数据
@@ -235,6 +244,7 @@ export default {
             if(item.humidity === -10000) item.humidity = '--'
             if(item.fanElec === -10000) item.fanElec = '--'
             if(item.purifierElec === -10000) item.purifierElec = '--'
+            item.enterpriseName = that.sysEnterprise.get(item.enterpriseId)
           })
         }
         that.list = res.result.content
