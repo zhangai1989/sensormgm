@@ -44,10 +44,10 @@ export default {
         let areas = []
         res.result.forEach(function (item) {
           if (!item.deleteFlag) {
-            areas.push({id: item.id + "", name: item.name})
+            areas.push({id: item.id + '', name: item.name})
           }
         })
-        localStorage.setItem("allArea", JSON.stringify(areas, null, 0))
+        localStorage.setItem('allArea', JSON.stringify(areas, null, 0))
       }
     },
     async getAllEnterprise () {
@@ -56,10 +56,10 @@ export default {
         let enterprises = []
         res.result.forEach(function (item) {
           if (!item.deleteFlag) {
-            enterprises.push({id: item.id + "", name: item.name})
+            enterprises.push({id: item.id + '', name: item.name})
           }
         })
-        localStorage.setItem("allEnterprise", JSON.stringify(enterprises, null, 0))
+        localStorage.setItem('allEnterprise', JSON.stringify(enterprises, null, 0))
       }
     }
 

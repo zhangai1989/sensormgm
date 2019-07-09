@@ -44,7 +44,6 @@
 
 <script>
 import { analysisList } from '@api/uploadLog'
-import { getAreaTree } from '@api/area'
 import UserContext from '@utils/UserContext'
 
 const normalBar = () => import('@components/common/NormalBar')
@@ -74,7 +73,7 @@ export default {
       chartSettings: {
         dimension: ['日期'],
         height: '900px'
-      },
+      }
     }
   },
   created () {
@@ -82,7 +81,7 @@ export default {
     this.rangeTime.push(date + ' 00:00:00')
     this.rangeTime.push(date + ' 23:59:59')
 
-    this.userLevel = UserContext.getUserLevel();
+    this.userLevel = UserContext.getUserLevel()
     if (this.userLevel === 4) {
       this.enterpriseId = UserContext.getUserEnterprise()
     }

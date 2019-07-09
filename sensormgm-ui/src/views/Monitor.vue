@@ -74,15 +74,15 @@
           <el-table-column
             align="center"
             prop="lampblack"
-            label="油烟浓度"
-            max-width="120">
+            label="油烟浓度(mg/m³)"
+            max-width="130">
           </el-table-column>
 
           <el-table-column
             align="center"
             prop="temp"
             label="VOC(mg/m³)"
-            max-width="120">
+            max-width="130">
           </el-table-column>
 
           <el-table-column
@@ -229,27 +229,32 @@ export default {
     },
 
     // 获取一页列表数据
-    async getList (argc) {
+    getList (argc) {
       let that = this
       argc.pageSize = that.pageSize
       that.loading = true
-      const res = await monitorList(argc)
-      if (res.code === 2000) {
-        that.currentPage = argc.pageNum
-        that.totalNum = res.result.totalElements
-        if (res.result.content && res.result.content.length > 0) {
-          res.result.content.forEach(function (item) {
-            if(item.lampblack === -10000) item.lampblack = '--'
-            if(item.temp === -10000) item.temp = '--'
-            if(item.humidity === -10000) item.humidity = '--'
-            if(item.fanElec === -10000) item.fanElec = '--'
-            if(item.purifierElec === -10000) item.purifierElec = '--'
-            item.enterpriseName = that.sysEnterprise.get(item.enterpriseId)
-          })
-        }
-        that.list = res.result.content
-      }
-      that.loading = false
+      monitorList(argc)
+        .then(function (res) {
+          that.loading = false
+          if (res.code === 2000) {
+            that.currentPage = argc.pageNum
+            that.totalNum = res.result.totalElements
+            if (res.result.content && res.result.content.length > 0) {
+              res.result.content.forEach(function (item) {
+                if(item.lampblack === -10000) item.lampblack = '--'
+                if(item.temp === -10000) item.temp = '--'
+                if(item.humidity === -10000) item.humidity = '--'
+                if(item.fanElec === -10000) item.fanElec = '--'
+                if(item.purifierElec === -10000) item.purifierElec = '--'
+                item.enterpriseName = that.sysEnterprise.get(item.enterpriseId)
+              })
+            }
+            that.list = res.result.content
+          }
+        })
+        .catch(function (error) {
+          that.loading = false
+        });
     },
 
     // 分页事件

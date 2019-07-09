@@ -99,7 +99,6 @@
 
 <script>
 import { historyList } from '@api/uploadLog'
-import { getAreaTree } from '@api/area'
 import UserContext from '@utils/UserContext'
 const normalBar = () => import('@components/common/NormalBar')
 const enterpriseSelector = () => import('@components/common/EnterpriseSelector')
@@ -135,7 +134,7 @@ export default {
     this.rangeTime.push(date + ' 00:00:00')
     this.rangeTime.push(date + ' 23:59:59')
 
-    this.userLevel = UserContext.getUserLevel();
+    this.userLevel = UserContext.getUserLevel()
     if (this.userLevel === 4) {
       this.enterpriseId = UserContext.getUserEnterprise()
     }
@@ -147,7 +146,7 @@ export default {
     async getList (argc) {
       let that = this
       argc.pageSize = that.pageSize
-      if ('' == that.enterpriseId) {
+      if (that.enterpriseId === '') {
         that.$message.warning('请先选择企业')
         return
       }
@@ -200,7 +199,7 @@ export default {
       that.getList(argc)
     },
     exportExcel () {
-      if ('' == this.enterpriseId) {
+      if (this.enterpriseId === '') {
         this.$message.warning('请先选择企业')
         return
       }
@@ -208,11 +207,11 @@ export default {
         this.$message.warning('请先选择时间')
         return
       }
-      if(new Date(this.rangeTime[1]).getTime() - new Date(this.rangeTime[0]).getTime() > 1000 * 60 * 60 * 24 * 31) {
+      if (new Date(this.rangeTime[1]).getTime() - new Date(this.rangeTime[0]).getTime() > 1000 * 60 * 60 * 24 * 31) {
         this.$message.warning('最多只能导出31天的数据')
         return
       }
-      window.location.href='/api/export/history?enterpriseId=' + this.enterpriseId + '&beginTime=' + this.rangeTime[0] + '&endTime=' + this.rangeTime[1]
+      window.location.href = '/api/export/history?enterpriseId=' + this.enterpriseId + '&beginTime=' + this.rangeTime[0] + '&endTime=' + this.rangeTime[1]
       this.exportAble = false
       this.counter = 30
       let that = this

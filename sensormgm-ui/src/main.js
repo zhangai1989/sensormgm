@@ -68,7 +68,7 @@ axios.interceptors.response.use((response) => {
   }
   return response
 }, (error) => {
-  ElementUI.Message.error(error.response.data.message)
+  ElementUI.Message.error(error.response.data.error)
   Promise.reject(error)
 })
 

@@ -5,7 +5,7 @@ var UserContext = {
   getUserInfo () {
     var str = localStorage.getItem('userInfo')
     if (str === undefined || str === null || str === '') {
-      window.location.href = "/"
+      window.location.href = '/'
       return null
     }
     return JSON.parse(localStorage.getItem('userInfo'))
