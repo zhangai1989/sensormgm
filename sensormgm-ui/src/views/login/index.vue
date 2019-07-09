@@ -79,7 +79,7 @@
 
 <script>
 import { login } from '@api/login'
-import { menus_level1, menus_level23, menus_level4 } from '@api/Base'
+import { menus_level1, menus_level2, menus_level3, menus_level4 } from '@api/Base'
 export default {
   data () {
     return {
