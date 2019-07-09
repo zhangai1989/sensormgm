@@ -143,7 +143,7 @@ export default {
   mounted () {},
   methods: {
     // 获取一页列表数据
-    async getList (argc) {
+    getList (argc) {
       let that = this
       argc.pageSize = that.pageSize
       if (that.enterpriseId === '') {
@@ -162,26 +162,32 @@ export default {
       argc.startTime = that.rangeTime[0]
       argc.endTime = that.rangeTime[1]
       that.queryAble = false
-      const res = await historyList(argc)
-      that.queryAble = true
-      if (res.code === 2000) {
-        that.currentPage = argc.pageNum
-        that.totalNum = res.result.totalElements
-        that.list = res.result.content
-        if (that.list && that.list.length > 0) {
-          that.list.forEach(function (item) {
-            if (item.lampblack === -10000) {
-              item.lampblack = '--'
+      historyList(argc)
+        .then(function (res) {
+          that.queryAble = true
+          if (res.code === 2000) {
+            that.currentPage = argc.pageNum
+            that.totalNum = res.result.totalElements
+            that.list = res.result.content
+            if (that.list && that.list.length > 0) {
+              that.list.forEach(function (item) {
+                if (item.lampblack === -10000) {
+                  item.lampblack = '--'
+                }
+                if (item.temp === -10000) {
+                  item.temp = '--'
+                }
+                if (item.humidity === -10000) {
+                  item.humidity = '--'
+                }
+              })
             }
-            if (item.temp === -10000) {
-              item.temp = '--'
-            }
-            if (item.humidity === -10000) {
-              item.humidity = '--'
-            }
-          })
-        }
-      }
+          }
+        })
+        .catch(function () {
+          that.queryAble = true
+        })
+
     },
 
     // 分页事件

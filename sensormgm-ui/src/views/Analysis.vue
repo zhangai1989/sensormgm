@@ -90,7 +90,7 @@ export default {
   mounted () {},
   methods: {
     // 获取一页列表数据
-    async getList () {
+    getList () {
       let that = this
       if (that.rangeTime === null || that.rangeTime.length === 0) {
         this.$message.warning('请先选择时间')
@@ -110,22 +110,27 @@ export default {
         endTime: that.rangeTime[1]
       }
       that.queryAble = false
-      const res = await analysisList(argc)
-      that.chartData.rows = []
-      that.queryAble = true
-      if (res.code === 2000) {
-        let list = res.result
-        if (list && list.length > 0) {
-          list.forEach(function (item, index, array) {
-            that.chartData.rows.push({
-              '日期': item.uploadTime,
-              '油烟浓度': item.lampblack,
-              'VOC': item.temp,
-              '颗粒物': item.humidity
-            })
-          })
-        }
-      }
+      analysisList(argc)
+        .then(function (res) {
+          that.queryAble = true
+          that.chartData.rows = []
+          if (res.code === 2000) {
+            let list = res.result
+            if (list && list.length > 0) {
+              list.forEach(function (item, index, array) {
+                that.chartData.rows.push({
+                  '日期': item.uploadTime,
+                  '油烟浓度': item.lampblack,
+                  'VOC': item.temp,
+                  '颗粒物': item.humidity
+                })
+              })
+            }
+          }
+        })
+        .catch(function () {
+          that.queryAble = true
+        })
     },
     changeEnterprise (id) {
       this.enterpriseId = id

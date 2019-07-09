@@ -372,11 +372,16 @@ export default {
     getList (argc) {
       let that = this
       argc.pageSize = that.pageSize
-      argc.areaId = that.condition.areaId
-      argc.name = that.condition.name
+      if (that.condition.areaId && that.condition.areaId !== '') {
+        argc.areaId = that.condition.areaId
+      }
+      if (that.condition.name && that.condition.name !== '') {
+        argc.name = that.condition.name
+      }
       that.loading = true
       enterpriseList(argc)
         .then(res => {
+          that.loading = false
           if (res.code === 2000) {
             that.currentPage = argc.pageNum
             that.totalNum = res.result.totalElements
@@ -390,6 +395,8 @@ export default {
             })
             that.list = res.result.content
           }
+        })
+        .catch(function () {
           that.loading = false
         })
     },
@@ -431,9 +438,10 @@ export default {
                   this.$message.success('保存成功')
                   this.editFlag = false
                   this.searchList()
-                } else {
-                  this.$message.error(res.message)
                 }
+              })
+              .catch(function () {
+                this.saveAble = true
               })
           } else {
             // 修改企业
@@ -445,6 +453,9 @@ export default {
                   this.editFlag = false
                   this.searchList()
                 }
+              })
+              .catch(function () {
+                this.saveAble = true
               })
           }
         } else {

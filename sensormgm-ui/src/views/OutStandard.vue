@@ -130,7 +130,7 @@ export default {
   mounted () {},
   methods: {
     // 获取一页列表数据
-    async getList (argc) {
+    getList (argc) {
       let that = this
       if (that.rangeTime === null || that.rangeTime.length == 0) {
         this.$message.warning('请先选择时间')
@@ -144,13 +144,18 @@ export default {
       argc.endTime = that.rangeTime[1]
       argc.pageSize = that.pageSize
       that.queryAble = false
-      const res = await beyondList(argc)
-      that.queryAble = true
-      if (res.code === 2000) {
-        that.currentPage = argc.pageNum
-        that.totalNum = res.result.totalElements
-        that.list = res.result.content
-      }
+      beyondList(argc)
+        .then(function (res) {
+          that.queryAble = true
+          if (res.code === 2000) {
+            that.currentPage = argc.pageNum
+            that.totalNum = res.result.totalElements
+            that.list = res.result.content
+          }
+        })
+        .catch(function () {
+          that.queryAble = true
+        })
     },
 
     // 分页事件

@@ -357,8 +357,8 @@ export default {
     // 获取一页列表数据
     getList (argc) {
       let that = this
-      argc.pageSize = that.pageSize
       that.queryAble = false
+      argc.pageSize = that.pageSize
       argc.areaId = that.condition.areaId
       argc.enterpriseId = that.condition.enterpriseId
       argc.name = that.condition.name
@@ -377,6 +377,9 @@ export default {
           }
           that.queryAble = true
         })
+        .catch(function () {
+          that.queryAble = true
+        });
     },
 
     // 分页事件
@@ -420,6 +423,9 @@ export default {
                   this.searchList()
                 }
               })
+              .catch(function () {
+                this.saveAble = true
+              })
           } else {
             // 修改企业
             updateUser(this.form)
@@ -430,6 +436,9 @@ export default {
                   this.editFlag = false
                   this.searchList()
                 }
+              })
+              .catch(function () {
+                this.saveAble = true
               })
           }
         } else {

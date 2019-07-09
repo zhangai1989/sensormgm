@@ -122,7 +122,7 @@ export default {
   mounted () {},
   methods: {
     // 获取一页列表数据
-    async getList () {
+    getList () {
       let that = this
       if (null == that.rangeTime || that.rangeTime.length == 0) {
         this.$message.warning('请先选择时间')
@@ -137,11 +137,17 @@ export default {
         that.form.endTime = that.rangeTime[1]
       }
       that.queryAble = false
-      const res = await rankingList(this.form)
-      that.queryAble = true
-      if (res.code === 2000) {
-        that.list = res.result
-      }
+      rankingList(this.form)
+        .then(function (res) {
+          that.queryAble = true
+          if (res.code === 2000) {
+            that.list = res.result
+          }
+        })
+        .catch(function () {
+          that.queryAble = true
+        })
+
     }
   }
 }

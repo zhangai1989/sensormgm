@@ -189,13 +189,18 @@ export default {
     async addArea () {
       this.saveAble = false
       this.form.deleteFlag = 0
-      const res = await addArea(this.form)
-      this.saveAble = true
-      if (res === 2000) {
-        this.$message.success('区域新增成功')
-        this.dialogVisible = false
-        this.getTree()
-      }
+      addArea(this.form)
+        .then(function (res) {
+          this.saveAble = true
+          if (res === 2000) {
+            this.$message.success('区域新增成功')
+            this.dialogVisible = false
+            this.getTree()
+          }
+        })
+        .catch(function () {
+          this.saveAble = true
+        })
     },
     async loadDetail (node) {
       if (this.$refs['detailForm']) {
@@ -207,14 +212,19 @@ export default {
       }
       this.showEdit = true
       this.editAble = false
-      const res = await areaDetail({id: node.id})
-      if (res.code === 2000) {
-        this.editAble = true
-        this.form.id = res.result.id
-        this.form.name = res.result.name
-        this.form.longitude = res.result.longitude
-        this.form.latitude = res.result.latitude
-      }
+      areaDetail({id: node.id})
+        .then(function (res) {
+          this.editAble = true
+          if (res.code === 2000) {
+            this.form.id = res.result.id
+            this.form.name = res.result.name
+            this.form.longitude = res.result.longitude
+            this.form.latitude = res.result.latitude
+          }
+        })
+        .catch(function () {
+          this.editAble = true
+        })
     },
     deleteConfirm (id) {
       let that = this
@@ -238,25 +248,23 @@ export default {
         that.getTree()
       }
     },
-    async updateArea () {
+    updateArea () {
       let that = this
       this.$refs['detailForm'].validate((valid) => {
         if (valid) {
-          that.updateRequest()
+          updateArea({
+            id: that.form.id,
+            name: that.form.name,
+            longitude: that.form.longitude,
+            latitude: that.form.latitude
+          }).then(function (res) {
+            if (res.code === 2000) {
+              that.$message.success('修改成功')
+              that.getTree()
+            }
+          })
         }
       })},
-    async updateRequest () {
-      const res = await updateArea({
-        id: that.form.id,
-        name: that.form.name,
-        longitude: that.form.longitude,
-        latitude: that.form.latitude
-      })
-      if (res.code === 2000) {
-        that.$message.success('修改成功')
-        that.getTree()
-      }
-    }
   }
 }
 

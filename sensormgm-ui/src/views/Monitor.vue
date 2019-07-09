@@ -252,7 +252,7 @@ export default {
             that.list = res.result.content
           }
         })
-        .catch(function (error) {
+        .catch(function () {
           that.loading = false
         });
     },
