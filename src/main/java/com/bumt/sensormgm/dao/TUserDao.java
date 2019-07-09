@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface TUserDao extends BaseJpaDao<TUser> {
 
-    TUser findByLoginNameAndPasswordAndDeleteFlagNot(String loginName, String password,int deleteFlag);
+    TUser findByLoginNameAndPasswordAndDeleteFlagEquals(String loginName, String password,int deleteFlag);
 
 
     List<TUser> findByLoginNameAndDeleteFlagNot(String loginName,int deleteFlag);

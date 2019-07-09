@@ -147,7 +147,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>sensormgm</finalName>
+		<finalName>sensormgm-web</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

@@ -54,7 +54,7 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 			e.printStackTrace();
 			return new ResultUtil<>().setErrorMsg("获取密文出错！");
 		}
-		TUser user = dao.findByLoginNameAndPasswordAndDeleteFlagNot(userName,enpassword,0);
+		TUser user = dao.findByLoginNameAndPasswordAndDeleteFlagEquals(userName,enpassword,0);
 		if(user==null){
 			return new ResultUtil<>().setErrorMsg("用户名或密码不正确！");
 		}else{
