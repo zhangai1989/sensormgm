@@ -125,11 +125,11 @@ export default {
     getList () {
       let that = this
       if (null == that.rangeTime || that.rangeTime.length == 0) {
-        this.$message.warning('请先选择时间')
+        that.$message.warning('请先选择时间')
         return
       }
-      if (new Date(this.rangeTime[1]).getTime() - new Date(this.rangeTime[0]).getTime() > 1000 * 60 * 60 * 24 * 31) {
-        this.$message.warning('最多只能查询31天的数据')
+      if (new Date(that.rangeTime[1]).getTime() - new Date(that.rangeTime[0]).getTime() > 1000 * 60 * 60 * 24 * 31) {
+        that.$message.warning('最多只能查询31天的数据')
         return
       }
       if (that.rangeTime !== '' && that.rangeTime !== null) {
@@ -137,7 +137,7 @@ export default {
         that.form.endTime = that.rangeTime[1]
       }
       that.queryAble = false
-      rankingList(this.form)
+      rankingList(that.form)
         .then(function (res) {
           that.queryAble = true
           if (res.code === 2000) {

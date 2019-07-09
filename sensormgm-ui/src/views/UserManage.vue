@@ -401,44 +401,42 @@ export default {
     },
 
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+      let that = this
+      that.$refs[formName].validate((valid) => {
         if (valid) {
-          this.saveAble = false
-          if (!this.form.id) {
+          that.saveAble = false
+          if (!that.form.id) {
             // 新增用户
-            let arg = this.form
+            let arg = that.form
             // 如果选了企业 level=4
             if (arg.level === 3 && arg.enterpriseId && arg.enterpriseId.length > 0) {
               arg.level = 4
             }
-            if (!arg.enterpriseId || arg.enterpriseId.length) {
-//              arg.enterpriseId = null
-            }
-            addUser(this.form)
+            addUser(that.form)
               .then(res => {
-                this.saveAble = true
+                that.saveAble = true
                 if (res && res.code === 2000) {
-                  this.$message.success('保存成功')
-                  this.editFlag = false
-                  this.searchList()
+                  that.$message.success('保存成功')
+                  that.editFlag = false
+                  that.searchList()
                 }
               })
               .catch(function () {
-                this.saveAble = true
+                that.saveAble = true
               })
           } else {
             // 修改企业
-            updateUser(this.form)
+            updateUser(that.form)
               .then(res => {
-                this.saveAble = true
+                that.saveAble = true
                 if (res.code === 2000) {
-                  this.$message.success('修改成功')
-                  this.editFlag = false
-                  this.searchList()
+                  that.$message.success('修改成功')
+                  that.editFlag = false
+                  that.searchList()
                 }
               })
               .catch(function () {
-                this.saveAble = true
+                that.saveAble = true
               })
           }
         } else {
@@ -448,7 +446,8 @@ export default {
     },
 
     confirmDelete (id) {
-      this.$confirm('确定要删除？', '提示', {
+      let that = this
+      that.$confirm('确定要删除？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         customClass: 'border-gray',
@@ -457,8 +456,8 @@ export default {
         deleteUser({id: id})
           .then(res => {
             if (res.code === 2000) {
-              this.$message.success('删除成功')
-              this.searchList()
+              that.$message.success('删除成功')
+              that.searchList()
             }
           })
       }).catch(() => {

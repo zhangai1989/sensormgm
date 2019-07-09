@@ -55,6 +55,10 @@ export default {
     },
     changeTree (arr) {
       let that = this
+      if (!arr || arr.length === 0) {
+        that.$emit('changeEnterprise', '')
+        return
+      }
       let id = arr[arr.length - 1]
       let idx = id.indexOf('-')
       // 必须选企业
