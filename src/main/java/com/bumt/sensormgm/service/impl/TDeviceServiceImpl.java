@@ -4,21 +4,23 @@ import com.bumt.sensormgm.common.dao.BaseJpaDao;
 import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
 import com.bumt.sensormgm.dao.TDeviceDao;
 import com.bumt.sensormgm.dao.TEnterpriseDao;
+import com.bumt.sensormgm.entity.TArea;
 import com.bumt.sensormgm.entity.TDevice;
 import com.bumt.sensormgm.entity.TEnterprise;
 import com.bumt.sensormgm.entity.TUser;
+import com.bumt.sensormgm.service.TAreaService;
 import com.bumt.sensormgm.service.TDeviceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceService  {
@@ -27,6 +29,9 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 	private TDeviceDao dao;
 	@Resource
 	private TEnterpriseDao tEnterpriseDao;
+	@Resource
+	private TAreaService areaService;
+
 	@Override
 	public BaseJpaDao getGenericMapper() {return dao; }
 
@@ -74,5 +79,18 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 	@Override
 	public TDevice getByEnterpriseId(Long enterpriseId) {
 		return dao.getByEnterpriseId(enterpriseId);
+	}
+
+	@Override
+	public Object getDeviceList(Long areaId) {
+		List<TArea> userAreas = areaService.getUserAreas(areaId, true);
+		Set<String> ids = new HashSet<>();
+		for(TArea area : userAreas) {
+			if(area.getLevel().equals("2")) {
+				ids.add(area.getId().toString());
+			}
+		}
+		if(CollectionUtils.isEmpty(ids)) return new ArrayList<>();
+		return dao.getDeviceListByAreas(ids.toString().replace("[", "(").replace("]", ")"));
 	}
 }

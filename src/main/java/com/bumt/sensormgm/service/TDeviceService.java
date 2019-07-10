@@ -11,4 +11,6 @@ public interface TDeviceService extends BaseService {
     Object getPageListBySqlAndCondition(Map<String, Object> entity,HttpSession session);
 
     TDevice getByEnterpriseId(Long enterpriseId);
+
+    Object getDeviceList(Long areaId);
 }

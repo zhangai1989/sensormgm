@@ -3,16 +3,17 @@ package com.bumt.sensormgm.controller;
 import com.bumt.sensormgm.common.controller.BaseController;
 import com.bumt.sensormgm.common.service.BaseService;
 import com.bumt.sensormgm.entity.TDevice;
+import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TDeviceService;
 import com.bumt.sensormgm.util.ResultUtil;
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Map;
 
 @RestController
@@ -39,4 +40,16 @@ public class TDeviceController  extends BaseController<TDevice>{
 	public Object getPageListByCondition(@RequestBody Map<String,Object> entity, HttpSession session){
 		return new ResultUtil<>().setData(service.getPageListBySqlAndCondition(entity,session));
 	}
+
+	/**
+	 * 实时监控设备信息查询
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getDeviceList", produces = {"application/json;charset=UTF-8"},method = RequestMethod.GET)
+	public Object getDeviceList(HttpSession session) {
+		TUser tUser = (TUser) session.getAttribute("user");
+		if(StringUtils.isEmpty(tUser)) return new ArrayList<>();
+		return new ResultUtil<>().setData(service.getDeviceList(Long.valueOf(tUser.getAreaId())));
+	}
+
 }
