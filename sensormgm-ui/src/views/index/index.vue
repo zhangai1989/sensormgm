@@ -285,7 +285,7 @@
   .box-upload-data{
     position: absolute;
     top: 180px;
-    left: 600px;
+    left: 640px;
     width: 638px;
     height: 110px;
     display: flex;
@@ -383,7 +383,7 @@
 
   .box-2-3 {
     position: absolute;
-    left: 570px;
+    left: 610px;
     top: 350px;
     width: 700px;
     height: 500px;
@@ -393,7 +393,7 @@
 
   .box-2-4 {
     position: absolute;
-    left: 569px;
+    left: 610px;
     top: 850px;
     width: 700px;
     height: 120px;
