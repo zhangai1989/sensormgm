@@ -1,15 +1,20 @@
 package com.bumt.sensormgm;
 
+import com.bumt.sensormgm.common.dao.RedisDao;
 import com.bumt.sensormgm.dao.TUploadLogDao;
 import com.bumt.sensormgm.entity.TUploadLog;
 import com.bumt.sensormgm.service.TUploadLogService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @RunWith(SpringRunner.class)
@@ -36,6 +41,18 @@ public class SensormgmApplicationTests {
 			log.setUploadTime(new Date(ms + i * 1000 * 60 * 10));
 			uploadLogDao.save(log);
 		}
+	}
+
+	@Autowired
+	private RedisTemplate<String,String> redisTemplate;
+
+	@Resource
+	private RedisDao redisDao;
+
+	@Test
+	public void testRedis() {
+		Object allCount2 = redisDao.get("upload.total");
+		System.out.println(allCount2);
 	}
 
 }

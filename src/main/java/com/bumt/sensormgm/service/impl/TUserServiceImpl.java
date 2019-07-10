@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -54,7 +55,7 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 			e.printStackTrace();
 			return new ResultUtil<>().setErrorMsg("获取密文出错！");
 		}
-		TUser user = dao.findByLoginNameAndPasswordAndDeleteFlagEquals(userName,enpassword,0);
+		TUser user = dao.findByLoginNameAndPasswordAndDeleteFlag(userName,enpassword,0);
 		if(user==null){
 			return new ResultUtil<>().setErrorMsg("用户名或密码不正确！");
 		}else{
@@ -118,23 +119,37 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 	@Override
 	public List<TUser> getByLoginName(String cname) {
 
-		return dao.findByLoginNameAndDeleteFlagNot(cname,0);
+		return dao.findByLoginNameAndDeleteFlag(cname,0);
 	}
 
 	@Override
 	public List<TUser> getByMobile(String mobile) {
-		return dao.findByMobileAndDeleteFlagNot(mobile,0);
+		return dao.findByMobileAndDeleteFlag(mobile,0);
 	}
 
 	@Override
 	public List<TUser> getByEmail(String email) {
-		return dao.findByEmailAndDeleteFlagNot(email,0);
+		return dao.findByEmailAndDeleteFlag(email,0);
 	}
 
 	@Override
-	public List<TUser> checkUpdateStatus(String cname, String mobile, String email, long id) {
+	public String checkUpdateStatus(String cname, String mobile, String email, long id) {
 
-		return dao.findByEmailOrLoginNameOrMobileAndIdNotAndDeleteFlagNot(email,cname,mobile,id,0);
+		List<TUser> resultMobile = dao.findByMobileAndIdNotAndDeleteFlag(mobile,id,0);
+		List<TUser> resultEmail = dao.findByEmailAndIdNotAndDeleteFlag(email,id,0);
+		List<TUser> resultCname = dao.findByLoginNameAndIdNotAndDeleteFlag(cname,id,0);
+
+		if(!CollectionUtils.isEmpty(resultCname)){
+			return "登录名称不能重复！";
+		}
+		if(!CollectionUtils.isEmpty(resultMobile)){
+			return "电话不能重复！";
+		}
+		if(!CollectionUtils.isEmpty(resultEmail)){
+			return "邮箱不能重复！";
+		}
+
+		return "";
 	}
 
 	@Override

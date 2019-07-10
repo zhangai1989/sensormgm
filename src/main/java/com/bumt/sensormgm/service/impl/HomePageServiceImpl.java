@@ -1,13 +1,19 @@
 package com.bumt.sensormgm.service.impl;
 
+import com.bumt.sensormgm.common.dao.RedisDao;
 import com.bumt.sensormgm.dao.TAreaDao;
 import com.bumt.sensormgm.dao.TDeviceDao;
 import com.bumt.sensormgm.dao.TEnterpriseDao;
 import com.bumt.sensormgm.dao.TUploadLogDao;
 import com.bumt.sensormgm.service.HomePageService;
+import com.bumt.sensormgm.util.CommonUtil;
+import com.bumt.sensormgm.util.Constant;
 import com.bumt.sensormgm.view.HomePageVo;
 import com.github.pagehelper.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -28,6 +34,8 @@ public class HomePageServiceImpl  implements HomePageService {
     @Resource
     private TUploadLogDao tUploadLogDao;
 
+    @Resource
+    private RedisDao redisDao;
 
 	@Override
 	public Object getHomePageDataByAreaId(String areaId) {
@@ -35,7 +43,22 @@ public class HomePageServiceImpl  implements HomePageService {
 		if(StringUtil.isEmpty(areaId)){
 			return null;
 		}
+
         HomePageVo homePageVo = new HomePageVo();
+
+        try {
+            String allCount2 = redisDao.get("upload.total");
+            if(!StringUtils.isEmpty(allCount2)){
+                homePageVo.setAllCount(Integer.parseInt(allCount2));
+            }
+            String todayCount = redisDao.get("upload.total."+CommonUtil.getCodeByNowDateTime().substring(0,8));
+            if(!StringUtils.isEmpty(todayCount)){
+                homePageVo.setTodayCount(Integer.parseInt(todayCount));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         //获取区域排名
         List<Map> areaRank =  tDeviceDao.getAreaRank();
