@@ -186,44 +186,46 @@ export default {
         }
       })
     },
-    async addArea () {
-      this.saveAble = false
-      this.form.deleteFlag = 0
-      addArea(this.form)
+    addArea () {
+      let that = this
+      that.saveAble = false
+      that.form.deleteFlag = 0
+      addArea(that.form)
         .then(function (res) {
-          this.saveAble = true
+          that.saveAble = true
           if (res === 2000) {
-            this.$message.success('区域新增成功')
-            this.dialogVisible = false
-            this.getTree()
+            that.$message.success('区域新增成功')
+            that.dialogVisible = false
+            that.getTree()
           }
         })
         .catch(function () {
-          this.saveAble = true
+          that.saveAble = true
         })
     },
-    async loadDetail (node) {
-      if (this.$refs['detailForm']) {
-        this.$refs['detailForm'].resetFields()
+    loadDetail (node) {
+      let that = this
+      if (that.$refs['detailForm']) {
+        that.$refs['detailForm'].resetFields()
       }
       if (node.levelCode * 1 > 2) {
-        this.showEdit = false
+        that.showEdit = false
         return
       }
-      this.showEdit = true
-      this.editAble = false
+      that.showEdit = true
+      that.editAble = false
       areaDetail({id: node.id})
         .then(function (res) {
-          this.editAble = true
+          that.editAble = true
           if (res.code === 2000) {
-            this.form.id = res.result.id
-            this.form.name = res.result.name
-            this.form.longitude = res.result.longitude
-            this.form.latitude = res.result.latitude
+            that.form.id = res.result.id
+            that.form.name = res.result.name
+            that.form.longitude = res.result.longitude
+            that.form.latitude = res.result.latitude
           }
         })
         .catch(function () {
-          this.editAble = true
+          that.editAble = true
         })
     },
     deleteConfirm (id) {
@@ -239,29 +241,41 @@ export default {
         console.log('取消')
       })
     },
-    async deleteArea (id) {
+    deleteArea (id) {
       let that = this
-      const res = await deleteArea({id: id})
-      if (res.code === 2000) {
-        that.$message.success('删除成功')
-        that.showEdit = false
-        that.getTree()
-      }
+      that.editAble = false
+      deleteArea({id: id})
+        .then(function (res) {
+          that.editAble = true
+          if (res.code === 2000) {
+            that.showEdit = false
+            that.$message.success('删除成功')
+            that.getTree()
+          }
+        })
+        .catch(function () {
+          that.editAble = true
+        })
+
     },
     updateArea () {
       let that = this
       this.$refs['detailForm'].validate((valid) => {
         if (valid) {
+          that.editAble = false
           updateArea({
             id: that.form.id,
             name: that.form.name,
             longitude: that.form.longitude,
             latitude: that.form.latitude
           }).then(function (res) {
+            that.editAble = true
             if (res.code === 2000) {
               that.$message.success('修改成功')
               that.getTree()
             }
+          }).catch(function () {
+            that.editAble = true
           })
         }
       })},

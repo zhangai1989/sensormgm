@@ -50,14 +50,14 @@
             fixed
             prop="enterpriseName"
             label="企业名称"
-            min-width="150">
+            min-width="140">
           </el-table-column>
 
           <el-table-column
             fixed
             align="center"
             label="网络状态"
-            min-width="120">
+            max-width="100">
             <template slot-scope="scope">
               <i class="iconfont icon-wifi"
                  :style="{color:scope.row.status === 'ONLINE' ? '#53ee33': '#d1d1d1'}"></i>
@@ -68,28 +68,28 @@
             align="center"
             prop="lampblackWarning"
             label="限值"
-            min-width="150">
+            min-width="100">
           </el-table-column>
 
           <el-table-column
             align="center"
             prop="lampblack"
             label="油烟浓度(mg/m³)"
-            max-width="130">
+            min-width="130">
           </el-table-column>
 
           <el-table-column
             align="center"
             prop="temp"
             label="VOC(mg/m³)"
-            max-width="130">
+            min-width="130">
           </el-table-column>
 
           <el-table-column
             align="center"
             prop="humidity"
             label="颗粒物(mg/m³)"
-            max-width="120">
+            min-width="120">
           </el-table-column>
 
           <el-table-column
