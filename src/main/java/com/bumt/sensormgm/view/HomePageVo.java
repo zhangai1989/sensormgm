@@ -5,6 +5,11 @@ import java.util.Map;
 
 public class HomePageVo {
 
+
+
+    private int allCount;
+
+    private int todayCount;
     /**
      * @Description:区域排名
      * @Author:     zhangai
@@ -56,6 +61,23 @@ public class HomePageVo {
      * @Version: 1.0
      */
     private List<String> lastLogsData;
+
+
+    public int getAllCount() {
+        return allCount;
+    }
+
+    public void setAllCount(int allCount) {
+        this.allCount = allCount;
+    }
+
+    public int getTodayCount() {
+        return todayCount;
+    }
+
+    public void setTodayCount(int todayCount) {
+        this.todayCount = todayCount;
+    }
 
     public List<String> getLastLogsData() {
         return lastLogsData;

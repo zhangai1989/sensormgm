@@ -62,21 +62,7 @@ public class TUserController  extends BaseController<TUser>{
 
 		long id = entity.getId();
 		String cname = entity.getLoginName();
-		List<TUser> tUser =  service.checkUpdateStatus(cname,entity.getMobile(),entity.getEmail(),id);
-		if(!CollectionUtils.isEmpty(tUser)){
-			for(TUser u : tUser) {
-				if(u.getLoginName().equals(entity.getLoginName())) {
-					return "登录名称不能重复！";
-				}
-				if(u.getMobile().equals(entity.getMobile())) {
-					return "手机号不能重复！";
-				}
-				if(u.getEmail().equals(entity.getEmail())) {
-					return "邮箱不能重复！";
-				}
-			}
-		}
-		return "";
+		return service.checkUpdateStatus(cname,entity.getMobile(),entity.getEmail(),id);
 	}
 
 	/**

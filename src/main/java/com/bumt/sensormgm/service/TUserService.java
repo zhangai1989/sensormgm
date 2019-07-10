@@ -19,5 +19,5 @@ public interface TUserService extends BaseService {
 
     List<TUser> getByEmail(String email);
 
-    List<TUser> checkUpdateStatus(String cname, String mobile, String email, long id);
+    String checkUpdateStatus(String cname, String mobile, String email, long id);
 }
