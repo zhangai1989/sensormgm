@@ -27,6 +27,16 @@
         </li>
         <li class="flex fxmiddle">
           <el-input
+            placeholder="请输入设备编号"
+            size="small"
+            :clearable="true"
+            maxlength="30"
+            v-model.trim="condition.code"
+            style="width: 250px; line-height: 34px; height: 34px">
+          </el-input>
+        </li>
+        <li class="flex fxmiddle">
+          <el-input
             placeholder="请输入企业名称"
             size="small"
             :clearable="true"
@@ -59,7 +69,7 @@
           <el-table-column
             align="center"
             prop="code"
-            label="企业编码"
+            label="设备编码"
             width="140">
           </el-table-column>
 
@@ -191,8 +201,8 @@
           <el-form-item label="企业名称" prop="name">
             <el-input size="small" v-model.trim="form.name" placeholder="请输入企业名称"/>
           </el-form-item>
-          <el-form-item label="企业编码" prop="code" v-if="'' === form.code">
-            <el-input size="small" v-model.trim="form.code" placeholder="请输入企业编码"/>
+          <el-form-item label="设备编码" prop="code" v-if="'' === form.id">
+            <el-input size="small" v-model.trim="form.code" placeholder="请输入设备编码"/>
           </el-form-item>
           <el-form-item label="企业地址" prop="address">
             <el-input size="small" v-model.trim="form.address" placeholder="请输入企业地址"/>
@@ -266,6 +276,7 @@ export default {
       areas: [],
       condition: {
         areaId: '',
+        code: '',
         name: ''
       },
       form: {
@@ -374,6 +385,9 @@ export default {
       argc.pageSize = that.pageSize
       if (that.condition.areaId && that.condition.areaId !== '') {
         argc.areaId = that.condition.areaId
+      }
+      if (that.condition.code && that.condition.code !== '') {
+        argc.code = that.condition.code
       }
       if (that.condition.name && that.condition.name !== '') {
         argc.name = that.condition.name

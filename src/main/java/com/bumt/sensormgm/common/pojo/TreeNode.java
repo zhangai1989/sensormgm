@@ -1,5 +1,6 @@
 package com.bumt.sensormgm.common.pojo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TreeNode {
@@ -16,7 +17,7 @@ public class TreeNode {
 
     private String type;
 
-    private List<TreeNode> nodes;
+    private List<TreeNode> nodes = new ArrayList<>();
 
     private String icon;
 

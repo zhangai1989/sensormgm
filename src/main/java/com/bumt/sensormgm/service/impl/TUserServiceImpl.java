@@ -11,7 +11,6 @@ import com.bumt.sensormgm.service.TUserService;
 import com.bumt.sensormgm.util.CommonUtil;
 import com.bumt.sensormgm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -74,34 +73,18 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 		if (StringUtils.isEmpty(tUser)) {
 			return new ResultUtil<>().setErrorMsg(4000,"未登录");
 		}
-		// 企业账号无权限
-		if (4 == tUser.getLevel()) {
-			return new PageImpl(new ArrayList(), null, 0);
-		}
 		Specification<TUser> specification = (root, criteriaQuery, cb) -> {
 			List<Predicate> list = new ArrayList<>();
-			// 前端传了企业ID
-			if (!StringUtils.isEmpty(entity.get("enterpriseId"))) {
-				list.add(cb.equal(root.<String>get("enterpriseId"), entity.get("enterpriseId")));
-			} else {
-				// 前端传了区域ID
-				if (!StringUtils.isEmpty(entity.get("areaId"))) {
-					list.add(cb.equal(root.<String>get("areaId"), entity.get("areaId")));
-				} else {
-					if(3 == tUser.getLevel()) {
-						// 办事处级别只能查看同区域下企业用户
-						list.add(cb.equal(root.<String>get("areaId"), tUser.getAreaId()));
-						list.add(cb.isNotNull(root.<String>get("enterpriseId")));
-					}else {
-						CriteriaBuilder.In<Long> in = cb.in(root.<Long>get("areaId"));
-						List<TArea> listArea = tAreaService.getUserAreas(Long.valueOf(tUser.getAreaId()), false);
-						for (TArea area : listArea) {
-							in.value(area.getId());
-						}
-						list.add(in);
-					}
-				}
+			String areaId = tUser.getAreaId();
+			if(!StringUtils.isEmpty(entity) && !StringUtils.isEmpty(entity.get("areaId"))) {
+				areaId = entity.get("areaId").toString();
 			}
+			List<TArea> listArea = tAreaService.getUserAreas(Long.valueOf(areaId), true);
+			CriteriaBuilder.In<Long> in = cb.in(root.<Long>get("areaId"));
+			for (TArea area : listArea) {
+				in.value(area.getId());
+			}
+			list.add(in);
 			if (!StringUtils.isEmpty(entity.get("name"))) {
 				list.add(cb.like(root.get("cname"), "%" + entity.get("name") + "%"));
 			}

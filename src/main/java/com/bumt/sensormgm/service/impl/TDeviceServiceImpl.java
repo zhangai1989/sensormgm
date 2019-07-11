@@ -6,7 +6,6 @@ import com.bumt.sensormgm.dao.TDeviceDao;
 import com.bumt.sensormgm.dao.TEnterpriseDao;
 import com.bumt.sensormgm.entity.TArea;
 import com.bumt.sensormgm.entity.TDevice;
-import com.bumt.sensormgm.entity.TEnterprise;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TAreaService;
 import com.bumt.sensormgm.service.TDeviceService;
@@ -47,6 +46,10 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 		if(!StringUtils.isEmpty(entity.get("status"))){
 			status =entity.get("status").toString();
 		}
+		String deviceCode = "";
+		if(!StringUtils.isEmpty(entity.get("deviceCode"))){
+			deviceCode =entity.get("deviceCode").toString();
+		}
 
 		String areaId="";
 		if(!StringUtils.isEmpty(entity.get("areaId"))){
@@ -61,7 +64,7 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 		int pageNum =Integer.parseInt(entity.get("pageNum").toString());
 		int pageSize =Integer.parseInt(entity.get("pageSize").toString());
 		int start = (pageNum-1)*pageSize;
-		List<TDevice> dataList =  dao.getPageListBySqlAndCondition(enterprise,status,areaId, start,pageSize );
+		List<TDevice> dataList =  dao.getPageListBySqlAndCondition(enterprise,status,areaId, deviceCode, start,pageSize );
 //		for(TDevice tDevice:dataList){
 //			if(tDevice.getEnterpriseId()!=null){
 //				TEnterprise tEnterprise = tEnterpriseDao.findById(tDevice.getEnterpriseId()).get();
@@ -70,7 +73,7 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 //				}
 //			}
 //		}
-		int total =  dao.getTotalBySqlAndCondition(enterprise,status,areaId);
+		int total =  dao.getTotalBySqlAndCondition(enterprise,status,areaId, deviceCode);
 		Pageable pageable = PageRequest.of((pageNum-1), pageSize);
 		Page<TDevice> page = new PageImpl(dataList,pageable,total);
 		return page;
@@ -84,13 +87,13 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 	@Override
 	public Object getDeviceList(Long areaId) {
 		List<TArea> userAreas = areaService.getUserAreas(areaId, true);
-		Set<String> ids = new HashSet<>();
+		Set<Long> areaIds = new HashSet<>();
 		for(TArea area : userAreas) {
 			if(area.getLevel().equals("2")) {
-				ids.add(area.getId().toString());
+				areaIds.add(area.getId());
 			}
 		}
-		if(CollectionUtils.isEmpty(ids)) return new ArrayList<>();
-		return dao.getDeviceListByAreas(ids.toString().replace("[", "(").replace("]", ")"));
+		if(CollectionUtils.isEmpty(areaIds)) return new ArrayList<>();
+		return dao.getDeviceListByAreas(areaIds);
 	}
 }

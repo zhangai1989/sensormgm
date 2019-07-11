@@ -412,7 +412,10 @@ export default {
             if (arg.level === 3 && arg.enterpriseId && arg.enterpriseId.length > 0) {
               arg.level = 4
             }
-            addUser(that.form)
+            if (arg.enterpriseId === '') {
+              arg.enterpriseId = null
+            }
+            addUser(arg)
               .then(res => {
                 that.saveAble = true
                 if (res && res.code === 2000) {

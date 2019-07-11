@@ -1,8 +1,9 @@
 <template>
   <section class="layout width100 height100">
     <div class="height100" style="float: left; width: calc(100% - 300px)">
-      <el-amap vid="amap" :center="center" :zoom="zoom">
-        <el-amap-marker v-for="item in positions" :position="item"/>
+      <el-amap vid="amap" :center="center" :zoom="zoom" :events="events">
+        <el-amap-marker v-for="(item, i) in filterList" :key="i" :position="item.positions" :events="item.events"/>
+        <el-amap-text  v-for="(item, i) in filterList" :key="i" :position="item.positions"  :offset="[0, -45]" :text="item.name" ></el-amap-text>
       </el-amap>
     </div>
     <div class="height100" style="float: left; width: 299px; border-left: 1px solid #28a745;">
@@ -24,7 +25,7 @@
                  :style="{color:item.deviceStatus === 'ONLINE' ? '#53ee33': '#d1d1d1'}"></i>
             </el-col>
             <el-col span="15">
-              <span class="dname">{{ item.name }}</span>
+              <span class="dname" :class="{'selected-dname': selectedDevice === item.id, 'not-selected-dname': selectedDevice !== item.id}">{{ item.name }}</span>
             </el-col>
             <el-col span="7" class="val-box">
               <span class="dval" :class="{'normal':item.dataStatus === 1, 'beyond':item.dataStatus === 3, 'warning':item.dataStatus === 2}">0.090mg/m³</span>
@@ -32,11 +33,52 @@
           </el-row>
         </div>
       </div>
+
+      <div class="map-pop-box" v-show="mapPopVisible">
+        <div class="map-pop-row" style="text-align: center">{{popObj.name}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">详细地址:&nbsp;</span>{{popObj.address}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">企业负责人:&nbsp;</span>{{popObj.contact}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">环保负责人:&nbsp;</span>{{popObj.envContact}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">油烟:&nbsp;</span>{{popObj.lampblack}}mg/m³</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">温度:&nbsp;</span>{{popObj.temp}}℃</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">湿度:&nbsp;</span>{{popObj.humidity}}%</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">当前风机状态:&nbsp;</span>{{popObj.fanStatus}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">当前净化器状态:&nbsp;</span>{{popObj.purifierStatus}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">最后上传时间:&nbsp;</span>{{popObj.lastUploadTime}}</div>
+      </div>
     </div>
   </section>
 </template>
 
+<style>
+  .amap-icon img{
+    width: 30px;
+    height: 30px;
+  }
+  .amap-overlay-text-container{
+    background-color: #155D74;
+    color: #ffffff;
+  }
+</style>
+
 <style scoped>
+  .map-pop-box{
+    position: absolute;
+    width: 250px;
+    box-sizing: border-box;
+    right: 310px;
+    top: 90px;
+    background: rgba(0,0,0,0.5);
+    height: auto;
+    z-index: 800;
+    padding: 20px 20px 10px;
+    border-radius: 6px;
+  }
+  .map-pop-row{
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
   .serach {
     width: 280px;
     margin-left: 10px;
@@ -61,8 +103,13 @@
   .dname {
     margin-left: 10px;
     font-size: 16px;
-    color: #7a7a7a;
     font-family: '华文中宋', 'Times New Roman', 'Microsoft YaHei';
+  }
+  .not-selected-dname {
+    color: #7a7a7a;
+  }
+  .selected-dname {
+    color: #474747;
   }
   .val-box {
     text-align: right;
@@ -109,7 +156,26 @@ export default {
       positions: [],
       filterList: [],
       zoom: 16,
-      center: [1, 2]
+      center: [1, 2],
+      selectedDevice: -1,
+      mapPopVisible: false,
+      popObj: {
+        name: '',
+        address: '',
+        contact: '',
+        envContact: '',
+        lampblack: '',
+        temp: '',
+        humidity: '',
+        fanStatus: '',
+        purifierStatus: '',
+        lastUploadTime: ''
+      },
+      events: {
+        click: ()=>{
+          this.mapPopVisible = false
+        }
+      }
     }
   },
   created () {
@@ -121,11 +187,15 @@ export default {
     this.loadArea()
     this.loadDevice()
   },
+  watch: {
+    search (val) {
+      this.filter(this.areaId, val)
+    }
+  },
   methods: {
     // 初始化
     async loadArea () {
       let that = this
-      const res = await areaList()
       let userAreaName
       let allArea = JSON.parse(localStorage.getItem('allArea'))
       allArea.forEach(function (item) {
@@ -137,8 +207,10 @@ export default {
         id: that.areaId,
         name: userAreaName
       })
+      const res = await areaList()
       if (res.code === 2000) {
         if (res.result && res.result.length > 0) {
+          that.center = [res.result[0].longitude, res.result[0].latitude]
           res.result.forEach(function (item) {
             that.areas.push({
               id: item.id,
@@ -156,24 +228,79 @@ export default {
           this.center = [res.result[0].longitude, res.result[0].latitude]
           res.result.forEach(function (item) {
             that.deviceList.push({
+              areaId: item.areaId,
               deviceStatus: item.status,
-              dataStatus: 1,
               name: item.name,
               longitude: item.longitude,
               latitude: item.latitude,
               lampblack: item.lampblack,
-//              dataStatus: item.lampblackStatus
+              temp: item.temp,
+              humidity: item.humidity,
+              dataStatus: item.lampblackStatus,
+              address: item.address,
+              contact: item.contact + '(' + item.contactMobile + ')',
+              envContact: item.envContact + '(' + item.envContactMobile + ')',
+              lastUploadTime: item.lastUploadTime,
+              positions: [item.longitude, item.latitude],
+              events: {
+                click: () => {
+                  that.mapPopVisible = true
+                  that.popObj = {
+                    name: item.name,
+                    address: item.address,
+                    contact: item.contact + '(' + item.contactMobile + ')',
+                    envContact: item.envContact + '(' + item.envContactMobile + ')',
+                    lampblack: item.lampblack,
+                    temp: item.temp,
+                    humidity: item.humidity,
+                    fanStatus: 1 === item.fanStatus ? '开' : '关',
+                    purifierStatus: 1 === item.purifierStatus ? '开' : '关',
+                    lastUploadTime: item.lastUploadTime
+                  }
+                }
+              }
             })
-            that.positions.push([23, 45])
           })
         }
       }
     },
-    changeArea () {
-      this.center = [16.0, 17.0]
+    changeArea (val) {
+      this.filter(val, this.search)
+    },
+    filter (areaId, name) {
+      let that = this
+      that.filterList = []
+      if (that.deviceList && that.deviceList.length > 0) {
+        that.deviceList.forEach(function (item) {
+          if (item.areaId === parseInt(areaId) || areaId === UserContext.getUserArea()) {
+            if ('' === that.search) {
+              that.filterList.push(item)
+            } else {
+              if (item.name.indexOf(name) > -1) {
+                that.filterList.push(item)
+              }
+            }
+          }
+        })
+      }
     },
     selectDevice (item) {
-      this.center = [item.longitude, item.latitude]
+      let that = this
+      that.center = [item.longitude, item.latitude]
+      that.selectedDevice = item.id
+      that.mapPopVisible = true
+      that.popObj = {
+        name: item.name,
+        address: item.address,
+        contact: item.contact,
+        envContact: item.envContact,
+        lampblack: item.lampblack,
+        temp: item.temp,
+        humidity: item.humidity,
+        fanStatus: 1 === item.fanStatus ? '开' : '关',
+        purifierStatus: 1 === item.purifierStatus ? '开' : '关',
+        lastUploadTime: item.lastUploadTime
+      }
     }
   }
 }

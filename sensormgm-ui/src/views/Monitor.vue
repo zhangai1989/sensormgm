@@ -20,7 +20,7 @@
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
         <li class="flex fxmiddle">
-          <el-select v-model="status" @change="changeStatus" size="small" placeholder="请选择" style="width: 80px">
+          <el-select v-model="condition.status" @change="changeStatus" size="small" placeholder="请选择" style="width: 80px">
             <el-option
               v-for="(item, i) in status_list"
               :key="i"
@@ -31,9 +31,16 @@
         </li>
         <li class="flex fxmiddle">
           <el-input
-            placeholder="请输入企业名称"
+            placeholder="请输入设备编号"
             size="small"
-            v-model.trim="search">
+            v-model.trim="condition.code">
+          </el-input>
+        </li>
+        <li class="flex fxmiddle">
+          <el-input
+            placeholder="请输入设备名称"
+            size="small"
+            v-model.trim="condition.name">
           </el-input>
         </li>
         <el-button type="success" size="small" @click="searchList">查 询</el-button>
@@ -49,15 +56,21 @@
           <el-table-column
             fixed
             prop="enterpriseName"
-            label="企业名称"
-            min-width="140">
+            label="企业名"
+            min-width="180">
+          </el-table-column>
+          <el-table-column
+            fixed
+            prop="deviceCode"
+            label="设备编码"
+            min-width="150">
           </el-table-column>
 
           <el-table-column
             fixed
             align="center"
             label="网络状态"
-            max-width="100">
+            max-width="90">
             <template slot-scope="scope">
               <i class="iconfont icon-wifi"
                  :style="{color:scope.row.status === 'ONLINE' ? '#53ee33': '#d1d1d1'}"></i>
@@ -181,8 +194,11 @@ export default {
       sysEnterprise: new Map(),
       loading: false,
       autoReload: false,
-      search: '',
-      status: '全部',
+      condition: {
+        status: '全部',
+        code: '',
+        name: ''
+      },
       status_list: [{
         title: '全部',
         label: '全部'
@@ -233,6 +249,15 @@ export default {
       let that = this
       argc.pageSize = that.pageSize
       that.loading = true
+      if (that.condition.status && that.condition.status !== '全部') {
+        argc.status = that.condition.status
+      }
+      if (that.condition.code && that.condition.code !== '') {
+        argc.deviceCode = that.condition.code
+      }
+      if (that.condition.name && that.condition.name !== '') {
+        argc.enterprise = that.condition.name
+      }
       monitorList(argc)
         .then(function (res) {
           that.loading = false
@@ -263,30 +288,13 @@ export default {
       let argc = {
         pageNum: page
       }
-      if (that.search !== '') {
-        argc.enterprise = that.search
-      }
-
-      if (that.status !== '全部') {
-        argc.status = that.status
-      }
       that.getList(argc)
     },
     // 搜索
     searchList () {
       let that = this
-      if (that.search.length > 30) {
-        that.$message.warning('搜索内容请勿太长!')
-        return
-      }
       let argc = {
         pageNum: 1
-      }
-      if (that.search !== '') {
-        argc.enterprise = that.search
-      }
-      if (that.status !== '全部') {
-        argc.status = that.status
       }
       that.getList(argc)
     },
@@ -296,12 +304,6 @@ export default {
       let that = this
       let argc = {
         pageNum: 1
-      }
-      if (that.search !== '') {
-        argc.enterprise = that.search
-      }
-      if (label !== '全部') {
-        argc.status = label
       }
       that.getList(argc)
     },

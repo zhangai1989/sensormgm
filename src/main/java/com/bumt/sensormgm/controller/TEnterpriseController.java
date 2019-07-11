@@ -88,6 +88,18 @@ public class TEnterpriseController  extends BaseController<TEnterprise>{
 		return "";
 	}
 
+	/**
+	 *@author : zhangai
+	 *@Date : 11:31 2019/6/24
+	 * @Parm: pageNum第几页  pageSize一页的数量 因为存在分页信息的参数，无法使用对象接收
+	 *@描述：获取单页信息
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getPageListByCondition2", produces = {"application/json;charset=UTF-8"})
+	public Object getPageListByCondition(@RequestBody Map<String,Object> entity, HttpSession httpSession){
+		return service.getPageListByCondition2(entity, httpSession);
+	}
+
 	public  String checkUpdateStatus(TEnterprise entity){
 		String name = entity.getName();
 

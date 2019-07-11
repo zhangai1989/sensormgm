@@ -108,7 +108,8 @@ export default {
       list: [],
 
       form: {
-        level: 0,
+        id: '',
+        level: '',
         parentId: '',
         name: '',
         longitude: '',
@@ -173,10 +174,17 @@ export default {
       }
     },
     openDialog () {
-      this.dialogVisible = true
-      if (this.$refs['addForm']) {
-        this.$refs['addForm'].resetFields()
+      let that = this
+      if (that.$refs['addForm']) {
+        that.$refs['addForm'].resetFields()
       }
+      that.form.id = ''
+      that.form.level = 0
+      that.form.parentId = ''
+      that.form.name = ''
+      that.form.longitude = ''
+      that.form.latitude = ''
+      that.dialogVisible = true
     },
     saveArea () {
       this.$refs['addForm'].validate((valid) => {
@@ -190,10 +198,18 @@ export default {
       let that = this
       that.saveAble = false
       that.form.deleteFlag = 0
-      addArea(that.form)
+      let argc = {
+        deleteFlag: 0,
+        level: that.form.level,
+        parentId: that.form.parentId,
+        name: that.form.name,
+        longitude: that.form.longitude,
+        latitude: that.form.latitude
+      }
+      addArea(argc)
         .then(function (res) {
           that.saveAble = true
-          if (res === 2000) {
+          if (res.code === 2000) {
             that.$message.success('区域新增成功')
             that.dialogVisible = false
             that.getTree()

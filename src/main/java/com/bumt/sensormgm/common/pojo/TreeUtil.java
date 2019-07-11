@@ -1,6 +1,7 @@
 package com.bumt.sensormgm.common.pojo;
 
 import com.github.pagehelper.util.StringUtil;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,36 @@ public class TreeUtil {
             }
         }
         return tnlist;
+    }
+
+    public static List<TreeNode> buildTree(String rootId, List<TreeNode> nodes) {
+        List<TreeNode> result = getChildren(rootId, nodes);
+        if(!CollectionUtils.isEmpty(result)) {
+            for(TreeNode node : result) {
+                appendChildren(node, nodes);
+            }
+        }
+        return result;
+    }
+
+    public static List<TreeNode> getChildren(String parentId, List<TreeNode> nodes) {
+        List<TreeNode> result = new ArrayList<>();
+        for(TreeNode node : nodes) {
+            if(parentId.equals(node.getParentId())) {
+                result.add(node);
+            }
+        }
+        return result;
+    }
+
+    public static void appendChildren(TreeNode parentNode, List<TreeNode> nodes) {
+        for(TreeNode node : nodes) {
+            if(parentNode.getId().equals(node.getParentId())) {
+                parentNode.getNodes().add(node);
+                if(node.getLevelCode().equals("4")) continue;
+                appendChildren(node, nodes);
+            }
+        }
     }
 
 }

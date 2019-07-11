@@ -13,5 +13,5 @@ public interface TEnterpriseDao extends BaseJpaDao<TEnterprise> {
 
     List<TEnterprise> findByAreaIdAndDeleteFlag(long areaId, int deleteFlag);
 
-    List<TEnterprise> findByNameAndIdNotAndDeleteFlag(String name, int i, int i1);
+    List<TEnterprise> findByNameAndIdNotAndDeleteFlag(String name, long i, int i1);
 }

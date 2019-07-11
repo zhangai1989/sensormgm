@@ -16,9 +16,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
@@ -34,24 +32,16 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 
 	@Override
 	public List<TreeNode> getAreaTreeByAreaId(String areaId) {
-
-		// 获取数据
-		Map<String, TreeNode> nodeList = new LinkedHashMap<String, TreeNode>();
-		List<TArea> tAreaList = dao.findAll();
+		List<TreeNode> nodeList = new ArrayList<>();
+		List<TArea> tAreaList = getUserAreas(Long.valueOf(areaId), false);
+		if(CollectionUtils.isEmpty(tAreaList)) return nodeList;
 		for (TArea area : tAreaList) {
-			if(area.getDeleteFlag()!=0){
-				continue;
-			}
 			TreeNode node = new TreeNode();
 			node.setText(area.getName());
 			node.setId(area.getId().toString());
-			if(!areaId.equals(area.getId().toString())){
-				node.setParentId(area.getParentId().toString());
-			}
-
+			node.setParentId(area.getParentId().toString());
 			node.setLevelCode(area.getLevel());
-//			node.setType(area.getDeleteFlag());
-			nodeList.put(node.getId(), node);
+			nodeList.add( node);
 		}
 		List<TEnterprise> tEnterpriseList= tEnterpriseDao.findAll();
 		for (TEnterprise tEnterprise : tEnterpriseList) {
@@ -61,10 +51,10 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 			node.setParentId(tEnterprise.getAreaId().toString());
 			node.setLevelCode("4");
 			node.setType("");
-			nodeList.put(tEnterprise.getCode(), node);
+			nodeList.add(node);
 		}
 			// 构造树形结构
-		List<TreeNode>	tnlist = TreeUtil.getNodeList(nodeList);
+		List<TreeNode>	tnlist = TreeUtil.buildTree(areaId, nodeList);
 		return tnlist;
 
 	}
@@ -96,18 +86,22 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 		// 查询出所有区域
 		List<TArea> allArea = dao.findAll();
 		if(CollectionUtils.isEmpty(allArea)) return result;
-		buildUserAreas(areaId, result, allArea, containSelf);
+		buildUserAreas(areaId, result, allArea);
+		if(containSelf) {
+			for(TArea area : allArea) {
+				if(areaId.equals(area.getId())) {
+					result.add(area);
+				}
+			}
+		}
 		return result;
 	}
 
-	private void buildUserAreas(Long parentId, List<TArea> mareas, List<TArea> allArea, boolean containSelf) {
+	private void buildUserAreas(Long parentId, List<TArea> mareas, List<TArea> allArea) {
 		for(TArea area : allArea) {
-			if(containSelf && parentId.equals(area.getId())) {
-				mareas.add(area);
-			}
 			if(area.getDeleteFlag()==0 && parentId.equals(area.getParentId())) {
 				mareas.add(area);
-				buildUserAreas(area.getId(), mareas, allArea, containSelf);
+				buildUserAreas(area.getId(), mareas, allArea);
 			}
 		}
 	}
