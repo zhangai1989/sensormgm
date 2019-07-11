@@ -57,6 +57,7 @@ public class HomePageServiceImpl  implements HomePageService {
             }
         }catch (Exception e){
             e.printStackTrace();
+            //异常捕获，避免redis连接异常导致首页无法显示
         }
 
 
