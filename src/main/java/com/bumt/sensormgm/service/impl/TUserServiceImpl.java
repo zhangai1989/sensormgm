@@ -25,7 +25,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +81,7 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 		int pageNum = Integer.parseInt(entity.get("pageNum").toString());
 		int pageSize = Integer.parseInt(entity.get("pageSize").toString());
 		Pageable pageable = PageRequest.of((pageNum - 1), pageSize, new Sort(Sort.Direction.DESC, "id"));
-		List<TArea> listArea = tAreaService.getUserAreas(Long.valueOf(areaId), true);
+		List<TArea> listArea = tAreaService.getUserAreas(Long.valueOf(areaId), false);
 		if(CollectionUtils.isEmpty(listArea)) {
 			return new ResultUtil<>().setData(new PageImpl(new ArrayList(),pageable, 0));
 		}
