@@ -578,7 +578,7 @@
     /*background-color: #155D74;*/
     margin-right: 30px;
     cursor: pointer;
-	margin-bottom: 15px;
+	margin-bottom: 10px;
   }
 
   .area-item-unactive{
