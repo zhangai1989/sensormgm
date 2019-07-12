@@ -33,7 +33,7 @@ public class HomePageController {
 
     @ResponseBody
     @RequestMapping(value = "/getAllCountAndTodayCount", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
-    public Object getAllCountAndTodayCount(){
-        return new ResultUtil<>().setData(homePageService.getAllCountAndTodayCount());
+    public Object getAllCountAndTodayCount(HttpSession httpSession){
+        return new ResultUtil<>().setData(homePageService.getAllCountAndTodayCount(httpSession));
     }
 }

@@ -5,18 +5,20 @@ import com.bumt.sensormgm.dao.TAreaDao;
 import com.bumt.sensormgm.dao.TDeviceDao;
 import com.bumt.sensormgm.dao.TEnterpriseDao;
 import com.bumt.sensormgm.dao.TUploadLogDao;
+import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.HomePageService;
 import com.bumt.sensormgm.util.CommonUtil;
-import com.bumt.sensormgm.util.Constant;
 import com.bumt.sensormgm.view.HomePageVo;
 import com.github.pagehelper.util.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.*;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -142,13 +144,17 @@ public class HomePageServiceImpl  implements HomePageService {
 	}
 
     @Override
-    public Object getAllCountAndTodayCount() {
+    public Object getAllCountAndTodayCount(HttpSession httpSession) {
         Map resultMap = new HashMap();
-        String allCount2 = redisDao.get("upload.total");
+        TUser tUser = (TUser) httpSession.getAttribute("user");
+        if(StringUtils.isEmpty(tUser)) {
+            return resultMap;
+        }
+        String allCount2 = redisDao.get("upload.total." + tUser.getAreaId());
         if(!StringUtils.isEmpty(allCount2)){
             resultMap.put("allCount",Integer.parseInt(allCount2));
         }
-        String todayCount = redisDao.get("upload.total."+CommonUtil.getCodeByNowDateTime().substring(0,8));
+        String todayCount = redisDao.get("upload.total." + tUser.getAreaId() + "." + CommonUtil.getCodeByNowDateTime().substring(0,8));
         if(!StringUtils.isEmpty(todayCount)){
             resultMap.put("todayCount",Integer.parseInt(todayCount));
         }
