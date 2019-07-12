@@ -8,7 +8,7 @@
                         :extend="areaExtend"
                         :title="areaRankTitle"
                         :grid="gridSetting"
-                        :colors="['#67C23A']"
+                        :colors="['#0adf96']"
                         :settings="areaRankSetting"
                         :legend-visible="false" height="220px">
           </ve-histogram>
@@ -23,7 +23,7 @@
                         :extend="enterpriseRankExtend"
                         :title="enterpriseRankTitle"
                         :grid="gridSetting1"
-                        :colors="['#67C23A']"
+                        :colors="['#f96a8f']"
                         :settings="areaRankSetting"
                         :legend-visible="false" height="316px">
           </ve-histogram>
@@ -46,7 +46,7 @@
       <div class="title-wap">
         <img src="../../assets/img/title.png">
         <div
-          style="color: #ffffff;font-size: 36px;font-weight: bold;display: flex;align-items: center;justify-content: center;height: 90px;letter-spacing: 10px;">
+          style="color: #ffffff;font-size: 36px;font-weight: bold;display: flex;align-items: center;justify-content: center;height: 112px;letter-spacing: 10px;">
           油烟监控系统
         </div>
       </div>
@@ -145,7 +145,7 @@
 
       <div class="map-pop-box" v-show="mapPopVisible">
         <div class="map-pop-row" style="text-align: center">{{pop_obj.name}}</div>
-        <div class="map-pop-row">{{nowTime}}</div>
+        <div class="map-pop-row">{{pop_obj.lastUploadTime}}</div>
         <div class="map-pop-row"><span class="map-pop-row-title">油烟:</span>{{pop_obj.lampblack}}mg/m³</div>
         <div class="map-pop-row"><span class="map-pop-row-title">温度:</span>{{pop_obj.temp}}℃</div>
         <div class="map-pop-row"><span class="map-pop-row-title">湿度:</span>{{pop_obj.humidity}}%</div>
@@ -337,7 +337,7 @@
   .box-1-1 {
     position: absolute;
     top: 135px;
-    left: 60px;
+    left: 67px;
     width: 420px;
     height: 240px;
   }
@@ -345,7 +345,7 @@
   .box-1-2 {
     position: absolute;
     top: 445px;
-    left: 60px;
+    left: 67px;
     width: 420px;
     height: 340px;
   }
@@ -353,7 +353,7 @@
   .box-1-3 {
     position: absolute;
     top: 815px;
-    left: 60px;
+    left: 67px;
     width: 420px;
     height: 255px;
   }
@@ -394,14 +394,14 @@
   .box-2-4 {
     position: absolute;
     left: 610px;
-    top: 850px;
+    top: 880px;
     width: 700px;
     height: 120px;
   }
 
   .box-3-1 {
     position: absolute;
-    right: 60px;
+    right: 67px;
     top: 135px;
     width: 420px;
     height: 295px;
@@ -410,7 +410,7 @@
   .box-3-2 {
     position: absolute;
     top: 505px;
-    right: 60px;
+    right: 67px;
     width: 420px;
     height: 295px;
   }
@@ -418,7 +418,7 @@
   .box-3-3{
     position: absolute;
     top: 815px;
-    right: 60px;
+    right: 67px;
     width: 420px;
     height: 255px;
   }
@@ -463,8 +463,8 @@
   }
 
   .title-wap {
-    height: 108px;
-    width: 623px;
+    height: 112px;
+    width: 1115px;
     margin: 0 auto;
     position: relative;
   }
@@ -473,8 +473,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: 108px;
-    width: 623px;
+    height: 112px;
+    width: 1115px;
     display: block;
   }
 
@@ -564,7 +564,7 @@
     width: 700px;
     height: 120px;
     box-sizing: border-box;
-    padding: 0 30px;
+    padding: 0 20px;
   }
 
   .area-item {
@@ -578,6 +578,7 @@
     /*background-color: #155D74;*/
     margin-right: 30px;
     cursor: pointer;
+	margin-bottom: 15px;
   }
 
   .area-item-unactive{
@@ -654,7 +655,7 @@
 </style>
 
 <script>
-  import {areaMapList, indexData} from '@api/index'
+  import {areaMapList, indexData, getCount} from '@api/index'
 
   import market1 from '../../assets/img/market1.png'
   import market2 from '../../assets/img/market2.png'
@@ -696,6 +697,7 @@
         mapPopVisible: false,
         pop_obj: {
           name: '',
+		  lastUploadTime: '',
           lampblack: '',
           temp: '',
           humidity: '',
@@ -836,6 +838,7 @@
       clearInterval(this.ScrollYSetInterval)
       clearInterval(this.ScrollYSetInterval1)
       clearInterval(this.timeInterval)
+	  clearInterval(this.countInterval)
     },
 
     mounted() {
@@ -847,6 +850,8 @@
         that.timeInterval = setInterval(function () {
           that.getNowTime()
         },1000)
+		
+		that.interval1Count()
 
         areaMapList({})
           .then(res => {
@@ -868,6 +873,25 @@
             }
           })
       },
+	  
+	  
+	  interval1Count(){
+		let that = this
+		
+		that.countInterval = setInterval(function () {
+          getCount({})
+		  .then(res => {
+			if (res.code === 2000) {
+			that.all_count = res.result.allCount
+              that.today_count = res.result.todayCount
+              that.all_num_list = that.getNumList(res.result.allCount,9)
+              that.today_num_list = that.getNumList(res.result.todayCount,6)
+			}
+		  })
+        },1000)
+	  },
+	  
+	  
 
       getInitDataById(areaId){
         let that = this
@@ -926,11 +950,6 @@
               that.lastLogsData = res.result.lastLogsData
               that.scrollYFunc1(res.result.lastLogsData.length)
 
-              that.all_count = res.result.allCount
-              that.today_count = res.result.todayCount
-
-              that.all_num_list = that.getNumList(res.result.allCount,9)
-              that.today_num_list = that.getNumList(res.result.todayCount,6)
             }
           })
       },
@@ -971,6 +990,7 @@
                   that.mapPopVisible = true
                   that.pop_obj = {
                     name: item.name,
+					lastUploadTime: item.lastUploadTime,
                     lampblack: item.lampblack,
                     temp: item.temp,
                     humidity: item.humidity,
@@ -992,6 +1012,7 @@
                   that.mapPopVisible = true
                   that.pop_obj = {
                     name: item.name,
+					lastUploadTime: item.lastUploadTime,
                     lampblack: item.lampblack,
                     temp: item.temp,
                     humidity: item.humidity,
@@ -1013,6 +1034,7 @@
                   that.mapPopVisible = true
                   that.pop_obj = {
                     name: item.name,
+					lastUploadTime: item.lastUploadTime,
                     lampblack: item.lampblack,
                     temp: item.temp,
                     humidity: item.humidity,
