@@ -81,7 +81,7 @@ public class TUserController  extends BaseController<TUser>{
 
 	@ResponseBody
 	@RequestMapping(value = "/modifyPswd", method = RequestMethod.POST)
-	public Object alertPwd(@RequestParam String oldPswd,
+	public Object modifyPswd(@RequestParam String oldPswd,
 						   @RequestParam String newPswd,
 						   HttpSession session){
 		TUser tUser = (TUser) session.getAttribute("user");

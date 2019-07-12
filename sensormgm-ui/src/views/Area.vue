@@ -54,7 +54,7 @@
       :visible.sync="dialogVisible"
       width="420px">
       <el-form v-loading="!saveAble" :inline="true" :model="form" ref="addForm" :rules="rules" label-width="100px">
-        <el-form-item prop="parentId" label="父级区域">
+        <el-form-item prop="parentId" label="所属区域" v-if="userLevel === 1">
           <el-select size="small" v-model="form.parentId" placeholder="请选择">
             <el-option
               v-for="item in areas"
@@ -65,7 +65,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item prop="name" label="区域名称">
+        <el-form-item prop="name" :label="form.parentId === 0 ? '市' : '区域名称'">
           <el-input size="small" v-model.trim="form.name" maxlength="15"/>
         </el-form-item>
 
@@ -87,6 +87,8 @@
 
 <script>
 import { addArea, deleteArea, updateArea, getAreaTree, areaDetail } from '@api/area'
+import UserContext from '@utils/UserContext'
+
 const normalBar = () => import('@components/common/NormalBar')
 
 export default {
@@ -98,6 +100,7 @@ export default {
     return {
       loading: false,
       userLevel: 0,
+      userAreaId: '',
       areaTree: [],
       areas: [],
       defaultProps: {
@@ -146,14 +149,17 @@ export default {
     async getTree () {
       let that = this
       let userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      that.userLevel = userInfo.level
+      debugger
+      that.userLevel = parseInt(UserContext.getUserLevel())
+      that.userAreaId = parseInt(UserContext.getUserArea())
       let treeProps = {
-        areaId: parseInt(userInfo.areaId)
+        areaId: that.userAreaId
       }
       that.expandedKeys = []
       that.areas = []
+
       if (that.userLevel === 1) {
-        that.areas.push({id: 0, name: '根'})
+        that.areas.push({id: 0, name: '...'})
       }
       const res = await getAreaTree(treeProps)
       if (res.code === 2000) {
@@ -180,7 +186,11 @@ export default {
       }
       that.form.id = ''
       that.form.level = 0
-      that.form.parentId = ''
+      if (2 === that.userLevel) {
+        that.form.parentId = that.userAreaId
+      } else {
+        that.form.parentId = ''
+      }
       that.form.name = ''
       that.form.longitude = ''
       that.form.latitude = ''
