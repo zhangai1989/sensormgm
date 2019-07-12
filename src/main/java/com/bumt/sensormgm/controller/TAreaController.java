@@ -91,6 +91,10 @@ public class TAreaController  extends BaseController<TArea>{
 			if(!StringUtils.isEmpty(entity.get("areaId"))){
 				list.add(criteriaBuilder.like(root.get("areaId").as(String.class), "%" + entity.get("areaId") + "%"));
 			}
+
+			if(!StringUtils.isEmpty(entity.get("level"))){
+				list.add(criteriaBuilder.equal(root.get("level").as(String.class),2));
+			}
 			list.add(criteriaBuilder.equal(root.get("deleteFlag").as(String.class),0));
 			return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
 		};
@@ -101,8 +105,8 @@ public class TAreaController  extends BaseController<TArea>{
 	@RequestMapping(value = "/getAreaList", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
 	@ApiOperation(value="获取区域下拉框列表", notes="")
 	@ApiImplicitParam(paramType="query", name = "areaId", value = "区域id", required = true, dataType = "String")
-	public Object getAreaList(){
-		return new ResultUtil<>().setData(service.getAreaList());
+	public Object getAreaList(HttpSession session){
+		return new ResultUtil<>().setData(service.getAreaList(session));
 	}
 
 	@ResponseBody

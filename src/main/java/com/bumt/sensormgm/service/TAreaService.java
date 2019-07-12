@@ -14,7 +14,7 @@ public interface TAreaService extends BaseService {
 
     Object getAreaListBySession(HttpSession session);
 
-    Object getAreaList();
+    Object getAreaList(HttpSession session);
 
     List<TArea> getUserAreas(Long areaId, boolean containSelf);
 
