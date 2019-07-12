@@ -12,11 +12,11 @@ import java.util.Set;
 public interface TDeviceDao extends BaseJpaDao<TDevice> {
 
 
-    @Query(value = "select t1.* from t_device t1 join t_enterprise t2 on t1.enterprise_id=t2.id where t1.delete_flag=0 and t2.name like CONCAT('%',?1,'%') and t1.`status` like CONCAT('%',?2,'%') AND t2.area_id like CONCAT('%',?3,'%') AND t1.device_code like CONCAT('%',?4,'%') limit ?5,?6",nativeQuery = true)
-    List<TDevice> getPageListBySqlAndCondition(String enterprise, String status, String areaId, String deviceCode, int pageNum,int pageSize);
+    @Query(value = "select t1.* from t_device t1 join t_enterprise t2 on t1.enterprise_id=t2.id where t1.delete_flag=0 and t2.name like CONCAT('%',:enterprise,'%') and t1.`status` like CONCAT('%',:status,'%') AND t2.area_id in(:areaIds) AND t1.device_code like CONCAT('%',:deviceCode,'%') limit :pageNum, :pageSize",nativeQuery = true)
+    List<TDevice> getPageListBySqlAndCondition(@Param("enterprise") String enterprise, @Param("status") String status, @Param("areaIds") List<Long> areaIds, @Param("deviceCode") String deviceCode, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
-    @Query(value = "select count(0) from t_device t1 join t_enterprise t2 on t1.enterprise_id=t2.id where t1.delete_flag=0 and t2.name like CONCAT('%',?1,'%') and t1.`status` like CONCAT('%',?2,'%') AND t2.area_id like CONCAT('%',?3,'%')  AND t1.device_code like CONCAT('%',?4,'%')",nativeQuery = true)
-    int getTotalBySqlAndCondition(String enterprise, String status, String areaId, String deviceCode);
+    @Query(value = "select count(0) from t_device t1 join t_enterprise t2 on t1.enterprise_id=t2.id where t1.delete_flag=0 and t2.name like CONCAT('%',:enterprise,'%') and t1.`status` like CONCAT('%',:status,'%') AND t2.area_id in(:areaIds)  AND t1.device_code like CONCAT('%',:deviceCode,'%')",nativeQuery = true)
+    int getTotalBySqlAndCondition(@Param("enterprise") String enterprise, @Param("status") String status, @Param("areaIds") List<Long> areaIds, @Param("deviceCode") String deviceCode);
 
 
     TDevice getByEnterpriseId(Long enterpriseId);

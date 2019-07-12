@@ -51,20 +51,22 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 			deviceCode =entity.get("deviceCode").toString();
 		}
 
-		String areaId="";
+		List<Long> areaIds = new ArrayList<>();
 		if(!StringUtils.isEmpty(entity.get("areaId"))){
-			areaId =entity.get("areaId").toString();
+			areaIds.add(Long.valueOf(entity.get("areaId").toString()));
 		}else{
 			TUser tUser = (TUser) session.getAttribute("user");
-			if(tUser!=null&&tUser.getLevel()==3){
-				areaId = tUser.getAreaId();
+			if(tUser!=null){
+				List<TArea> userAreas = areaService.getUserAreas(Long.valueOf(tUser.getAreaId()), true);
+				for(TArea area : userAreas) {
+					areaIds.add(area.getId());
+				}
 			}
 		}
-
 		int pageNum =Integer.parseInt(entity.get("pageNum").toString());
 		int pageSize =Integer.parseInt(entity.get("pageSize").toString());
 		int start = (pageNum-1)*pageSize;
-		List<TDevice> dataList =  dao.getPageListBySqlAndCondition(enterprise,status,areaId, deviceCode, start,pageSize );
+		List<TDevice> dataList =  dao.getPageListBySqlAndCondition(enterprise,status,areaIds, deviceCode, start,pageSize );
 //		for(TDevice tDevice:dataList){
 //			if(tDevice.getEnterpriseId()!=null){
 //				TEnterprise tEnterprise = tEnterpriseDao.findById(tDevice.getEnterpriseId()).get();
@@ -73,7 +75,7 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 //				}
 //			}
 //		}
-		int total =  dao.getTotalBySqlAndCondition(enterprise,status,areaId, deviceCode);
+		int total =  dao.getTotalBySqlAndCondition(enterprise,status,areaIds, deviceCode);
 		Pageable pageable = PageRequest.of((pageNum-1), pageSize);
 		Page<TDevice> page = new PageImpl(dataList,pageable,total);
 		return page;

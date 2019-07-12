@@ -11,11 +11,13 @@ import com.bumt.sensormgm.service.TAreaService;
 import com.bumt.sensormgm.service.TDeviceService;
 import com.bumt.sensormgm.service.TEnterpriseService;
 import com.bumt.sensormgm.util.ResultUtil;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -81,13 +83,19 @@ public class TEnterpriseServiceImpl extends BaseServiceImpl implements TEnterpri
 		if (StringUtils.isEmpty(tUser)) {
 			return new ResultUtil<>().setErrorMsg(4000,"未登录");
 		}
+		String areaId = tUser.getAreaId();
+		if(!StringUtils.isEmpty(entity) && !StringUtils.isEmpty(entity.get("areaId"))) {
+			areaId = entity.get("areaId").toString();
+		}
+		int pageNum = Integer.parseInt(entity.get("pageNum").toString());
+		int pageSize = Integer.parseInt(entity.get("pageSize").toString());
+		Pageable pageable = PageRequest.of((pageNum - 1), pageSize, new Sort(Sort.Direction.DESC, "id"));
+		List<TArea> listArea = areaService.getUserAreas(Long.valueOf(areaId), true);
+		if(CollectionUtils.isEmpty(listArea)) {
+			return new ResultUtil<>().setData(new PageImpl(new ArrayList(),pageable, 0));
+		}
 		Specification<TEnterprise> specification = (root, criteriaQuery, cb) -> {
 			List<Predicate> list = new ArrayList<>();
-			String areaId = tUser.getAreaId();
-			if(!StringUtils.isEmpty(entity) && !StringUtils.isEmpty(entity.get("areaId"))) {
-				areaId = entity.get("areaId").toString();
-			}
-			List<TArea> listArea = areaService.getUserAreas(Long.valueOf(areaId), true);
 			CriteriaBuilder.In<Long> in = cb.in(root.<Long>get("areaId"));
 			for (TArea area : listArea) {
 				in.value(area.getId());
@@ -102,11 +110,6 @@ public class TEnterpriseServiceImpl extends BaseServiceImpl implements TEnterpri
 			list.add(cb.equal(root.<Integer>get("deleteFlag"), 0));
 			return cb.and(list.toArray(new Predicate[list.size()]));
 		};
-
-		int pageNum = Integer.parseInt(entity.get("pageNum").toString());
-		int pageSize = Integer.parseInt(entity.get("pageSize").toString());
-		Pageable pageable = PageRequest.of((pageNum - 1), pageSize, new Sort(Sort.Direction.DESC, "id"));
-
 		return new ResultUtil<>().setData(getPageListByCondition(specification, pageable));
 	}
 

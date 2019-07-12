@@ -124,11 +124,6 @@ export default {
         localStorage.setItem('userInfo', JSON.stringify(res.result, null, 0))
         // 加载菜单
         that.loadMenus(level)
-      } else {
-        that.$message({
-          message: res.message,
-          type: 'error'
-        })
       }
     },
     async loadMenus (level) {

@@ -8,6 +8,7 @@ import com.bumt.sensormgm.util.CommonUtil;
 import com.bumt.sensormgm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -79,11 +80,15 @@ public class TUserController  extends BaseController<TUser>{
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/alertPwd", method = RequestMethod.POST)
-	public Object alertPwd(@RequestBody TUser entity, HttpSession session){
-		entity.setPassword("010a0c09090a090b0e060007020f080e");
-
-		return new ResultUtil<>().setData(getService().updateByPrimaryKeySelective(entity,session));
+	@RequestMapping(value = "/modifyPswd", method = RequestMethod.POST)
+	public Object alertPwd(@RequestParam String oldPswd,
+						   @RequestParam String newPswd,
+						   HttpSession session){
+		TUser tUser = (TUser) session.getAttribute("user");
+		if (StringUtils.isEmpty(tUser)) {
+			return new ResultUtil<>().setErrorMsg(4000,"未登录");
+		}
+		return service.modifyPswd(tUser.getLoginName(), oldPswd, newPswd);
 	}
 
 }

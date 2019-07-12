@@ -1,5 +1,6 @@
 package com.bumt.sensormgm.common.pojo;
 
+import com.bumt.sensormgm.util.CommonUtil;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,5 +24,9 @@ public class BaseEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(CommonUtil.encodeByMD5("ruifengyuan@2019"));
     }
 }

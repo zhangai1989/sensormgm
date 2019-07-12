@@ -20,4 +20,6 @@ public interface TUserService extends BaseService {
     List<TUser> getByEmail(String email);
 
     String checkUpdateStatus(String cname, String mobile, String email, long id);
+
+    Object modifyPswd(String userName, String oldPswd, String newPswd);
 }

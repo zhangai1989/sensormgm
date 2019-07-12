@@ -33,7 +33,6 @@ export default {
         newPswd: '',
         confPwd: ''
       },
-      accountRegx: {},
       rules: {
         oldPswd: [
           { required: true, message: '请输入原密码', trigger: 'blur' }
@@ -73,13 +72,11 @@ export default {
       if (value === '') {
         callback(new Error('请输入密码'))
       } else {
-        let reg = this.evil(this.accountRegx.passwordRegExpression)
-        if (value.match(reg) === null) {
-          callback(new Error(this.accountRegx.passwordErrMsg))
-        } else {
-          callback()
+        if (value.length < 6) {
+          callback(new Error('密码至少6位'))
         }
       }
+      callback()
     },
     validateConfPwd  (rule, value, callback) {
       if (value === '') {
@@ -94,17 +91,6 @@ export default {
     handleClose (done) {
       this.$emit('update:dialog', false)
     },
-    // 获取账号校验规则
-    async getAccountRegx () {
-      try {
-        const res = await accountRegx()
-        this.accountRegx.passwordMaxLen = res.items.passwordMaxLen
-        this.accountRegx.passwordRegExpression = res.items.passwordRegExpression
-        this.accountRegx.passwordErrMsg = res.items.passwordErrMsg
-      } catch (error) {
-        console.error(error)
-      }
-    },
     // 确定
     async handleConfirm (formName) {
       this.$refs[formName].validate(async (valid) => {
@@ -113,10 +99,10 @@ export default {
             this.loading = true
             const res = await modifyPswd(this.form)
             this.loading = false
-            if (res.items) {
+            if (res.code === 2000) {
+              this.$message.success('密码修改成功')
               this.$emit('update:dialog', false)
             } else {
-              this.$message({ message: res.message, type: 'warning', showClose: true })
               return false
             }
           } catch (error) {

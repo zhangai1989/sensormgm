@@ -11,6 +11,7 @@ import com.bumt.sensormgm.service.TUserService;
 import com.bumt.sensormgm.util.CommonUtil;
 import com.bumt.sensormgm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -73,13 +75,19 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 		if (StringUtils.isEmpty(tUser)) {
 			return new ResultUtil<>().setErrorMsg(4000,"未登录");
 		}
+		String areaId = tUser.getAreaId();
+		if(!StringUtils.isEmpty(entity) && !StringUtils.isEmpty(entity.get("areaId"))) {
+			areaId = entity.get("areaId").toString();
+		}
+		int pageNum = Integer.parseInt(entity.get("pageNum").toString());
+		int pageSize = Integer.parseInt(entity.get("pageSize").toString());
+		Pageable pageable = PageRequest.of((pageNum - 1), pageSize, new Sort(Sort.Direction.DESC, "id"));
+		List<TArea> listArea = tAreaService.getUserAreas(Long.valueOf(areaId), true);
+		if(CollectionUtils.isEmpty(listArea)) {
+			return new ResultUtil<>().setData(new PageImpl(new ArrayList(),pageable, 0));
+		}
 		Specification<TUser> specification = (root, criteriaQuery, cb) -> {
 			List<Predicate> list = new ArrayList<>();
-			String areaId = tUser.getAreaId();
-			if(!StringUtils.isEmpty(entity) && !StringUtils.isEmpty(entity.get("areaId"))) {
-				areaId = entity.get("areaId").toString();
-			}
-			List<TArea> listArea = tAreaService.getUserAreas(Long.valueOf(areaId), true);
 			CriteriaBuilder.In<Long> in = cb.in(root.<Long>get("areaId"));
 			for (TArea area : listArea) {
 				in.value(area.getId());
@@ -91,11 +99,6 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 			list.add(cb.equal(root.<Integer>get("deleteFlag"), 0));
 			return cb.and(list.toArray(new Predicate[list.size()]));
 		};
-
-		int pageNum = Integer.parseInt(entity.get("pageNum").toString());
-		int pageSize = Integer.parseInt(entity.get("pageSize").toString());
-		Pageable pageable = PageRequest.of((pageNum - 1), pageSize, new Sort(Sort.Direction.DESC, "id"));
-
 		return new ResultUtil<>().setData(getPageListByCondition(specification, pageable));
 	}
 
@@ -133,6 +136,16 @@ public class TUserServiceImpl extends BaseServiceImpl implements TUserService  {
 		}
 
 		return "";
+	}
+
+	@Override
+	public Object modifyPswd(String userName, String oldPswd, String newPswd) {
+		TUser user = dao.findByLoginNameAndPasswordAndDeleteFlag(userName, CommonUtil.encodeByMD5(oldPswd), 0);
+		if(StringUtils.isEmpty(user)) {
+			return new ResultUtil<>().setErrorMsg("原密码错误");
+		}
+		user.setPassword(CommonUtil.encodeByMD5(newPswd));
+		return new ResultUtil<>().setData(dao.save(user));
 	}
 
 	@Override
