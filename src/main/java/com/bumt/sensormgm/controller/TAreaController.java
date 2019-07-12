@@ -91,7 +91,7 @@ public class TAreaController  extends BaseController<TArea>{
 			if(!StringUtils.isEmpty(entity.get("areaId"))){
 				list.add(criteriaBuilder.like(root.get("areaId").as(String.class), "%" + entity.get("areaId") + "%"));
 			}
-			list.add(criteriaBuilder.equal(root.get("deleteFlag").as(String.class),1));
+			list.add(criteriaBuilder.equal(root.get("deleteFlag").as(String.class),0));
 			return criteriaBuilder.and(list.toArray(new Predicate[list.size()]));
 		};
 		return querySpecification;
