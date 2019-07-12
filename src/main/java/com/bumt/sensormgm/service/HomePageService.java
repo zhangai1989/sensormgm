@@ -9,4 +9,6 @@ import java.util.List;
 public interface HomePageService  {
 
     Object getHomePageDataByAreaId(String areaId);
+
+    Object getAllCountAndTodayCount();
 }

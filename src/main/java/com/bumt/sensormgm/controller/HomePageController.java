@@ -31,5 +31,9 @@ public class HomePageController {
         return new ResultUtil<>().setData(homePageService.getHomePageDataByAreaId(areaId));
     }
 
-
+    @ResponseBody
+    @RequestMapping(value = "/getAllCountAndTodayCount", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
+    public Object getAllCountAndTodayCount(){
+        return new ResultUtil<>().setData(homePageService.getAllCountAndTodayCount());
+    }
 }

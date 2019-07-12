@@ -46,21 +46,6 @@ public class HomePageServiceImpl  implements HomePageService {
 
         HomePageVo homePageVo = new HomePageVo();
 
-        try {
-            String allCount2 = redisDao.get("upload.total");
-            if(!StringUtils.isEmpty(allCount2)){
-                homePageVo.setAllCount(Integer.parseInt(allCount2));
-            }
-            String todayCount = redisDao.get("upload.total."+CommonUtil.getCodeByNowDateTime().substring(0,8));
-            if(!StringUtils.isEmpty(todayCount)){
-                homePageVo.setTodayCount(Integer.parseInt(todayCount));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            //异常捕获，避免redis连接异常导致首页无法显示
-        }
-
-
         //获取区域排名
         List<Map> areaRank =  tDeviceDao.getAreaRank();
 
@@ -155,5 +140,19 @@ public class HomePageServiceImpl  implements HomePageService {
         homePageVo.setLastLogsData(lastLogsData);
 		return homePageVo;
 	}
+
+    @Override
+    public Object getAllCountAndTodayCount() {
+        Map resultMap = new HashMap();
+        String allCount2 = redisDao.get("upload.total");
+        if(!StringUtils.isEmpty(allCount2)){
+            resultMap.put("allCount",Integer.parseInt(allCount2));
+        }
+        String todayCount = redisDao.get("upload.total."+CommonUtil.getCodeByNowDateTime().substring(0,8));
+        if(!StringUtils.isEmpty(todayCount)){
+            resultMap.put("todayCount",Integer.parseInt(todayCount));
+        }
+        return resultMap;
+    }
 
 }
