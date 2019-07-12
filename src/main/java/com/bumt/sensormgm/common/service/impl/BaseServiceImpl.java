@@ -9,18 +9,14 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author : zhangai
@@ -139,7 +135,7 @@ public abstract class BaseServiceImpl<T>  implements BaseService<T> {
 	public Object deleteByIdChangeStatus(T entity,HttpSession session) {
 		try {
 			//实现部分字段更新
-			BeanUtils.setProperty(entity, "deleteFlag",0);
+			BeanUtils.setProperty(entity, "deleteFlag",1);
 			return updateByPrimaryKeySelective(entity,session);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
