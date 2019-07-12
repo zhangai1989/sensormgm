@@ -139,7 +139,7 @@ public abstract class BaseServiceImpl<T>  implements BaseService<T> {
 	public Object deleteByIdChangeStatus(T entity,HttpSession session) {
 		try {
 			//实现部分字段更新
-			BeanUtils.setProperty(entity, "deleteFlag",1);
+			BeanUtils.setProperty(entity, "deleteFlag",0);
 			return updateByPrimaryKeySelective(entity,session);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
