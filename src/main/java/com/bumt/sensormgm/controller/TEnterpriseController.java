@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.bumt.sensormgm.util.CommonUtil.getCodeByNowDateTime;
-
 @RestController
 @RequestMapping("/api/TEnterprise")
 public class TEnterpriseController  extends BaseController<TEnterprise>{
@@ -69,7 +67,6 @@ public class TEnterpriseController  extends BaseController<TEnterprise>{
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	@Override
 	public Object insert(@RequestBody TEnterprise entity,HttpSession session){
-		entity.setCode(getCodeByNowDateTime());
 		entity.setDeleteFlag(0);
 		//企业名称不能重复
 		String errorMsg = checkUpdateStatus2(entity);

@@ -1,5 +1,7 @@
 package com.bumt.sensormgm.common.pojo;
 
+import org.springframework.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class TreeNode {
 
     private String type;
 
-    private List<TreeNode> nodes = new ArrayList<>();
+    private List<TreeNode> nodes;
 
     private String icon;
 
@@ -107,6 +109,13 @@ public class TreeNode {
     public void setNodes(List<TreeNode> nodes) {
 
         this.nodes = nodes;
+    }
+
+    public void addChild(TreeNode node) {
+        if(CollectionUtils.isEmpty(nodes)) {
+            nodes = new ArrayList<>();
+        }
+        nodes.add(node);
     }
 
 }

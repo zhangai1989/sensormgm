@@ -50,12 +50,11 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 		if(!StringUtils.isEmpty(entity.get("deviceCode"))){
 			deviceCode =entity.get("deviceCode").toString();
 		}
-
+		TUser tUser = (TUser) session.getAttribute("user");
 		List<Long> areaIds = new ArrayList<>();
 		if(!StringUtils.isEmpty(entity.get("areaId"))){
 			areaIds.add(Long.valueOf(entity.get("areaId").toString()));
 		}else{
-			TUser tUser = (TUser) session.getAttribute("user");
 			if(tUser!=null){
 				List<TArea> userAreas = areaService.getUserAreas(Long.valueOf(tUser.getAreaId()), true);
 				for(TArea area : userAreas) {
@@ -75,8 +74,19 @@ public class TDeviceServiceImpl extends BaseServiceImpl implements TDeviceServic
 //				}
 //			}
 //		}
-		int total =  dao.getTotalBySqlAndCondition(enterprise,status,areaIds, deviceCode);
 		Pageable pageable = PageRequest.of((pageNum-1), pageSize);
+		// 如果是企业用户
+		if(!StringUtils.isEmpty(tUser.getEnterpriseId())) {
+			for(TDevice d : dataList) {
+				if(d.getEnterpriseId().toString().equals(tUser.getEnterpriseId())) {
+					List<TDevice> ds = new ArrayList<>();
+					ds.add(d);
+					return new PageImpl(ds,pageable,0);
+				}
+			}
+		}
+		int total =  dao.getTotalBySqlAndCondition(enterprise,status,areaIds, deviceCode);
+
 		Page<TDevice> page = new PageImpl(dataList,pageable,total);
 		return page;
 	}

@@ -216,6 +216,10 @@ export default {
     }
   },
   created () {
+    this.autoReload = localStorage.getItem('MONITOR.AUTO.REFRESH') === 'true' ? true : false
+    if (this.autoReload) {
+      this.changeAutoReload(true)
+    }
   },
 
   mounted () {
@@ -266,12 +270,12 @@ export default {
             that.totalNum = res.result.totalElements
             if (res.result.content && res.result.content.length > 0) {
               res.result.content.forEach(function (item) {
-                if(item.lampblack === -10000) item.lampblack = '--'
-                if(item.temp === -10000) item.temp = '--'
-                if(item.humidity === -10000) item.humidity = '--'
-                if(item.fanElec === -10000) item.fanElec = '--'
-                if(item.purifierElec === -10000) item.purifierElec = '--'
-                item.enterpriseName = that.sysEnterprise.get(item.enterpriseId)
+                if(item.lampblack === -10000) item.lampblack = 'NULL'
+                if(item.temp === -10000) item.temp = 'NULL'
+                if(item.humidity === -10000) item.humidity = 'NULL'
+                if(item.fanElec === -10000) item.fanElec = 'NULL'
+                if(item.purifierElec === -10000) item.purifierElec = 'NULL'
+                item.enterpriseName = item.deviceName
               })
             }
             that.list = res.result.content
@@ -325,6 +329,7 @@ export default {
     },
     changeAutoReload (val) {
       let that = this
+      localStorage.setItem('MONITOR.AUTO.REFRESH', that.autoReload)
       if (val) {
         that.intervalId = setInterval(() => {
           that.reloadList()

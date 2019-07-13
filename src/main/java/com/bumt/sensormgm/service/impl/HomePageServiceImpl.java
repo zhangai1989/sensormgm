@@ -152,11 +152,15 @@ public class HomePageServiceImpl  implements HomePageService {
         }
         String allCount2 = redisDao.get("upload.total." + tUser.getAreaId());
         if(!StringUtils.isEmpty(allCount2)){
-            resultMap.put("allCount",Integer.parseInt(allCount2));
+            resultMap.put("allCount",Long.valueOf(allCount2));
+        } else {
+            resultMap.put("allCount", 0);
         }
         String todayCount = redisDao.get("upload.total." + tUser.getAreaId() + "." + CommonUtil.getCodeByNowDateTime().substring(0,8));
         if(!StringUtils.isEmpty(todayCount)){
-            resultMap.put("todayCount",Integer.parseInt(todayCount));
+            resultMap.put("todayCount",Long.valueOf(todayCount));
+        } else {
+            resultMap.put("todayCount", 0);
         }
         return resultMap;
     }

@@ -146,11 +146,11 @@
       <div class="map-pop-box" v-show="mapPopVisible">
         <div class="map-pop-row" style="text-align: center">{{pop_obj.name}}</div>
         <div class="map-pop-row">{{pop_obj.lastUploadTime}}</div>
-        <div class="map-pop-row"><span class="map-pop-row-title">油烟:</span>{{pop_obj.lampblack}}mg/m³</div>
-        <div class="map-pop-row"><span class="map-pop-row-title">温度:</span>{{pop_obj.temp}}℃</div>
-        <div class="map-pop-row"><span class="map-pop-row-title">湿度:</span>{{pop_obj.humidity}}%</div>
-        <div class="map-pop-row"><span class="map-pop-row-title">风机:</span>{{pop_obj.fanElec}}A</div>
-        <div class="map-pop-row"><span class="map-pop-row-title">净化器:</span>{{pop_obj.purifierElec}}A</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">油烟:&nbsp;</span>{{pop_obj.lampblack  === -10000 ? 'NULL' : pop_obj.lampblack + 'mg/m³'}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">VOC:&nbsp;</span>{{pop_obj.temp === -10000 ? 'NULL' : pop_obj.temp + 'mg/m³'}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">颗粒物:&nbsp;</span>{{pop_obj.humidity === -10000 ? 'NULL' : pop_obj.humidity + 'mg/m³'}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">风机:&nbsp;</span>{{pop_obj.fanElec === -10000 ? 'NULL' : pop_obj.fanElec + 'ma'}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">净化器:&nbsp;</span>{{pop_obj.purifierElec === -10000 ? 'NULL' : pop_obj.purifierElec + 'ma'}}</div>
       </div>
 
     </div>
@@ -850,7 +850,7 @@
         that.timeInterval = setInterval(function () {
           that.getNowTime()
         },1000)
-		
+
 		that.interval1Count()
 
         areaMapList({})
@@ -873,11 +873,11 @@
             }
           })
       },
-	  
-	  
+
+
 	  interval1Count(){
 		let that = this
-		
+
 		that.countInterval = setInterval(function () {
           getCount({})
 		  .then(res => {
@@ -890,8 +890,8 @@
 		  })
         },1000)
 	  },
-	  
-	  
+
+
 
       getInitDataById(areaId){
         let that = this

@@ -15,7 +15,7 @@
 
     <div class="main-viewer">
       <el-row>
-        <el-col :span="5">
+        <el-col :span=5>
           <el-tree
             :data="areaTree"
             node-key="id"
@@ -25,7 +25,7 @@
             @node-click="loadDetail">
           </el-tree>
         </el-col>
-        <el-col :span="19">
+        <el-col :span=19>
           <div class="detail" v-if="showEdit">
             <el-form :inline="true" :model="form" ref="detailForm" v-loading="!editAble" :rules="rules" label-width="100px">
               <el-form-item prop="name" label="区域名称">

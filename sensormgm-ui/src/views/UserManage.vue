@@ -157,7 +157,7 @@
         width="380px">
 
         <el-form :inline="true" :model="form" ref="editForm" :rules="rules" label-width="100px">
-          <el-form-item label="所属区域" prop="areaId">
+          <el-form-item label="所属区域" prop="areaId" v-if="level < 3">
             <el-select size="small" v-model="form.areaId" placeholder="请选择" :disabled="form.id !== ''" @change="changeArea">
               <el-option
                 v-for="item in areas"
@@ -169,7 +169,7 @@
           </el-form-item>
 
           <el-form-item v-if="form.level === 3 && form.id === ''" :disabled="level === 3 || form.enterpriseId" label="所属企业" prop="enterpriseId">
-            <el-select size="small" v-model="form.enterpriseId" placeholder="请选择">
+            <el-select size="small" v-model="form.enterpriseId" placeholder="请选择企业" clearable>
               <el-option
                 v-for="item in areaEnterprises"
                 :key="item.id"
@@ -342,7 +342,11 @@ export default {
       } else {
         this.title = '新增用户'
         this.form.id = ''
-        this.form.areaId = ''
+        if (this.level < 3) {
+          this.form.areaId = ''
+        } else {
+          this.form.areaId = areaId
+        }
         this.form.enterpriseId = ''
         this.form.level = ''
         this.form.loginName = ''

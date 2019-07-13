@@ -20,15 +20,15 @@
       <div class="list">
         <div class="list-item" v-for="item in filterList" @click="selectDevice(item)">
           <el-row>
-            <el-col span="2">
+            <el-col :span=2>
               <i class="iconfont icon-wifi status"
                  :style="{color:item.deviceStatus === 'ONLINE' ? '#53ee33': '#d1d1d1'}"></i>
             </el-col>
-            <el-col span="15">
+            <el-col :span=15>
               <span class="dname" :class="{'selected-dname': selectedDevice === item.id, 'not-selected-dname': selectedDevice !== item.id}">{{ item.name }}</span>
             </el-col>
-            <el-col span="7" class="val-box">
-              <span class="dval" :class="{'normal':item.dataStatus === 1, 'beyond':item.dataStatus === 3, 'warning':item.dataStatus === 2}">0.090mg/m³</span>
+            <el-col :span=7 class="val-box">
+              <span class="dval" :class="{'normal':item.dataStatus === 1, 'beyond':item.dataStatus === 3, 'warning':item.dataStatus === 2}">{{ item.lampblack }}mg/m³</span>
             </el-col>
           </el-row>
         </div>
@@ -38,10 +38,11 @@
         <div class="map-pop-row" style="text-align: center">{{popObj.name}}</div>
         <div class="map-pop-row"><span class="map-pop-row-title">详细地址:&nbsp;</span>{{popObj.address}}</div>
         <div class="map-pop-row"><span class="map-pop-row-title">企业负责人:&nbsp;</span>{{popObj.contact}}</div>
-        <div class="map-pop-row"><span class="map-pop-row-title">环保负责人:&nbsp;</span>{{popObj.envContact}}</div>
-        <div class="map-pop-row"><span class="map-pop-row-title">油烟:&nbsp;</span>{{popObj.lampblack}}mg/m³</div>
-        <div class="map-pop-row"><span class="map-pop-row-title">温度:&nbsp;</span>{{popObj.temp}}℃</div>
-        <div class="map-pop-row"><span class="map-pop-row-title">湿度:&nbsp;</span>{{popObj.humidity}}%</div>
+        <div v-if="popObj.envContact != '()'" class="map-pop-row"><span class="map-pop-row-title">环保负责人:&nbsp;</span>{{popObj.envContact }}</div>
+
+        <div class="map-pop-row"><span class="map-pop-row-title">油烟:&nbsp;</span>{{popObj.lampblack  === -10000 ? 'NULL' : popObj.lampblack + 'mg/m³'}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">VOC:&nbsp;</span>{{popObj.temp === -10000 ? 'NULL' : popObj.temp + 'mg/m³'}}</div>
+        <div class="map-pop-row"><span class="map-pop-row-title">颗粒物:&nbsp;</span>{{popObj.humidity === -10000 ? 'NULL' : popObj.humidity + 'mg/m³'}}</div>
         <div class="map-pop-row"><span class="map-pop-row-title">当前风机状态:&nbsp;</span>{{popObj.fanStatus}}</div>
         <div class="map-pop-row"><span class="map-pop-row-title">当前净化器状态:&nbsp;</span>{{popObj.purifierStatus}}</div>
         <div class="map-pop-row"><span class="map-pop-row-title">最后上传时间:&nbsp;</span>{{popObj.lastUploadTime}}</div>
@@ -64,10 +65,10 @@
 <style scoped>
   .map-pop-box{
     position: absolute;
-    width: 250px;
+    width: 280px;
     box-sizing: border-box;
     right: 310px;
-    top: 90px;
+    top: 95px;
     background: rgba(0,0,0,0.5);
     height: auto;
     z-index: 800;

@@ -56,7 +56,7 @@ public class TreeUtil {
     public static void appendChildren(TreeNode parentNode, List<TreeNode> nodes) {
         for(TreeNode node : nodes) {
             if(parentNode.getId().equals(node.getParentId())) {
-                parentNode.getNodes().add(node);
+                parentNode.addChild(node);
                 if(node.getLevelCode().equals("4")) continue;
                 appendChildren(node, nodes);
             }

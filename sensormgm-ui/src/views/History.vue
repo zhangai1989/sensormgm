@@ -16,7 +16,7 @@
 
     <div class="main-viewer">
       <ul class="bg-f8f f8f-set fxmiddle flex normal-set">
-        <li class="flex fxmiddle" v-if="userLevel !== '4'">
+        <li class="flex fxmiddle" v-if="userLevel !== 4">
           <enterprise-selector @changeEnterprise="changeEnterprise"/>
         </li>
         <li class="flex fxmiddle">
@@ -134,7 +134,7 @@ export default {
     this.rangeTime.push(date + ' 00:00:00')
     this.rangeTime.push(date + ' 23:59:59')
 
-    this.userLevel = UserContext.getUserLevel()
+    this.userLevel = parseInt(UserContext.getUserLevel())
     if (this.userLevel === 4) {
       this.enterpriseId = UserContext.getUserEnterprise()
     }
@@ -172,13 +172,13 @@ export default {
             if (that.list && that.list.length > 0) {
               that.list.forEach(function (item) {
                 if (item.lampblack === -10000) {
-                  item.lampblack = '--'
+                  item.lampblack = 'NULL'
                 }
                 if (item.temp === -10000) {
-                  item.temp = '--'
+                  item.temp = 'NULL'
                 }
                 if (item.humidity === -10000) {
-                  item.humidity = '--'
+                  item.humidity = 'NULL'
                 }
               })
             }

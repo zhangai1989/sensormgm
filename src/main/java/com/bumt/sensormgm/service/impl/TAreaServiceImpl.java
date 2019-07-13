@@ -43,16 +43,16 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 			node.setLevelCode(area.getLevel());
 			nodeList.add( node);
 		}
-		List<TEnterprise> tEnterpriseList= tEnterpriseDao.findAll();
-		for (TEnterprise tEnterprise : tEnterpriseList) {
-			TreeNode node = new TreeNode();
-			node.setText(tEnterprise.getName());
-			node.setId(tEnterprise.getId().toString());
-			node.setParentId(tEnterprise.getAreaId().toString());
-			node.setLevelCode("4");
-			node.setType("");
-			nodeList.add(node);
-		}
+//		List<TEnterprise> tEnterpriseList= tEnterpriseDao.findAll();
+//		for (TEnterprise tEnterprise : tEnterpriseList) {
+//			TreeNode node = new TreeNode();
+//			node.setText(tEnterprise.getName());
+//			node.setId(tEnterprise.getId().toString());
+//			node.setParentId(tEnterprise.getAreaId().toString());
+//			node.setLevelCode("4");
+//			node.setType("");
+//			nodeList.add(node);
+//		}
 			// 构造树形结构
 		List<TreeNode>	tnlist = TreeUtil.buildTree(areaId, nodeList);
 		return tnlist;
