@@ -20,8 +20,8 @@ public interface TDeviceDao extends BaseJpaDao<TDevice> {
 
     TDevice getByEnterpriseId(Long enterpriseId);
 
-    @Query(value = "select t3.name,sum(lampblack)/count(lampblack) per from t_device t1 JOIN t_enterprise t2 on t1.enterprise_id =t2.id JOIN t_area t3 on t2.area_id =t3.id GROUP BY t3.id order by per desc limit 7",nativeQuery = true)
-    List<Map> getAreaRank();
+    @Query(value = "select t3.name,sum(lampblack)/count(lampblack) per from t_device t1 JOIN t_enterprise t2 on t1.enterprise_id =t2.id JOIN t_area t3 on t2.area_id =t3.id and t2.area_id = ?1 GROUP BY t3.id order by per desc limit 7",nativeQuery = true)
+    List<Map> getAreaRank(Long areaId);
 
 
     @Query(value = "select t2.`name`,sum(lampblack)/count(lampblack) per from t_device t1 LEFT JOIN t_enterprise t2 on t1.enterprise_id =t2.id  where t2.area_id = ?1 GROUP BY t1.enterprise_id order by per desc limit 10",nativeQuery = true)

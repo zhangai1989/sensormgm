@@ -72,23 +72,7 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 	public Object getAreaList(HttpSession session) {
 
 		TUser tUser = (TUser) session.getAttribute("user");
-		List<TArea> areaList  = dao.findByLevelAndDeleteFlag("2",0);
-
-		if(tUser!=null){
-			if(tUser.getLevel()==3){
-				for(TArea area:areaList){
-					if(tUser.getAreaId().equals(area.getId().toString())){
-						List<TArea> areaListResult = new ArrayList<>();
-						areaListResult.add(area);
-						return areaListResult;
-					}
-				}
-			}else if(tUser.getLevel()==4){
-				return null;
-			}
-		}
-
-		return areaList;
+		return dao.findByParentIdAndDeleteFlag(Long.valueOf(tUser.getAreaId()),0);
 	}
 
 	@Override

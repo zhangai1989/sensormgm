@@ -49,7 +49,7 @@ public class HomePageServiceImpl  implements HomePageService {
         HomePageVo homePageVo = new HomePageVo();
 
         //获取区域排名
-        List<Map> areaRank =  tDeviceDao.getAreaRank();
+        List<Map> areaRank =  tDeviceDao.getAreaRank(Long.valueOf(areaId));
 
         //获取企业排名
         List<Map> enterpriseRank =  tDeviceDao.getDeviceDataByAreaId(areaId);
