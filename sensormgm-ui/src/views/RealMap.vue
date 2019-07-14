@@ -137,17 +137,10 @@
 import { areaList } from '@api/area'
 import { deviceList } from '@api/device'
 import UserContext from '@utils/UserContext'
-import ElInput from "../../node_modules/element-ui/packages/input/src/input";
-import ElRow from "element-ui/packages/row/src/row";
-import ElCol from "element-ui/packages/col/src/col";
 
 export default {
   name: 'realMap',
-  components: {
-    ElCol,
-    ElRow,
-    ElInput
-  },
+  components: {},
   data () {
     return {
       areas: [],
