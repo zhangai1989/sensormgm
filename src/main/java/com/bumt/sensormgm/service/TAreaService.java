@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface TAreaService extends BaseService {
 
-    List<TreeNode> getAreaTreeByAreaId(String areaId);
+    List<TreeNode> getAreaTreeByAreaId(String areaId, boolean containEnterprise);
 
     Object getAreaListBySession(HttpSession session);
 

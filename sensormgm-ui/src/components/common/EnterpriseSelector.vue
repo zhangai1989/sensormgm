@@ -33,7 +33,7 @@ export default {
         this.treeValue = []
         return
       }
-      const res = await getAreaTree({areaId: areaId})
+      const res = await getAreaTree({areaId: areaId, containEnterprise: true})
       if (res.code === 2000) {
         // ID = 区域ID + 企业ID
         if(res.result && res.result.length > 0) {

@@ -187,6 +187,7 @@ export default {
     this.areaId = UserContext.getUserArea()
     this.loadArea()
     this.loadDevice()
+    this.autoReload()
   },
   watch: {
     search (val) {
@@ -226,7 +227,8 @@ export default {
       const res = await deviceList({})
       if (res.code === 2000) {
         if (res.result && res.result.length > 0) {
-          this.center = [res.result[0].longitude, res.result[0].latitude]
+          that.center = [res.result[0].longitude, res.result[0].latitude]
+          that.deviceList = []
           res.result.forEach(function (item) {
             that.deviceList.push({
               areaId: item.areaId,
@@ -262,6 +264,7 @@ export default {
               }
             })
           })
+          that.filter(that.areaId, that.search)
         }
       }
     },
@@ -302,6 +305,12 @@ export default {
         purifierStatus: 1 === item.purifierStatus ? '开' : '关',
         lastUploadTime: item.lastUploadTime
       }
+    },
+    autoReload () {
+      let that = this
+      setInterval(() => {
+        that.loadDevice()
+      }, 10000)
     }
   }
 }

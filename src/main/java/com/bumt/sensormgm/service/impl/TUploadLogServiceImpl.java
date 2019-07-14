@@ -1,12 +1,10 @@
 package com.bumt.sensormgm.service.impl;
 
-import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
 import com.bumt.sensormgm.common.dao.BaseJpaDao;
-
-import com.bumt.sensormgm.entity.TUploadLog;
+import com.bumt.sensormgm.common.service.impl.BaseServiceImpl;
+import com.bumt.sensormgm.dao.TUploadLogDao;
 import com.bumt.sensormgm.entity.TUser;
 import com.bumt.sensormgm.service.TUploadLogService;
-import com.bumt.sensormgm.view.WarningBeyondVo;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.data.domain.Page;
@@ -14,7 +12,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.bumt.sensormgm.dao.TUploadLogDao;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -23,7 +20,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -178,7 +174,7 @@ public class TUploadLogServiceImpl extends BaseServiceImpl implements TUploadLog
 		}
 
 
-		String sql =  "select t1.*,t3.`name` from (select device_code as deviceCode,sum(lampblack)/COUNT(0) as lampblack,SUM(temp)/count(0) as temp,SUM(humidity)/count(0) as humidity from t_upload_log where upload_time >='"+startTime+"' and upload_time <='"+endTime+"'  GROUP BY device_code) t1 JOIN t_device t2 ON t1.deviceCode = t2.device_code LEFT JOIN t_enterprise t3 ON t2.enterprise_id = t3.id where t2.delete_flag=0 and t3.delete_flag=0" ;
+		String sql =  "select t1.*,t3.`name` from (select device_code as deviceCode,sum(case when lampblack = -10000 then 0 else lampblack end)/COUNT(0) as lampblack,SUM(case when temp = -10000 then 0 else temp end)/count(0) as temp,SUM(case when humidity = -10000 then 0 else humidity end)/count(0) as humidity from t_upload_log where upload_time >='"+startTime+"' and upload_time <='"+endTime+"'  GROUP BY device_code) t1 JOIN t_device t2 ON t1.deviceCode = t2.device_code LEFT JOIN t_enterprise t3 ON t2.enterprise_id = t3.id where t2.delete_flag=0 and t3.delete_flag=0" ;
 
 
 		TUser tUser = (TUser) session.getAttribute("user");

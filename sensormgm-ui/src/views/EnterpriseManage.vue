@@ -137,7 +137,7 @@
             align="center"
             label="创建时间"
             prop="createTime"
-            min-width="150">
+            min-width="160">
           </el-table-column>
 
           <el-table-column

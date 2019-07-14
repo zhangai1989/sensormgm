@@ -155,8 +155,9 @@ public class TAreaController  extends BaseController<TArea>{
 	@RequestMapping(value = "/getAreaTreeByAreaId", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.GET)
 	@ApiOperation(value="获取区域下拉树", notes="")
 	@ApiImplicitParam(paramType="query", name = "areaId", value = "区域id", required = true, dataType = "String")
-	public Object getAreaTreeByAreaId(@RequestParam("areaId") String areaId){
-		return new ResultUtil<>().setData(service.getAreaTreeByAreaId(areaId));
+	public Object getAreaTreeByAreaId(@RequestParam("areaId") String areaId,
+									  @RequestParam(required = false, defaultValue = "false") Boolean containEnterprise){
+		return new ResultUtil<>().setData(service.getAreaTreeByAreaId(areaId, containEnterprise));
 	}
 
 }

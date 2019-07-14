@@ -31,7 +31,7 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 	public BaseJpaDao getGenericMapper() {return dao; }
 
 	@Override
-	public List<TreeNode> getAreaTreeByAreaId(String areaId) {
+	public List<TreeNode> getAreaTreeByAreaId(String areaId, boolean containEnterprise) {
 		List<TreeNode> nodeList = new ArrayList<>();
 		List<TArea> tAreaList = getUserAreas(Long.valueOf(areaId), false);
 		if(CollectionUtils.isEmpty(tAreaList)) return nodeList;
@@ -43,16 +43,19 @@ public class TAreaServiceImpl extends BaseServiceImpl implements TAreaService  {
 			node.setLevelCode(area.getLevel());
 			nodeList.add( node);
 		}
-//		List<TEnterprise> tEnterpriseList= tEnterpriseDao.findAll();
-//		for (TEnterprise tEnterprise : tEnterpriseList) {
-//			TreeNode node = new TreeNode();
-//			node.setText(tEnterprise.getName());
-//			node.setId(tEnterprise.getId().toString());
-//			node.setParentId(tEnterprise.getAreaId().toString());
-//			node.setLevelCode("4");
-//			node.setType("");
-//			nodeList.add(node);
-//		}
+		if (containEnterprise) {
+			List<TEnterprise> tEnterpriseList= tEnterpriseDao.findAll();
+			for (TEnterprise tEnterprise : tEnterpriseList) {
+				if (tEnterprise.getDeleteFlag() == 1) continue;
+				TreeNode node = new TreeNode();
+				node.setText(tEnterprise.getName());
+				node.setId(tEnterprise.getId().toString());
+				node.setParentId(tEnterprise.getAreaId().toString());
+				node.setLevelCode("4");
+				node.setType("");
+				nodeList.add(node);
+			}
+		}
 			// 构造树形结构
 		List<TreeNode>	tnlist = TreeUtil.buildTree(areaId, nodeList);
 		return tnlist;

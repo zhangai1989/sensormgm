@@ -110,22 +110,6 @@
           </el-table-column>
 
           <el-table-column
-            align="center"
-            prop="modifierName"
-            label="修改人"
-            width="120">
-          </el-table-column>
-
-          <el-table-column
-            align="center"
-            label="修改时间"
-            prop="modifyTime"
-            min-width="160">
-          </el-table-column>
-
-          <el-table-column
-            v-if="allowEdit"
-            fixed="right"
             label="操作"
             align="center"
             min-width="100">
@@ -266,7 +250,6 @@ export default {
       },
       title: '新增用户',
       editFlag: false,
-      allowEdit: false,
       rules: {
         areaId: [
           { required: true, message: '所属区域不能为空', trigger: 'blur' }
@@ -307,8 +290,6 @@ export default {
       let userInfo = JSON.parse(localStorage.getItem('userInfo'))
       that.level = parseInt(userInfo.level)
       that.areaId = userInfo.areaId
-
-      that.allowEdit = that.level < 4
     },
     initSysArea () {
       let that = this
