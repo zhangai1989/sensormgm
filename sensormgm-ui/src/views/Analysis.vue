@@ -120,9 +120,9 @@ export default {
               list.forEach(function (item, index, array) {
                 that.chartData.rows.push({
                   '日期': item.uploadTime,
-                  '油烟浓度': item.lampblack,
-                  'VOC': item.temp,
-                  '颗粒物': item.humidity
+                  '油烟浓度': item.lampblack === -10000 ? 0 : item.lampblack,
+                  'VOC': item.temp === -10000 ? 0 : item.temp,
+                  '颗粒物': item.humidity === -10000 ? 0 : item.humidity
                 })
               })
             }
