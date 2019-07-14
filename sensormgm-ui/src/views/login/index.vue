@@ -9,13 +9,13 @@
       <div class="login-input-box">
         <div class="input">
           <!--el-icon-user-solid-->
-          <el-input v-model="userName" prefix-icon="el-icon-user-solid" style="width: 300px"
+          <el-input v-model="userName" prefix-icon="el-icon-user-solid" style="width: 300px" autocomplete="off"
                     placeholder="请输入用户名"></el-input>
         </div>
       </div>
       <div class="login-input-box">
         <div class="input">
-          <el-input v-model="password" prefix-icon="el-icon-lock" style="width: 300px" type="password"
+          <el-input v-model="password" prefix-icon="el-icon-lock" style="width: 300px" type="password" autocomplete="off"
                     placeholder="请输入密码"></el-input>
         </div>
       </div>

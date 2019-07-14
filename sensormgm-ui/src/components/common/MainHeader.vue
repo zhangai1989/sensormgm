@@ -65,9 +65,9 @@ export default {
     layout () {
       localStorage.removeItem('userInfo')
       Cookies.remove('JSESSIONID') // 去除cookie
+      this.$router.push({path: '/login'})
       loginOut({})
         .then(res => {
-          location.href = LOGIN_URL
         })
     }
   }
