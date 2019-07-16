@@ -568,6 +568,22 @@
 	overflow: auto;
   }
 
+  .area-box::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+      background-color: #395067;
+  }
+
+  .area-box::-webkit-scrollbar-thumb {
+      border-radius: 6px;
+      background-color: #3a8ee6;
+  }
+
+  .area-box::-webkit-scrollbar-track {
+      border-radius: 6px;
+      background-color: #606266;
+  }
+
   .area-item {
     display: flex;
     align-items: center;
