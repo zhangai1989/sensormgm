@@ -562,9 +562,10 @@
     flex-wrap: wrap;
     align-items: center;
     width: 700px;
-    height: 120px;
+    height: 128px;
     box-sizing: border-box;
     padding: 0 20px;
+	overflow: auto;
   }
 
   .area-item {
